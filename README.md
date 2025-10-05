@@ -1,4 +1,4 @@
-# MobileApp
+# ShareCare
 Мобильное приложение для проекта по "Обучению служением"
 
 This is a Kotlin Multiplatform project targeting Android, iOS.
