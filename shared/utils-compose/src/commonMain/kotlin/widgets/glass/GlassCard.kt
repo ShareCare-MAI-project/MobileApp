@@ -1,0 +1,91 @@
+package widgets.glass
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.shapes
+import androidx.compose.material3.Surface
+import androidx.compose.material3.contentColorFor
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.unit.Dp
+import dev.chrisbanes.haze.ExperimentalHazeApi
+import dev.chrisbanes.haze.HazeInputScale
+import dev.chrisbanes.haze.HazeProgressive
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
+import dev.chrisbanes.haze.materials.HazeMaterials
+import view.consts.Paddings
+
+
+object GlassCardFunctions {
+    @Suppress("ComposableNaming")
+    @Composable
+    fun getContentColor(
+        tint: Color? = null
+    ) : Color {
+        return tint?.let { contentColorFor(lerp(tint, colorScheme.background, .5f)) }
+            ?: colorScheme.onBackground
+    }
+
+
+    fun getHazeTintColor(tint: Color?, primaryContainerColor: Color): Color {
+        return tint ?: primaryContainerColor.copy(.2f)
+    }
+    fun getBorderColor(tint: Color?, primaryContainerColor: Color): Color {
+        return tint?.copy(alpha = .6f) ?: primaryContainerColor.copy(alpha = .2f)
+    }
+}
+
+@OptIn(ExperimentalHazeMaterialsApi::class, ExperimentalHazeApi::class)
+@Composable
+fun GlassCard(
+    modifier: Modifier = Modifier,
+    hazeState: HazeState,
+    shape: Shape = shapes.extraLarge,
+    tint: Color? = null,
+    hazeTint: Color = GlassCardFunctions.getHazeTintColor(tint, colorScheme.primaryContainer),
+    borderColor: Color = GlassCardFunctions.getBorderColor(tint, colorScheme.primaryContainer),
+    contentColor: Color = GlassCardFunctions.getContentColor(tint),
+    contentPadding: PaddingValues = PaddingValues(Paddings.medium),
+    isReversedProgressive: Boolean = false,
+    content: @Composable BoxScope.() -> Unit
+) {
+
+    Surface(
+        modifier = Modifier.clip(shape).then(modifier)
+            .hazeEffect(hazeState, HazeMaterials.ultraThin(colorScheme.background)) {
+                this.noiseFactor = 0f
+
+                this.tints =
+                        listOf(HazeTint(hazeTint))
+
+                this.inputScale = HazeInputScale.Fixed(.85f)
+                this.progressive =
+                    HazeProgressive.verticalGradient(
+                        startIntensity = if (isReversedProgressive) .6f else .3f,
+                        endIntensity = if (isReversedProgressive) .3f else .6f
+                    )
+            },
+        shape = shape,
+        color = Color.Transparent,
+        contentColor = contentColor,
+        border = BorderStroke(
+            Dp.Hairline,
+            color = borderColor
+        )
+    ) {
+        Box(Modifier.padding(contentPadding)) {
+            content()
+        }
+    }
+}
