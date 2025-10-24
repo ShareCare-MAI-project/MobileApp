@@ -97,8 +97,7 @@ fun MainFlowUI(
         },
         topBar = {
             MainTopBar(
-                modifier = Modifier.fillMaxWidth().padding(top = topSafePadding)
-                    .padding(horizontal = Paddings.medium),
+                modifier = Modifier.fillMaxWidth().padding(top = topSafePadding),
                 hazeState = hazeState,
                 currentContentType = currentContentType
             )

@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import view.consts.Paddings
 
 @Suppress("FunctionName")
@@ -37,8 +38,8 @@ internal fun TransitionHeader(
 ) {
     AnimatedContent(
         if (isVisible) when (contentType) {
-            ContentType.Catalog -> "Мои вещи"
-            ContentType.Catalogx -> "Каталог"
+            ContentType.Catalog -> "Каталог"
+            ContentType.MyRequests -> "Мои заявки"
         } else "",
         transitionSpec = { fadeIn().togetherWith(fadeOut()) }
     ) { text ->
@@ -46,7 +47,9 @@ internal fun TransitionHeader(
             text = text,
             modifier =
                 modifier,
-            style = MaterialTheme.typography.headlineMediumEmphasized
+            style = MaterialTheme.typography.headlineMediumEmphasized,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1
 
         )
     }

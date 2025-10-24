@@ -52,10 +52,10 @@ internal fun FindHelpUI(
         item(contentType = ContentType.Catalog) { SpacerV(Paddings.medium) }
 
         TransitionColumnHeader(
-            contentType = ContentType.Catalogx,
+            contentType = ContentType.MyRequests,
             currentContentType = currentContentType
         )
-        items(50, key = { (it+1) * 100  }, contentType = { ContentType.Catalogx }) {
+        items(50, key = { (it+1) * 100  }, contentType = { ContentType.MyRequests }) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
                 (1..3).forEach { _ ->
                     Text("FindHelp")

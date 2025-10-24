@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import careshare.shared.main.presentation.generated.resources.Res
@@ -58,17 +59,20 @@ internal fun MainFAB(
     val isFindHelpMode = child is Child.FindHelpChild
 
     val animatedTint by animateColorAsState(
-        if (isFindHelpMode ) colorScheme.secondaryContainer else colorScheme.tertiaryContainer,
+        if (isFindHelpMode) colorScheme.secondaryContainer else colorScheme.tertiaryContainer,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioLowBouncy,
             stiffness = Spring.StiffnessVeryLow
         )
     )
 
-    val shape by shapeByInteraction(isPressed = isPressed,
-        shapeDp = animateDpAsState(if (isAnimating) ShapeByInteractionDefaults.largeIncreasedDpShape else ShapeByInteractionDefaults.extraLargeDpShape,
-            animationSpec = ShapeByInteractionDefaults.shapeAnimationSpec).value
-        )
+    val shape by shapeByInteraction(
+        isPressed = isPressed,
+        shapeDp = animateDpAsState(
+            if (isAnimating) ShapeByInteractionDefaults.largeIncreasedDpShape else ShapeByInteractionDefaults.extraLargeDpShape,
+            animationSpec = ShapeByInteractionDefaults.shapeAnimationSpec
+        ).value
+    )
 
 
     GlassCard(
@@ -79,23 +83,23 @@ internal fun MainFAB(
         modifier = Modifier.clickable(interactionSource = interactionSource) {}
     ) {
 
-                AnimatedContent(
-                    isFindHelpMode,
-                    transitionSpec = { fadeIn().togetherWith(fadeOut()) }
-                ) { isFindHelpMode ->
-                    Row {
-                        Icon(
-                            if (isFindHelpMode) Icons.Rounded.LibraryAdd else Icons.Rounded.Handshake,
-                            contentDescription = null
-                        )
+        AnimatedContent(
+            isFindHelpMode,
+            transitionSpec = { fadeIn().togetherWith(fadeOut()) }
+        ) { isFindHelpMode ->
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    if (isFindHelpMode) Icons.Rounded.LibraryAdd else Icons.Rounded.Handshake,
+                    contentDescription = null
+                )
 
-                        SpacerH(Paddings.semiSmall)
-                        Text(
-                            (if (isFindHelpMode) Res.string.fab_find_help else Res.string.fab_share_care).value,
-                            modifier = Modifier.basicMarquee(iterations = Int.MAX_VALUE)
-                        )
-                    }
-                }
+                SpacerH(Paddings.semiSmall)
+                Text(
+                    (if (isFindHelpMode) Res.string.fab_find_help else Res.string.fab_share_care).value,
+                    modifier = Modifier.basicMarquee(iterations = Int.MAX_VALUE)
+                )
+            }
+        }
 
 
 //        Row {
