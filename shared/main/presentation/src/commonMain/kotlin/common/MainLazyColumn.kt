@@ -29,7 +29,7 @@ internal fun MainLazyColumn(
         LazyColumn(
             modifier = Modifier.fillMaxSize().fastBackground(colorScheme.background),
             state = lazyListState,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.Start
         ) {
             item(key = "topPadding") {
                 SpacerV(topPadding)

@@ -1,5 +1,6 @@
 package flow.ui
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
@@ -15,6 +16,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -23,6 +27,7 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import common.ContentType
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 import findHelp.ui.FindHelpUI
@@ -37,11 +42,13 @@ import foundation.scrollables.ScrollEdgeShadowHeight
 import shareCare.ui.ShareCareUI
 import view.consts.Paddings
 
-@OptIn(ExperimentalDecomposeApi::class)
+@OptIn(ExperimentalDecomposeApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun MainFlowUI(
     component: MainFlowComponent
 ) {
+    var currentContentType: ContentType? by remember { mutableStateOf(null) }
+
     val stack by component.stack.subscribeAsState()
     val currentChild = stack.active.instance
 
@@ -69,43 +76,55 @@ fun MainFlowUI(
 
     Scaffold(
         bottomBar = {
-                val bottomBarPadding by animateDpAsState(with(bottomSafePadding - imePadding) {
-                    if (this > Paddings.semiLarge) this + Paddings.semiSmall
-                    else Paddings.semiLarge // if there is no safeContentBottomPadding
-                }, animationSpec = spring(stiffness = Spring.StiffnessVeryLow))
+            val bottomBarPadding by animateDpAsState(with(bottomSafePadding - imePadding) {
+                if (this > Paddings.semiLarge) this + Paddings.semiSmall
+                else Paddings.semiLarge // if there is no safeContentBottomPadding
+            }, animationSpec = spring(stiffness = Spring.StiffnessVeryLow))
 
-                MainBottomBar(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            bottom =
-                                bottomBarPadding
-                        ),
-                    child = currentChild,
-                    hazeState = hazeState,
-                    lazyListStateFindHelp = lazyListStateFindHelp,
-                    lazyListStateShareCare = lazyListStateShareCare,
-                    navigateTo = { cfg -> component.navigateTo(cfg) }
-                )
-
+            MainBottomBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        bottom =
+                            bottomBarPadding
+                    ),
+                child = currentChild,
+                hazeState = hazeState,
+                lazyListStateFindHelp = lazyListStateFindHelp,
+                lazyListStateShareCare = lazyListStateShareCare,
+                navigateTo = { cfg -> component.navigateTo(cfg) }
+            )
         },
         topBar = {
             MainTopBar(
                 modifier = Modifier.fillMaxWidth().padding(top = topSafePadding)
                     .padding(horizontal = Paddings.medium),
-                hazeState = hazeState
+                hazeState = hazeState,
+                currentContentType = currentContentType
             )
         }
     ) { paddings ->
-        val topBarHeight = paddings.calculateTopPadding() - topSafePadding
+        val scaffoldTopPadding = paddings.calculateTopPadding()
+
+        val topBarHeight = scaffoldTopPadding - topSafePadding
+
+        val topBarBottomPx = with(LocalDensity.current) {
+            (scaffoldTopPadding).roundToPx()
+        }
+
+        // Получаем первый элемент контента, который находится ниже topBar
+        currentContentType = currentLazyListState.layoutInfo.visibleItemsInfo
+            .asSequence()
+            .firstOrNull { item ->
+                item.offset + item.size > topBarBottomPx
+            }?.contentType as? ContentType
 
 
         // просто добавляет отступ в скролл, без тени
         val bottomPadding =
             bottomSafePadding + paddings.calculateBottomPadding() + Paddings.endListPadding
 
-        val topPadding = paddings.calculateTopPadding() + Paddings.medium
-
+        val topPadding = scaffoldTopPadding + Paddings.medium
 
         Box(modifier = Modifier.fillMaxSize()) {
             Children(
@@ -122,7 +141,8 @@ fun MainFlowUI(
                         topPadding = topPadding,
                         bottomPadding = bottomPadding,
                         component = child.findHelpComponent,
-                        lazyListState = lazyListStateFindHelp
+                        lazyListState = lazyListStateFindHelp,
+                        currentContentType = currentContentType
                     )
 
                     is Child.ShareCareChild -> ShareCareUI(
@@ -131,6 +151,7 @@ fun MainFlowUI(
                         component = child.shareCareComponent,
                         lazyListState = lazyListStateShareCare
                     )
+
                 }
             }
 
@@ -153,7 +174,6 @@ fun MainFlowUI(
 
             Text(stack.items.size.toString(), modifier = Modifier.padding(Paddings.big))
         }
-
-
     }
+
 }

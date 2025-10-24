@@ -62,7 +62,7 @@ fun GlassCard(
 ) {
 
     Surface(
-        modifier = Modifier.clip(shape).then(modifier)
+        modifier = Modifier.clip(shape).then(modifier).clip(shape)
             .hazeEffect(hazeState, HazeMaterials.ultraThin(colorScheme.background)) {
                 this.noiseFactor = 0f
 

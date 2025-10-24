@@ -1,5 +1,6 @@
 package findHelp.ui
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,22 +9,53 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
+import common.ContentType
 import common.MainLazyColumn
+import common.TransitionColumnHeader
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
 import findHelp.components.FindHelpComponent
+import utils.SpacerV
+import view.consts.Paddings
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun FindHelpUI(
+internal fun FindHelpUI(
     topPadding: Dp,
     bottomPadding: Dp,
     lazyListState: LazyListState,
-    component: FindHelpComponent
+    currentContentType: ContentType?,
+    component: FindHelpComponent,
 ) {
+
+    val hazeState = rememberHazeState()
     MainLazyColumn(
         topPadding = topPadding,
         emptyBottomPadding = bottomPadding,
         lazyListState = lazyListState
     ) {
-        items(100, key = { it }) {
+        TransitionColumnHeader(
+            contentType = ContentType.Catalog,
+            currentContentType = currentContentType
+        )
+        items(50, key = { it }, contentType = { ContentType.Catalog }) {
+            Row(
+                Modifier.fillMaxWidth().hazeSource(hazeState),
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                (1..3).forEach { _ ->
+                    Text("FindHelp")
+                }
+            }
+        }
+
+        item(contentType = ContentType.Catalog) { SpacerV(Paddings.medium) }
+
+        TransitionColumnHeader(
+            contentType = ContentType.Catalogx,
+            currentContentType = currentContentType
+        )
+        items(50, key = { (it+1) * 100  }, contentType = { ContentType.Catalogx }) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
                 (1..3).forEach { _ ->
                     Text("FindHelp")

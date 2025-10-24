@@ -1,5 +1,7 @@
 package compose
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
@@ -17,26 +19,29 @@ import flow.ui.MainFlowUI
 import ui.HelloUI
 import view.theme.AppTheme
 
-@OptIn(ExperimentalHazeMaterialsApi::class)
+@OptIn(ExperimentalHazeMaterialsApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun RootUI(
     component: RootComponent
 ) {
     val stack by component.stack.subscribeAsState()
+    SharedTransitionLayout {
 
-    AppTheme {
+        AppTheme {
 
-        CompositionLocalProvider(
-            LocalHazeStyle provides HazeMaterials.regular(colorScheme.background)
-        ) {
+            CompositionLocalProvider(
+                LocalHazeStyle provides HazeMaterials.regular(colorScheme.background)
+            ) {
 
-            Surface(Modifier.fillMaxSize()) {
-                Children(
-                    stack = stack
-                ) {
-                    when (val child = it.instance) {
-                        is RootComponent.Child.HelloChild -> HelloUI(child.helloComponent)
-                        is RootComponent.Child.MainFlowChild -> MainFlowUI(child.mainFlowComponent)
+                Surface(Modifier.fillMaxSize()) {
+                    Children(
+                        stack = stack
+                    ) {
+
+                        when (val child = it.instance) {
+                            is RootComponent.Child.HelloChild -> HelloUI(child.helloComponent)
+                            is RootComponent.Child.MainFlowChild -> MainFlowUI(child.mainFlowComponent)
+                        }
                     }
                 }
             }
