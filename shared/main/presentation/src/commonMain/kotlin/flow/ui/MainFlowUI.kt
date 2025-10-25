@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,7 +39,6 @@ import foundation.scrollables.BottomScrollEdgeFade
 import foundation.scrollables.ScrollEdgeFade
 import foundation.scrollables.ScrollEdgeProgressiveHeight
 import foundation.scrollables.ScrollEdgeShadowHeight
-import shareCare.ui.ShareCareUI
 import view.consts.Paddings
 
 @OptIn(ExperimentalDecomposeApi::class, ExperimentalSharedTransitionApi::class)
@@ -68,11 +67,11 @@ fun MainFlowUI(
 
 
     // храню их здесь, а не в в ui-компонентах, т.к. fade идёт с MainFlow (чтоб не мерцало)
-    val lazyListStateFindHelp = rememberLazyListState()
-    val lazyListStateShareCare = rememberLazyListState()
+    val lazyGridStateFindHelp = rememberLazyGridState()
+    val lazyGridStateShareCare = rememberLazyGridState()
 
-    val currentLazyListState =
-        if (currentChild is Child.FindHelpChild) lazyListStateFindHelp else lazyListStateShareCare
+    val currentLazyGridState =
+        if (currentChild is Child.FindHelpChild) lazyGridStateFindHelp else lazyGridStateShareCare
 
     Scaffold(
         bottomBar = {
@@ -90,8 +89,8 @@ fun MainFlowUI(
                     ),
                 child = currentChild,
                 hazeState = hazeState,
-                lazyListStateFindHelp = lazyListStateFindHelp,
-                lazyListStateShareCare = lazyListStateShareCare,
+                lazyGridStateFindHelp = lazyGridStateFindHelp,
+                lazyGridStateShareCare = lazyGridStateShareCare,
                 navigateTo = { cfg -> component.navigateTo(cfg) }
             )
         },
@@ -107,15 +106,21 @@ fun MainFlowUI(
 
         val topBarHeight = scaffoldTopPadding - topSafePadding
 
-        val topBarBottomPx = with(LocalDensity.current) {
+        val topBarBottomPx = with(density) {
             (scaffoldTopPadding).roundToPx()
         }
 
+        val topPadding = scaffoldTopPadding + Paddings.medium
+
+        val topPaddingPx = with(density) {
+            (topPadding).roundToPx()
+        }
+
         // Получаем первый элемент контента, который находится ниже topBar
-        currentContentType = currentLazyListState.layoutInfo.visibleItemsInfo
+        currentContentType = currentLazyGridState.layoutInfo.visibleItemsInfo
             .asSequence()
             .firstOrNull { item ->
-                item.offset + item.size > topBarBottomPx
+                (item.offset.y + item.size.height) > topBarBottomPx
             }?.contentType as? ContentType
 
 
@@ -123,7 +128,7 @@ fun MainFlowUI(
         val bottomPadding =
             bottomSafePadding + paddings.calculateBottomPadding() + Paddings.endListPadding
 
-        val topPadding = scaffoldTopPadding + Paddings.medium
+
 
         Box(modifier = Modifier.fillMaxSize()) {
             Children(
@@ -140,16 +145,11 @@ fun MainFlowUI(
                         topPadding = topPadding,
                         bottomPadding = bottomPadding,
                         component = child.findHelpComponent,
-                        lazyListState = lazyListStateFindHelp,
+                        lazyGridState = lazyGridStateFindHelp,
                         currentContentType = currentContentType
                     )
 
-                    is Child.ShareCareChild -> ShareCareUI(
-                        topPadding = topPadding,
-                        bottomPadding = bottomPadding,
-                        component = child.shareCareComponent,
-                        lazyListState = lazyListStateShareCare
-                    )
+                    is Child.ShareCareChild -> TODO()
 
                 }
             }
@@ -161,14 +161,14 @@ fun MainFlowUI(
                 solidHeight = topSafePadding / 2,
                 shadowHeight = ScrollEdgeShadowHeight.big + topBarHeight,
                 progressiveHeight = ScrollEdgeProgressiveHeight.big + topBarHeight,
-                isVisible = currentLazyListState.canScrollBackward,
+                isVisible = currentLazyGridState.canScrollBackward,
                 hazeState = hazeState
             )
 
             BottomScrollEdgeFade(
                 modifier = Modifier.fillMaxWidth().align(Alignment.BottomStart),
                 solidHeight = bottomShadowHeight,
-                isVisible = currentLazyListState.canScrollForward
+                isVisible = currentLazyGridState.canScrollForward
             )
 
             Text(stack.items.size.toString(), modifier = Modifier.padding(Paddings.big))

@@ -1,6 +1,6 @@
 package flow.ui.bottomBar
 
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Interests
 import androidx.compose.material.icons.rounded.VolunteerActivism
@@ -24,8 +24,8 @@ internal fun MainBottomBar(
     child: Child,
     hazeState: HazeState,
     navigateTo: (Config) -> Unit,
-    lazyListStateFindHelp: LazyListState,
-    lazyListStateShareCare: LazyListState
+    lazyGridStateFindHelp: LazyGridState,
+    lazyGridStateShareCare: LazyGridState
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -43,7 +43,7 @@ internal fun MainBottomBar(
                 hazeState = hazeState,
                 onLongClick = {
                     coroutineScope.launch {
-                        lazyListStateFindHelp.animateScrollToItem(0)
+                        lazyGridStateFindHelp.animateScrollToItem(0)
                     }
                 }
             ) {
@@ -64,7 +64,7 @@ internal fun MainBottomBar(
                 hazeState = hazeState,
                 onLongClick = {
                     coroutineScope.launch {
-                        lazyListStateShareCare.animateScrollToItem(0)
+                        lazyGridStateShareCare.animateScrollToItem(0)
                     }
                 }
             ) {

@@ -31,7 +31,7 @@ internal fun TopTitle(
         isTitle,
         modifier = modifier,
         enter = fadeIn(tween(600)) + expandHorizontally(),
-        exit = fadeOut(tween(600)) + shrinkHorizontally(),
+        exit = fadeOut(tween(500)) + shrinkHorizontally(),
     ) {
         Row {
             SpacerH(Paddings.medium)

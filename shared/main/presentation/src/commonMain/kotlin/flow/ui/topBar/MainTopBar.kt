@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
@@ -24,7 +25,6 @@ import androidx.compose.ui.unit.times
 import common.ContentType
 import dev.chrisbanes.haze.HazeState
 import foundation.layouts.RightImportantLayout
-import foundation.scrollables.ScrollEdgeFadeHorizontal
 import utils.SpacerH
 import view.consts.Paddings
 
@@ -50,6 +50,7 @@ internal fun MainTopBar(
         if (isTitle) Paddings.medium else Paddings.small,
         animationSpec = tween(400)
     )
+
 
     RightImportantLayout(
         modifier = modifier.then(
@@ -84,14 +85,6 @@ internal fun MainTopBar(
                         hazeState = hazeState, isTitle = isTitle
                     )
                 }
-                ScrollEdgeFadeHorizontal(
-                    modifier = Modifier,
-                    solidWidth = Paddings.semiSmall,
-                    isVisible = true,
-                    shadowWidth = 40.dp,
-                    hazeState = null,
-                    isReversed = false
-                )
             }
 
         }, rightSide = {
