@@ -12,8 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
-import dev.chrisbanes.haze.hazeSource
-import dev.chrisbanes.haze.rememberHazeState
 import utils.SpacerV
 
 @Composable
@@ -27,8 +25,6 @@ fun VerticalScrollableBox(
     isBottomPadding: Boolean = true,
     content: @Composable BoxScope.() -> Unit,
 ) {
-
-    val hazeState = rememberHazeState()
     val density = LocalDensity.current
 
     val topInsetsHeightDp = with(density) { windowInsets.getTop(this).toDp() }
@@ -44,10 +40,6 @@ fun VerticalScrollableBox(
         Column(
             Modifier
                 .then(scrollModifier)
-                .then(
-                    if (isScrollable) Modifier.hazeSource(hazeState)
-                    else Modifier
-                )
 
         ) {
             SpacerV(topInsetsHeightDp)
@@ -66,7 +58,6 @@ fun VerticalScrollableBox(
                 modifier = Modifier.fillMaxWidth().align(Alignment.TopStart),
                 solidHeight = topInsetsHeightDp / 2,
                 isVisible = scrollState.canScrollBackward,
-                hazeState = hazeState
             )
 
             BottomScrollEdgeFade(

@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridScope
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.text.TextAutoSize
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import view.consts.Paddings
 
@@ -54,10 +56,11 @@ internal fun TransitionHeader(
                 text = text,
                 modifier =
                     modifier,
-                style = MaterialTheme.typography.headlineMediumEmphasized,
                 overflow = TextOverflow.Ellipsis,
-                maxLines = 1
-
+                maxLines = 1,
+                fontWeight = FontWeight.Medium,
+                style = typography.headlineLargeEmphasized,
+                autoSize = TextAutoSize.StepBased(maxFontSize = typography.headlineLargeEmphasized.fontSize)
             )
         }
     }

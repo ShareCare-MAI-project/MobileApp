@@ -3,7 +3,6 @@ package findHelp.ui
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.Text
@@ -37,8 +36,8 @@ internal fun FindHelpUI(
         items(50, key = { it }, contentType = { ContentType.Catalog }) {
             ItemCard(
                 modifier = Modifier
-                    .aspectRatio(1f)
-                    .fillMaxWidth(), title = "se${it}"
+//                    .aspectRatio(0.7f)
+                    .fillMaxWidth(), title = "Чёрная футболка #${it}"
             )
         }
 

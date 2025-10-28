@@ -4,6 +4,7 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,11 +38,13 @@ import flow.ui.bottomBar.MainBottomBar
 import flow.ui.topBar.MainTopBar
 import foundation.scrollables.BottomScrollEdgeFade
 import foundation.scrollables.ScrollEdgeFade
-import foundation.scrollables.ScrollEdgeProgressiveHeight
 import foundation.scrollables.ScrollEdgeShadowHeight
 import view.consts.Paddings
 
-@OptIn(ExperimentalDecomposeApi::class, ExperimentalSharedTransitionApi::class)
+@OptIn(
+    ExperimentalDecomposeApi::class, ExperimentalSharedTransitionApi::class,
+    ExperimentalFoundationApi::class
+)
 @Composable
 fun MainFlowUI(
     component: MainFlowComponent
@@ -61,7 +64,7 @@ fun MainFlowUI(
     val topSafePadding = with(density) { safeContentInsets.getTop(density).toDp() }
     val bottomSafePadding = with(density) { safeContentInsets.getBottom(density).toDp() }
 
-    val bottomShadowHeight = bottomSafePadding + Paddings.big
+    val bottomShadowHeight = bottomSafePadding
 
     val imePadding = with(density) { imeInsets.getBottom(density).toDp() }
 
@@ -130,10 +133,10 @@ fun MainFlowUI(
 
 
 
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxSize().hazeSource(hazeState, key = "MainFlow")) {
             Children(
                 stack = stack,
-                modifier = Modifier.fillMaxSize().hazeSource(hazeState, key = "MainFlow"),
+                modifier = Modifier.fillMaxSize(),
                 animation = predictiveBackAnimation(
                     backHandler = component.backHandler,
                     fallbackAnimation = stackAnimation(),
@@ -156,19 +159,18 @@ fun MainFlowUI(
 
             // overlay fadings
             ScrollEdgeFade(
-                modifier = Modifier.hazeSource(hazeState, zIndex = 1f).fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
                     .align(Alignment.TopStart),
                 solidHeight = topSafePadding / 2,
                 shadowHeight = ScrollEdgeShadowHeight.big + topBarHeight,
-                progressiveHeight = ScrollEdgeProgressiveHeight.big + topBarHeight,
-                isVisible = currentLazyGridState.canScrollBackward,
-                hazeState = hazeState
+                isVisible = currentLazyGridState.canScrollBackward
             )
 
             BottomScrollEdgeFade(
                 modifier = Modifier.fillMaxWidth().align(Alignment.BottomStart),
-                solidHeight = bottomShadowHeight,
-                isVisible = currentLazyGridState.canScrollForward
+                isVisible = currentLazyGridState.canScrollForward,
+                solidHeight = bottomSafePadding / 2,
+                shadowHeight = ScrollEdgeShadowHeight.big,
             )
 
             Text(stack.items.size.toString(), modifier = Modifier.padding(Paddings.big))
