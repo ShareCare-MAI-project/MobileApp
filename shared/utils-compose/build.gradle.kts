@@ -11,8 +11,9 @@ kotlin {
 //                api(project(Modules.utils))
 
 //                implementation(libs.kotlinx.coroutines)
-//                implementation(libs.bundles.coil)
+                implementation(libs.bundles.coil)
                 implementation(compose.components.resources)
+
             }
 
         }

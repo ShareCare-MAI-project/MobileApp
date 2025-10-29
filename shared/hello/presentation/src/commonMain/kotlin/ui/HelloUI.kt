@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.TextAutoSize
@@ -51,7 +51,7 @@ fun HelloUI(
     val num = component.num.collectAsState()
 
 
-    val windowInsets = WindowInsets.safeDrawing
+    val windowInsets = WindowInsets.safeContent
     val density = LocalDensity.current
 
     val logoMaxSize = remember { 400.dp }

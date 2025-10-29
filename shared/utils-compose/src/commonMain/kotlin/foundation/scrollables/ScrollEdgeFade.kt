@@ -1,35 +1,21 @@
 package foundation.scrollables
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
-import dev.chrisbanes.haze.ExperimentalHazeApi
-import dev.chrisbanes.haze.HazeInputScale
-import dev.chrisbanes.haze.HazeProgressive
-import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.hazeEffect
-import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
-import dev.chrisbanes.haze.materials.HazeMaterials
-
-object ScrollEdgeProgressiveHeight {
-    val big = 90.dp
-}
 
 object ScrollEdgeShadowHeight {
     val small = 80.dp
@@ -40,74 +26,56 @@ object ScrollEdgeShadowHeight {
 fun BottomScrollEdgeFade(
     modifier: Modifier = Modifier,
     solidHeight: Dp = 0.dp,
-    isVisible: Boolean = true,
+    shadowHeight: Dp = ScrollEdgeShadowHeight.small,
+    isVisible: Boolean = true
 ) = ScrollEdgeFade(
     modifier = modifier,
     solidHeight = solidHeight,
     isVisible = isVisible,
-    shadowHeight = ScrollEdgeShadowHeight.small,
-    hazeState = null,
+    shadowHeight = shadowHeight,
     isReversed = true
 )
 
-@OptIn(ExperimentalHazeApi::class, ExperimentalHazeMaterialsApi::class)
 @Composable
 fun ScrollEdgeFade(
     modifier: Modifier = Modifier,
     solidHeight: Dp = 0.dp,
-    progressiveHeight: Dp = ScrollEdgeProgressiveHeight.big,
     shadowHeight: Dp = ScrollEdgeShadowHeight.big,
     isVisible: Boolean = true,
-    isReversed: Boolean = false,
-    hazeState: HazeState?,
+    isReversed: Boolean = false
 ) {
     val back = colorScheme.background
     val density = LocalDensity.current
-
-    // More compact
-    val (solidHeightPx, progressiveHeightPx, shadowHeightPx) = with(density) {
-        listOf(solidHeight.toPx(), progressiveHeight.toPx(), shadowHeight.toPx())
+    val (solidHeightPx, shadowHeightPx) = with(density) {
+        listOf(solidHeight.toPx(), shadowHeight.toPx())
     }
-
 
     AnimatedVisibility(
         modifier = modifier, visible = isVisible,
         enter = fadeIn(tween(600)),
         exit = fadeOut(tween(800))
     ) {
-        Column(Modifier) {
-            Box(
-                Modifier.fillMaxWidth().height(solidHeight + max(shadowHeight, progressiveHeight))
-                    .then(
-                        if (hazeState != null) {
-                            Modifier.hazeEffect(
-                                hazeState, HazeMaterials.thick(colorScheme.background)
-                            ) {
-                                this.noiseFactor = 0f
-                                this.inputScale = HazeInputScale.Fixed(1f)
+        Canvas(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(solidHeight + shadowHeight)
+        ) {
+            val totalHeight = size.height
 
-                                progressive = HazeProgressive.verticalGradient(
-                                    easing = EaseOut,
-                                    startY = 0f,
-                                    startIntensity = if (!isReversed) 0.8f else 0f,
-                                    endY = solidHeightPx + progressiveHeightPx,
-                                    endIntensity = if (!isReversed) 0f else 0.8f
-                                )
-                            }
-                        } else Modifier
-                    )
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = with(
-                                listOf(
-                                    Transparent,
-                                    back.copy(alpha = .9f),
-                                )
-                            ) { if (!isReversed) this.asReversed() else this },
-                            startY = 0f,
-                            endY = solidHeightPx + shadowHeightPx
+            drawRect(
+                brush = Brush.verticalGradient(
+                    startY = if (isReversed) totalHeight else 0f,
+                    endY = if (isReversed) 0f else totalHeight,
+                    colorStops =
+                        arrayOf(
+                            0f to back,
+                            (solidHeightPx / totalHeight) to back.copy(.9f),
+                            ((solidHeightPx + shadowHeightPx / 2) / totalHeight) to back.copy(.5f),
+                            1f to Transparent
                         )
-                    )
+                ),
+                topLeft = Offset.Zero,
+                size = size
             )
         }
     }

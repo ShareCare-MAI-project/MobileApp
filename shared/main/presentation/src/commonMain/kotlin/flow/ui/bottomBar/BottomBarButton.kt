@@ -3,10 +3,10 @@ package flow.ui.bottomBar
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,6 +25,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import dev.chrisbanes.haze.HazeState
 import foundation.shapeByInteraction
+import utils.defaultMarquee
 import view.consts.Paddings
 import widgets.glass.GlassCard
 import widgets.glass.GlassCardFunctions
@@ -45,28 +46,34 @@ fun BottomBarButton(
 
     val colorAnimationSpec = spring<Color>(stiffness = Spring.StiffnessMedium)
 
+    val isDarkTheme = isSystemInDarkTheme()
+
     val color by animateColorAsState(
-        if (isPressed) colorScheme.tertiaryContainer
-        else if (isSelected) colorScheme.primaryContainer
-        else Color.Transparent,
+        (if (isPressed) colorScheme.tertiaryContainer
+        else if (isSelected) colorScheme.secondaryContainer
+        else Color.Transparent).copy(alpha = if (isDarkTheme) .7f else .45f),
         animationSpec = colorAnimationSpec
     )
 
     val hazeTint by animateColorAsState(
         GlassCardFunctions.getHazeTintColor(
             tint = if (isSelected || isPressed) color else null,
-            colorScheme.primaryContainer
+            containerColor = colorScheme.primaryContainer,
+            containerColorAlpha = .2f
         ),
         animationSpec = colorAnimationSpec
     )
     val contentColor by animateColorAsState(
-        if (isSelected || isPressed) Color.White else colorScheme.onBackground,
+        if (isPressed) Color.White
+        else colorScheme.onBackground,
         animationSpec = colorAnimationSpec
     )
     val borderColor by animateColorAsState(
         GlassCardFunctions.getBorderColor(
             tint = if (isSelected || isPressed) color else null,
-            colorScheme.primaryContainer
+            tintColorAlpha = .4f,
+            containerColor = colorScheme.primaryContainer,
+            containerColorAlpha = .1f
         ),
         animationSpec = colorAnimationSpec
     )
@@ -102,7 +109,7 @@ fun BottomBarButton(
                 text,
                 textAlign = TextAlign.Center,
                 style = typography.labelMedium,
-                modifier = Modifier.basicMarquee(iterations = Int.MAX_VALUE)
+                modifier = Modifier.defaultMarquee()
             )
         }
     }

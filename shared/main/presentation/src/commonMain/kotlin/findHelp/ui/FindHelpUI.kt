@@ -1,29 +1,51 @@
 package findHelp.ui
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
-import common.MainLazyColumn
+import common.ContentType
+import common.ItemCard
+import common.MainLazyGrid
+import common.TransitionColumnHeader
 import findHelp.components.FindHelpComponent
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun FindHelpUI(
+internal fun FindHelpUI(
     topPadding: Dp,
     bottomPadding: Dp,
-    lazyListState: LazyListState,
-    component: FindHelpComponent
+    lazyGridState: LazyGridState,
+    currentContentType: ContentType?,
+    component: FindHelpComponent,
 ) {
-    MainLazyColumn(
+    MainLazyGrid(
         topPadding = topPadding,
         emptyBottomPadding = bottomPadding,
-        lazyListState = lazyListState
+        lazyGridState = lazyGridState
     ) {
-        items(100, key = { it }) {
+        TransitionColumnHeader(
+            contentType = ContentType.Catalog,
+            currentContentType = currentContentType
+        )
+        items(50, key = { it }, contentType = { ContentType.Catalog }) {
+            ItemCard(
+                modifier = Modifier
+//                    .aspectRatio(0.7f)
+                    .fillMaxWidth(), title = "Чёрная футболка #${it}"
+            )
+        }
+
+        TransitionColumnHeader(
+            contentType = ContentType.MyRequests,
+            currentContentType = currentContentType
+        )
+        items(50, key = { (it + 1) * 100 }, contentType = { ContentType.MyRequests }) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
                 (1..3).forEach { _ ->
                     Text("FindHelp")

@@ -38,11 +38,11 @@ object GlassCardFunctions {
     }
 
 
-    fun getHazeTintColor(tint: Color?, primaryContainerColor: Color): Color {
-        return tint ?: primaryContainerColor.copy(.2f)
+    fun getHazeTintColor(tint: Color?, containerColor: Color, containerColorAlpha: Float = .4f): Color {
+        return tint ?: containerColor.copy(containerColorAlpha)
     }
-    fun getBorderColor(tint: Color?, primaryContainerColor: Color): Color {
-        return tint?.copy(alpha = .6f) ?: primaryContainerColor.copy(alpha = .2f)
+    fun getBorderColor(tint: Color?, tintColorAlpha: Float = .6f, containerColor: Color, containerColorAlpha: Float = .4f): Color {
+        return tint?.copy(alpha = tintColorAlpha) ?: containerColor.copy(alpha = containerColorAlpha)
     }
 }
 
@@ -53,28 +53,30 @@ fun GlassCard(
     hazeState: HazeState,
     shape: Shape = shapes.extraLarge,
     tint: Color? = null,
-    hazeTint: Color = GlassCardFunctions.getHazeTintColor(tint, colorScheme.primaryContainer),
-    borderColor: Color = GlassCardFunctions.getBorderColor(tint, colorScheme.primaryContainer),
+    hazeTint: Color = GlassCardFunctions.getHazeTintColor(tint, containerColor = colorScheme.primaryContainer),
+    borderColor: Color = GlassCardFunctions.getBorderColor(tint, containerColor = colorScheme.primaryContainer),
     contentColor: Color = GlassCardFunctions.getContentColor(tint),
     contentPadding: PaddingValues = PaddingValues(Paddings.medium),
     isReversedProgressive: Boolean = false,
     content: @Composable BoxScope.() -> Unit
 ) {
 
-    Surface(
-        modifier = Modifier.clip(shape).then(modifier)
-            .hazeEffect(hazeState, HazeMaterials.ultraThin(colorScheme.background)) {
-                this.noiseFactor = 0f
 
+    Surface(
+        modifier = Modifier.clip(shape).then(modifier).clip(shape)
+            .hazeEffect(hazeState, HazeMaterials.ultraThick(colorScheme.background)) {
+                this.noiseFactor = 0f
                 this.tints =
                         listOf(HazeTint(hazeTint))
 
-                this.inputScale = HazeInputScale.Fixed(.85f)
+                this.inputScale = HazeInputScale.Fixed(.4f)
+                // TODO: what about to remove progressive?
                 this.progressive =
                     HazeProgressive.verticalGradient(
-                        startIntensity = if (isReversedProgressive) .6f else .3f,
-                        endIntensity = if (isReversedProgressive) .3f else .6f
+                        startIntensity = if (isReversedProgressive) .8f else .5f,
+                        endIntensity = if (isReversedProgressive) .5f else .8f
                     )
+
             },
         shape = shape,
         color = Color.Transparent,
@@ -85,6 +87,7 @@ fun GlassCard(
         )
     ) {
         Box(Modifier.padding(contentPadding)) {
+
             content()
         }
     }
