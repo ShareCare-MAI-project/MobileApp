@@ -56,7 +56,8 @@ fun VerticalScrollableBox(
         if (isScrollable) {
             ScrollEdgeFade(
                 modifier = Modifier.fillMaxWidth().align(Alignment.TopStart),
-                solidHeight = topInsetsHeightDp / 2,
+                solidHeight = topInsetsHeightDp/2,
+                shadowHeight = topInsetsHeightDp,
                 isVisible = scrollState.canScrollBackward,
             )
 

@@ -64,8 +64,6 @@ fun MainFlowUI(
     val topSafePadding = with(density) { safeContentInsets.getTop(density).toDp() }
     val bottomSafePadding = with(density) { safeContentInsets.getBottom(density).toDp() }
 
-    val bottomShadowHeight = bottomSafePadding
-
     val imePadding = with(density) { imeInsets.getBottom(density).toDp() }
 
 
@@ -106,17 +104,13 @@ fun MainFlowUI(
         }
     ) { paddings ->
         val scaffoldTopPadding = paddings.calculateTopPadding()
+        val scaffoldBottomPadding = paddings.calculateTopPadding()
 
         val topBarHeight = scaffoldTopPadding - topSafePadding
+        val bottomBarHeight = scaffoldBottomPadding - topSafePadding
 
         val topBarBottomPx = with(density) {
             (scaffoldTopPadding).roundToPx()
-        }
-
-        val topPadding = scaffoldTopPadding + Paddings.medium
-
-        val topPaddingPx = with(density) {
-            (topPadding).roundToPx()
         }
 
         // Получаем первый элемент контента, который находится ниже topBar
@@ -127,9 +121,10 @@ fun MainFlowUI(
             }?.contentType as? ContentType
 
 
-        // просто добавляет отступ в скролл, без тени
-        val bottomPadding =
-            bottomSafePadding + paddings.calculateBottomPadding() + Paddings.endListPadding
+        // просто добавляютт отступ в скролл, без тени
+        val topSpacePadding = scaffoldTopPadding + Paddings.medium
+        val bottomSpacePadding =
+            bottomSafePadding + scaffoldBottomPadding + Paddings.endListPadding
 
 
 
@@ -145,8 +140,8 @@ fun MainFlowUI(
             ) {
                 when (val child = it.instance) {
                     is Child.FindHelpChild -> FindHelpUI(
-                        topPadding = topPadding,
-                        bottomPadding = bottomPadding,
+                        topPadding = topSpacePadding,
+                        bottomPadding = bottomSpacePadding,
                         component = child.findHelpComponent,
                         lazyGridState = lazyGridStateFindHelp,
                         currentContentType = currentContentType
@@ -161,7 +156,7 @@ fun MainFlowUI(
             ScrollEdgeFade(
                 modifier = Modifier.fillMaxWidth()
                     .align(Alignment.TopStart),
-                solidHeight = topSafePadding / 2,
+                solidHeight = topSafePadding,
                 shadowHeight = ScrollEdgeShadowHeight.big + topBarHeight,
                 isVisible = currentLazyGridState.canScrollBackward
             )
@@ -170,7 +165,7 @@ fun MainFlowUI(
                 modifier = Modifier.fillMaxWidth().align(Alignment.BottomStart),
                 isVisible = currentLazyGridState.canScrollForward,
                 solidHeight = bottomSafePadding / 2,
-                shadowHeight = ScrollEdgeShadowHeight.big,
+                shadowHeight = ScrollEdgeShadowHeight.big + bottomBarHeight,
             )
 
             Text(stack.items.size.toString(), modifier = Modifier.padding(Paddings.big))

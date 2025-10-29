@@ -4,21 +4,18 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import dev.chrisbanes.haze.ExperimentalHazeApi
-import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 
 object ScrollEdgeShadowHeight {
     val small = 80.dp
@@ -39,7 +36,6 @@ fun BottomScrollEdgeFade(
     isReversed = true
 )
 
-@OptIn(ExperimentalHazeApi::class, ExperimentalHazeMaterialsApi::class)
 @Composable
 fun ScrollEdgeFade(
     modifier: Modifier = Modifier,
@@ -50,35 +46,36 @@ fun ScrollEdgeFade(
 ) {
     val back = colorScheme.background
     val density = LocalDensity.current
-
-    // More compact
     val (solidHeightPx, shadowHeightPx) = with(density) {
         listOf(solidHeight.toPx(), shadowHeight.toPx())
     }
-
-
-    // TODO: Calibrate this shit
 
     AnimatedVisibility(
         modifier = modifier, visible = isVisible,
         enter = fadeIn(tween(600)),
         exit = fadeOut(tween(800))
     ) {
-        Column(Modifier) {
-            Box(
-                Modifier.fillMaxWidth().height(solidHeight + shadowHeight)
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = with(
-                                listOf(
-                                    Transparent,
-                                    back.copy(alpha = 1f),
-                                )
-                            ) { if (!isReversed) this.asReversed() else this },
-                            startY = solidHeightPx,
-                            endY = solidHeightPx + shadowHeightPx
+        Canvas(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(solidHeight + shadowHeight)
+        ) {
+            val totalHeight = size.height
+
+            drawRect(
+                brush = Brush.verticalGradient(
+                    startY = if (isReversed) totalHeight else 0f,
+                    endY = if (isReversed) 0f else totalHeight,
+                    colorStops =
+                        arrayOf(
+                            0f to back,
+                            (solidHeightPx / totalHeight) to back.copy(.9f),
+                            ((solidHeightPx + shadowHeightPx / 2) / totalHeight) to back.copy(.5f),
+                            1f to Transparent
                         )
-                    )
+                ),
+                topLeft = Offset.Zero,
+                size = size
             )
         }
     }
