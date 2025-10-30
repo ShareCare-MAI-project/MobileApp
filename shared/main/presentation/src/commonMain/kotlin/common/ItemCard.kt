@@ -1,7 +1,9 @@
 package common
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,8 +44,9 @@ internal fun ItemCard(
         shape = cardShape
     ) {
         Column(
-            modifier = Modifier.padding(containerPadding),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxSize().padding(containerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             AsyncImage(
                 path = RImages.LOGO,
@@ -54,14 +57,18 @@ internal fun ItemCard(
                 contentDescription = null
             )
             SpacerV(Paddings.semiSmall)
+
+
+
             Text(
                 title,
                 textAlign = TextAlign.Center,
-                maxLines = 3,
+                maxLines = 1,
                 style = typography.bodyMediumEmphasized,
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.Medium
             )
+
             Text(
                 "Москва, метро Славянский бульвар",
                 maxLines = 1,
