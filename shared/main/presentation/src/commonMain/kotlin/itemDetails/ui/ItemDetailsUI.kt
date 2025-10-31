@@ -10,13 +10,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -41,6 +38,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.cardTitle
 import dev.chrisbanes.haze.HazeProgressive
@@ -63,7 +61,8 @@ import view.consts.Sizes
 @Composable
 fun ItemDetailsUI(
     component: ItemDetailsComponent,
-    hazeState: HazeState
+    hazeState: HazeState,
+    topPadding: Dp
 ) {
 //    Modifier.sharedElement()
 
@@ -71,8 +70,6 @@ fun ItemDetailsUI(
 
     val isDarkTheme = isSystemInDarkTheme()
 
-    val windowInsetsPaddings = WindowInsets.safeContent.asPaddingValues()
-    val topPadding = windowInsetsPaddings.calculateTopPadding()
     val screenHeight = LocalWindowInfo.current.containerDpSize.height - topPadding
 
     Box(
