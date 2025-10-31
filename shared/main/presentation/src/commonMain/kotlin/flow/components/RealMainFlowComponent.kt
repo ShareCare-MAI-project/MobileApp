@@ -51,6 +51,7 @@ class RealMainFlowComponent(
             childFactory = { configuration, context ->
                 RealItemDetailsComponent(context)
             }
+
         )
 
 

@@ -3,6 +3,7 @@ package flow.ui
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
@@ -23,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalDensity
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
@@ -73,7 +75,11 @@ fun MainFlowUI(
 
     val detailsSlot by component.detailsSlot.subscribeAsState()
 
+    val details = detailsSlot.child?.instance
 
+    val animatedAlpha by animateFloatAsState(if (details != null) .4f else 1f)
+
+    val outHazeState = rememberHazeState()
 
     LaunchedEffect(Unit) {
         component.detailsNav.activate(MainFlowComponent.DetailsConfig())
@@ -114,7 +120,8 @@ fun MainFlowUI(
                 hazeState = hazeState,
                 currentContentType = currentContentType
             )
-        }
+        },
+        modifier = Modifier.hazeSource(outHazeState).alpha(animatedAlpha) // TODO: test perf
     ) { paddings ->
         val scaffoldTopPadding = paddings.calculateTopPadding()
         val scaffoldBottomPadding = paddings.calculateTopPadding()
@@ -184,8 +191,8 @@ fun MainFlowUI(
         }
     }
 
-    detailsSlot.child?.instance?.also {
-        ItemDetailsUI(it)
+    details?.also {
+        ItemDetailsUI(it, hazeState = outHazeState)
     }
 
 }
