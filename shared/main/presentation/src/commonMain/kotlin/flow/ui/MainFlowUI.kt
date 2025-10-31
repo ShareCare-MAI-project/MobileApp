@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +29,7 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.arkivanov.decompose.router.slot.activate
 import common.ContentType
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
@@ -39,6 +41,7 @@ import flow.ui.topBar.MainTopBar
 import foundation.scrollables.BottomScrollEdgeFade
 import foundation.scrollables.ScrollEdgeFade
 import foundation.scrollables.ScrollEdgeShadowHeight
+import itemDetails.ui.ItemDetailsUI
 import view.consts.Paddings
 
 @OptIn(
@@ -52,6 +55,8 @@ fun MainFlowUI(
     var currentContentType: ContentType? by remember { mutableStateOf(null) }
 
     val stack by component.stack.subscribeAsState()
+
+
     val currentChild = stack.active.instance
 
     val density = LocalDensity.current
@@ -66,6 +71,14 @@ fun MainFlowUI(
 
     val imePadding = with(density) { imeInsets.getBottom(density).toDp() }
 
+    val detailsSlot by component.detailsSlot.subscribeAsState()
+
+
+
+    LaunchedEffect(Unit) {
+        component.detailsNav.activate(MainFlowComponent.DetailsConfig())
+//        component.navigateTo(MainFlowComponent.Config.ItemDetails)
+    }
 
     // храню их здесь, а не в в ui-компонентах, т.к. fade идёт с MainFlow (чтоб не мерцало)
     val lazyGridStateFindHelp = rememberLazyGridState()
@@ -148,7 +161,6 @@ fun MainFlowUI(
                     )
 
                     is Child.ShareCareChild -> TODO()
-
                 }
             }
 
@@ -170,6 +182,10 @@ fun MainFlowUI(
 
             Text(stack.items.size.toString(), modifier = Modifier.padding(Paddings.big))
         }
+    }
+
+    detailsSlot.child?.instance?.also {
+        ItemDetailsUI(it)
     }
 
 }
