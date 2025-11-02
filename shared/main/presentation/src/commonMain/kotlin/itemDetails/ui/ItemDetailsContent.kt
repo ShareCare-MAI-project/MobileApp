@@ -23,41 +23,46 @@ import androidx.compose.ui.unit.dp
 import common.ItemImage
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
+import itemDetails.components.ItemDetailsComponent
+import itemDetails.ui.bottomSheet.SheetValue
+import itemDetails.ui.bottomSheet.isExpanded
 import resources.RImages
 import view.consts.Paddings
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.ItemDetailsContent(
+    component: ItemDetailsComponent,
     topPadding: Dp,
     hazeState: HazeState,
-    transition: Transition<Boolean>,
+    transition: Transition<SheetValue>,
     sheet: @Composable BoxScope.() -> Unit
 ) {
     Box(
         modifier = Modifier
-            .pointerInput(Unit) {} // Prohibit Background scrolling
             .fillMaxSize()
-            .padding(top = topPadding)
     ) {
-            transition.AnimatedContent(
-                transitionSpec = { fadeIn(tween(0)).togetherWith(fadeOut(tween(0))) }
-            ) { isDetails ->
-                if (isDetails) {
-                    ItemImage(
-                        path = RImages.LOGO,
-                        modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .padding(horizontal = Paddings.medium)
-                            .fillMaxWidth()
-                            .height(350.dp)
-                            .hazeSource(hazeState),
-                        id = "meow_1",
-                        detailedItemId = "meow_1",
-                        animatedContentScope = this
-                    )
-                }
+        transition.AnimatedContent(
+            transitionSpec = { fadeIn(tween(0)).togetherWith(fadeOut(tween(0))) }
+        ) { sheetValue ->
+            if (sheetValue.isExpanded()) {
+                ItemImage(
+                    path = RImages.LOGO,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+
+                        .pointerInput(Unit) {} // Prohibit Background scrolling
+                        .padding(horizontal = Paddings.medium)
+                        .fillMaxWidth()
+                        .padding(top = topPadding)
+                        .height(350.dp)
+                        .hazeSource(hazeState),
+                    id = component.itemId,
+                    detailedItemId = component.itemId,
+                    animatedContentScope = this
+                )
             }
+        }
         sheet()
     }
 }

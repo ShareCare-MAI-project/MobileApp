@@ -4,11 +4,11 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.Transition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -29,8 +29,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.chrisbanes.haze.hazeSource
-import flow.ui.DetailedItemAnimationInfo
+import flow.ui.DetailedItemAnimationManager
 import foundation.AsyncImage
+import itemDetails.ui.bottomSheet.isExpanded
 import resources.RImages
 import utils.SpacerV
 import view.consts.Paddings
@@ -38,10 +39,10 @@ import view.consts.Paddings
 
 object ItemCardDefaults {
     val containerPadding = Paddings.small
-    val cardShapeDp = 20.dp
+    val cardShapeDp = 25.dp
     val imageShapeDp = cardShapeDp - containerPadding
 
-    val imageShape = RoundedCornerShape(ItemCardDefaults.imageShapeDp)
+    val imageShape = RoundedCornerShape(imageShapeDp)
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -50,14 +51,18 @@ internal fun SharedTransitionScope.ItemCard(
     modifier: Modifier = Modifier,
     title: String,
     id: String,
-    transition: Transition<Boolean>,
-    detailedItemAnimationInfo: DetailedItemAnimationInfo
+    detailedItemAnimationManager: DetailedItemAnimationManager,
+    onClicked: () -> Unit
 ) {
     val cardShape = RoundedCornerShape(ItemCardDefaults.cardShapeDp)
 
 
     Card(
-        modifier = modifier,
+        modifier = modifier
+            .clip(cardShape)
+            .clickable {
+                onClicked()
+            },
         shape = cardShape
     ) {
         Column(
@@ -65,29 +70,29 @@ internal fun SharedTransitionScope.ItemCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            if (detailedItemAnimationInfo.id != id) {
+            if (detailedItemAnimationManager.detailedItemId != id) {
                 ItemImage(
                     path = RImages.LOGO,
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(1.1f),
                     id = id,
-                    detailedItemId = detailedItemAnimationInfo.id,
+                    detailedItemId = detailedItemAnimationManager.detailedItemId,
                     animatedContentScope = null
                 )
             } else {
-                transition.AnimatedContent(
+                detailedItemAnimationManager.transition.AnimatedContent(
                     transitionSpec = { fadeIn(tween(0)).togetherWith(fadeOut(tween(0))) },
                     modifier = Modifier.fillMaxWidth().aspectRatio(1.1f)
-                ) { isDetails ->
-                    if (!isDetails) {
+                ) { sheetValue ->
+                    if (!sheetValue.isExpanded()) {
                         ItemImage(
                             path = RImages.LOGO,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .aspectRatio(1.1f),
                             id = id,
-                            detailedItemId = detailedItemAnimationInfo.id,
+                            detailedItemId = detailedItemAnimationManager.detailedItemId,
                             animatedContentScope = this
                         )
                     }
@@ -125,7 +130,7 @@ internal fun SharedTransitionScope.ItemImage(
     modifier: Modifier,
     id: String,
     animatedContentScope: AnimatedContentScope?,
-    detailedItemId: String?,
+    detailedItemId: String?
 ) {
     val isAnimating = detailedItemId == id
     val hazeState = if (isAnimating) LocalTransitionHazeState.current else null
@@ -142,6 +147,7 @@ internal fun SharedTransitionScope.ItemImage(
                         ),
                         animatedVisibilityScope = animatedContentScope,
                         renderInOverlayDuringTransition = isAnimating
+
                     )
                 else Modifier
             )

@@ -4,6 +4,6 @@ import com.arkivanov.decompose.ComponentContext
 
 class RealItemDetailsComponent(
     componentContext: ComponentContext,
-    override val itemId: String = "meow_1"
+    override val itemId: String
 ) : ItemDetailsComponent, ComponentContext by componentContext {
 }

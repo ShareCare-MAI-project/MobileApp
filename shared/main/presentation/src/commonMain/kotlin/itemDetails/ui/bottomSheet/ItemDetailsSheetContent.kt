@@ -2,7 +2,6 @@ package itemDetails.ui.bottomSheet
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -15,33 +14,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import dev.cardTitle
 import dev.chrisbanes.haze.HazeState
+import flow.ui.DetailedItemAnimationManager
 import view.consts.Paddings
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun BoxScope.ItemDetailsSheetContent(
-    sheetState: AnchoredDraggableState<SheetValue>,
-    backProgress: Float,
     hazeState: HazeState,
     sharedTransitionScope: SharedTransitionScope,
-    sheetHeight: Dp,
-    sheetHeightPx: Float,
-    onDrag: (Float) -> Unit
+    detailedItemAnimationManager: DetailedItemAnimationManager
 ) {
     CustomBottomSheet(
-        anchoredState = sheetState,
-        height = sheetHeight,
-        heightPx = sheetHeightPx,
         hazeState = hazeState,
         modifier = with(sharedTransitionScope) {
             Modifier.align(Alignment.BottomCenter)
                 .renderInSharedTransitionScopeOverlay(1f)
         },
-        backProgress = backProgress,
-        onDrag = onDrag
+        detailedItemAnimationManager = detailedItemAnimationManager
     ) {
         Text(
             text = cardTitle,

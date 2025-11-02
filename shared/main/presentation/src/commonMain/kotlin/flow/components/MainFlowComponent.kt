@@ -19,7 +19,7 @@ interface MainFlowComponent : DefaultStack<Config, Child> {
 
     @Serializable
     data class DetailsConfig(
-        val t: String = "s"
+        val id: String
     )
 
     sealed interface Child {

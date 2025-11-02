@@ -30,7 +30,6 @@ class RealMainFlowComponent(
     val initialConfig = calculateInitialConfig()
 
 
-
     private val _stack =
         childStack(
             source = nav,
@@ -49,30 +48,28 @@ class RealMainFlowComponent(
             serializer = DetailsConfig.serializer(),
             handleBackButton = true,
             childFactory = { configuration, context ->
-                RealItemDetailsComponent(context)
+                RealItemDetailsComponent(context, itemId = configuration.id)
             }
 
         )
 
 
-    override val detailsSlot:  Value<ChildSlot<*, ItemDetailsComponent>>
+    override val detailsSlot: Value<ChildSlot<*, ItemDetailsComponent>>
         get() = _detailsSlot
 
 
     private fun child(config: Config, childContext: ComponentContext): Child {
         return when (config) {
             Config.FindHelp -> FindHelpChild(
-                RealFindHelpComponent(childContext)
+                RealFindHelpComponent(childContext, openItemDetails = { id ->
+                    detailsNav.navigate({ DetailsConfig(id = id) })
+                })
             )
 
             Config.ShareCare -> ShareCareChild(
                 RealShareCareComponent(childContext)
             )
         }
-    }
-
-    fun a() {
-        detailsNav.navigate({ DetailsConfig()})
     }
 
     override fun onBackClicked() {

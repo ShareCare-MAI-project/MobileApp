@@ -2,8 +2,6 @@ package findHelp.ui
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.Transition
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,7 +22,7 @@ import common.ItemCard
 import common.MainLazyGrid
 import common.TransitionColumnHeader
 import findHelp.components.FindHelpComponent
-import flow.ui.DetailedItemAnimationInfo
+import flow.ui.DetailedItemAnimationManager
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -34,8 +32,7 @@ internal fun SharedTransitionScope.FindHelpUI(
     lazyGridState: LazyGridState,
     currentContentType: ContentType?,
     component: FindHelpComponent,
-    transition: Transition<Boolean>,
-    detailedItemAnimationInfo: DetailedItemAnimationInfo
+    detailedItemAnimationManager: DetailedItemAnimationManager
 ) {
 
 
@@ -55,19 +52,17 @@ internal fun SharedTransitionScope.FindHelpUI(
         )
 
         items(items = items.toList(), key = { it }, contentType = { ContentType.Catalog }) {
+            val id = "meow_$it"
             ItemCard(
                 modifier = Modifier
                     .animateItem()
-                    .clickable {
-                        items.removeAt(if (deletedLast <= it) it - deletedCount else it)
-                        deletedCount += 1
-                    }
                     .fillMaxSize(),
                 title = "Кроссовки Air Jordan 1 Low #${it}",
-                id = "meow_$it",
-                transition = transition,
-                detailedItemAnimationInfo
-            )
+                id = id,
+                detailedItemAnimationManager = detailedItemAnimationManager
+            ) {
+                component.onCardClicked(id)
+            }
         }
 
         TransitionColumnHeader(
