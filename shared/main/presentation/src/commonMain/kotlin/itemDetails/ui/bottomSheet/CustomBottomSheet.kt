@@ -3,10 +3,14 @@ package itemDetails.ui.bottomSheet
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsDraggedAsState
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -69,21 +73,26 @@ fun CustomBottomSheet(
 
     val isDarkTheme = isSystemInDarkTheme()
 
-    val startIntensity by animateFloatAsState(
-        if (false) .0f else .4f,
-        animationSpec = tween(600)
-    )
-
     val density = LocalDensity.current
 
     val isInBackGesture = backProgress > 0
 
+
+    val dragInteractionSource = remember { MutableInteractionSource() }
 
     val offset = if (isInBackGesture) {
         (backProgress * heightPx)
     } else {
         anchoredState.requireOffset()
     }
+
+    val dragPressed = dragInteractionSource.collectIsPressedAsState().value
+    val dragDragged = dragInteractionSource.collectIsDraggedAsState().value
+
+    val startIntensity by animateFloatAsState(
+        if (dragPressed) .15f else if (offset != 0f || dragDragged) .4f else .0f,
+        animationSpec = tween(600)
+    )
 
     LaunchedEffect(offset, isInBackGesture) {
         if (!isInBackGesture) {
@@ -92,19 +101,14 @@ fun CustomBottomSheet(
         }
     }
 
-
-    println("offset: $offset  bg: $isInBackGesture mewo $backProgress")
-
     Column(
-        modifier = Modifier
+        modifier = modifier
             .height(height)
             .fillMaxWidth()
-            .then(modifier)
-            .clip(shapes.extraExtraLarge)
-
             .offset(y = with(density) {
                 offset.toDp()
             })
+            .clip(shapes.extraExtraLarge)
             // HAZE
             .hazeEffect(
                 state = hazeState,
@@ -129,7 +133,12 @@ fun CustomBottomSheet(
                         alpha = (startIntensity + .6f).coerceAtMost(1f)
                     )
                 )
-                .anchoredDraggable(anchoredState, orientation = Orientation.Vertical)
+                .anchoredDraggable(
+                    anchoredState,
+                    orientation = Orientation.Vertical,
+                    interactionSource = dragInteractionSource
+                )
+                .clickable(dragInteractionSource, null) {}
         )
 
         content()
