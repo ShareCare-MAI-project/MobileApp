@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.shapes
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,13 +31,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.chrisbanes.haze.HazeProgressive
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
-import flow.ui.DetailedItemAnimationManager
 import view.consts.Paddings
 import view.consts.Sizes
 
@@ -62,9 +61,11 @@ fun rememberCustomSheetState(heightPx: Float, key: Any?) = remember(key) {
 @OptIn(ExperimentalHazeMaterialsApi::class)
 @Composable
 fun CustomBottomSheet(
-    detailedItemAnimationManager: DetailedItemAnimationManager,
+    sheetState: AnchoredDraggableState<SheetValue>,
+    height: Dp,
     hazeState: HazeState,
     modifier: Modifier,
+    onDrag: (Float) -> Unit,
     content: @Composable ColumnScope.() -> Unit
 ) {
 
@@ -75,7 +76,7 @@ fun CustomBottomSheet(
 
     val dragInteractionSource = remember { MutableInteractionSource() }
 
-    val offset = detailedItemAnimationManager.sheetState.requireOffset()
+    val offset = sheetState.requireOffset()
 
     val dragPressed = dragInteractionSource.collectIsPressedAsState().value
     val dragDragged = dragInteractionSource.collectIsDraggedAsState().value
@@ -92,13 +93,12 @@ fun CustomBottomSheet(
 
 
     LaunchedEffect(offset) {
-        val newBackProgress = offset / detailedItemAnimationManager.sheetHeightPx
-        detailedItemAnimationManager.onSheetDrag(newBackProgress.coerceIn(0f, 1f))
+        onDrag(offset)
     }
 
     Column(
         modifier = modifier
-            .height(detailedItemAnimationManager.sheetHeight)
+            .height(height)
             .fillMaxWidth()
             .offset(y = with(density) {
                 offset.toDp()
@@ -131,14 +131,12 @@ fun CustomBottomSheet(
                     )
                 )
                 .anchoredDraggable(
-                    detailedItemAnimationManager.sheetState,
+                    sheetState,
                     orientation = Orientation.Vertical,
                     interactionSource = dragInteractionSource
                 )
                 .clickable(dragInteractionSource, null) {}
         )
-        Text(detailedItemAnimationManager.sheetState.offset.toString())
-        Text(offset.toString())
 
         content()
     }

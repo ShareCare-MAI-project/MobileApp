@@ -32,7 +32,12 @@ fun BoxScope.ItemDetailsSheetContent(
             Modifier.align(Alignment.BottomCenter)
                 .renderInSharedTransitionScopeOverlay(1f)
         },
-        detailedItemAnimationManager = detailedItemAnimationManager
+        sheetState = detailedItemAnimationManager.sheetState,
+        height = detailedItemAnimationManager.sheetHeight,
+        onDrag = { offset ->
+            val newBackProgress = offset / detailedItemAnimationManager.sheetHeightPx
+            detailedItemAnimationManager.onSheetDrag(newBackProgress.coerceIn(0f, 1f))
+        }
     ) {
         Text(
             text = cardTitle,
