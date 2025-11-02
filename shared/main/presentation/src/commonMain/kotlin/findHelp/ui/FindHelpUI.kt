@@ -1,6 +1,8 @@
 package findHelp.ui
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.Transition
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -22,15 +24,18 @@ import common.ItemCard
 import common.MainLazyGrid
 import common.TransitionColumnHeader
 import findHelp.components.FindHelpComponent
+import flow.ui.DetailedItemAnimationInfo
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-internal fun FindHelpUI(
+internal fun SharedTransitionScope.FindHelpUI(
     topPadding: Dp,
     bottomPadding: Dp,
     lazyGridState: LazyGridState,
     currentContentType: ContentType?,
     component: FindHelpComponent,
+    transition: Transition<Boolean>,
+    detailedItemAnimationInfo: DetailedItemAnimationInfo
 ) {
 
 
@@ -54,10 +59,14 @@ internal fun FindHelpUI(
                 modifier = Modifier
                     .animateItem()
                     .clickable {
-                        items.removeAt(if (deletedLast <= it) it-deletedCount else it)
-                        deletedCount+=1
+                        items.removeAt(if (deletedLast <= it) it - deletedCount else it)
+                        deletedCount += 1
                     }
-                    .fillMaxSize(), title = "Кроссовки Air Jordan 1 Low #${it}"
+                    .fillMaxSize(),
+                title = "Кроссовки Air Jordan 1 Low #${it}",
+                id = "meow_$it",
+                transition = transition,
+                detailedItemAnimationInfo
             )
         }
 

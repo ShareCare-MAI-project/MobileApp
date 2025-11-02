@@ -1,6 +1,9 @@
 package flow.ui
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.Transition
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Box
@@ -9,6 +12,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Scaffold
@@ -22,6 +26,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
+import androidx.compose.ui.unit.times
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
@@ -40,15 +47,16 @@ import foundation.scrollables.ScrollEdgeFade
 import foundation.scrollables.ScrollEdgeShadowHeight
 import view.consts.Paddings
 
-@OptIn(ExperimentalDecomposeApi::class)
+@OptIn(ExperimentalDecomposeApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun MainFlowContent(
-    modifier: Modifier = Modifier,
+fun SharedTransitionScope.MainFlowContent(
     component: MainFlowComponent,
+    modifier: Modifier = Modifier,
+    transition: Transition<Boolean>,
     topPadding: Dp,
-    bottomPadding: Dp
+    bottomPadding: Dp,
+    detailedItemAnimationInfo: DetailedItemAnimationInfo
 ) {
-
     val density = LocalDensity.current
 
     val hazeState = rememberHazeState()
@@ -74,6 +82,8 @@ fun MainFlowContent(
     val currentLazyGridState =
         if (currentChild is Child.FindHelpChild) lazyGridStateFindHelp else lazyGridStateShareCare
 
+    var scaffoldTopPadding: Dp by remember { mutableStateOf(0.dp) }
+
     Scaffold(
         bottomBar = {
             MainBottomBar(
@@ -92,14 +102,24 @@ fun MainFlowContent(
         },
         topBar = {
             MainTopBar(
-                modifier = Modifier.fillMaxWidth().padding(top = topPadding),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = topPadding)
+                    .then(
+                        if (detailedItemAnimationInfo.id != null)
+                            Modifier.offset(
+                                y = -(1 - detailedItemAnimationInfo.animationProgress)
+                                    .coerceIn(0f, 1f) * scaffoldTopPadding
+                            )
+                        else Modifier
+                    ),
                 hazeState = hazeState,
-                currentContentType = currentContentType
+                currentContentType = currentContentType,
             )
         },
         modifier = modifier
     ) { paddings ->
-        val scaffoldTopPadding = paddings.calculateTopPadding()
+        scaffoldTopPadding = max(paddings.calculateTopPadding(), scaffoldTopPadding)
         val scaffoldBottomPadding = paddings.calculateTopPadding()
 
         val topBarHeight = scaffoldTopPadding - topPadding
@@ -139,7 +159,9 @@ fun MainFlowContent(
                         bottomPadding = bottomSpacePadding,
                         component = child.findHelpComponent,
                         lazyGridState = lazyGridStateFindHelp,
-                        currentContentType = currentContentType
+                        currentContentType = currentContentType,
+                        transition = transition,
+                        detailedItemAnimationInfo = detailedItemAnimationInfo
                     )
 
                     is Child.ShareCareChild -> TODO()
