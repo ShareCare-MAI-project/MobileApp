@@ -3,12 +3,10 @@ package itemDetails.ui.bottomSheet
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.AnchoredDraggableDefaults
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
-import androidx.compose.foundation.gestures.snapping.snapFlingBehavior
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -78,23 +76,6 @@ fun CustomBottomSheet(
 
     val density = LocalDensity.current
 
-
-    val xt = 50.dp
-
-    val threshold = with(density) { heightPx - 100.dp.toPx() }
-
-    val flingBehaviour = remember(anchoredState, density) {
-        snapFlingBehavior(
-            AnchoredDraggableLayoutInfoProvider(
-                state = anchoredState,
-                positionalThreshold = { it * .5f },
-                velocityThreshold = { with(density) { 200.dp.toPx() } }
-            ),
-            decayAnimationSpec = AnchoredDraggableDefaults.DecayAnimationSpec,
-            snapAnimationSpec = AnchoredDraggableDefaults.SnapAnimationSpec,
-        )
-    }
-
     val isInBackGesture = backProgress > 0
 
 
@@ -142,15 +123,13 @@ fun CustomBottomSheet(
     ) {
         Box(
             Modifier.padding(top = Paddings.semiMedium).size(Sizes.dragHandleSize)
-                .clip(shapes.medium).background(
+                .clip(shapes.medium)
+                .background(
                     colorScheme.onBackground.copy(
                         alpha = (startIntensity + .6f).coerceAtMost(1f)
                     )
                 )
-                .anchoredDraggable(
-                    anchoredState, orientation = Orientation.Vertical,
-                    flingBehavior = flingBehaviour
-                )
+                .anchoredDraggable(anchoredState, orientation = Orientation.Vertical)
         )
 
         content()

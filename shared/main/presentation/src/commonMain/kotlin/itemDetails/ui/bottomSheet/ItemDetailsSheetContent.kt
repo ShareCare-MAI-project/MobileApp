@@ -1,4 +1,4 @@
-package itemDetails.ui
+package itemDetails.ui.bottomSheet
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -18,8 +18,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import dev.cardTitle
 import dev.chrisbanes.haze.HazeState
-import itemDetails.ui.bottomSheet.CustomBottomSheet
-import itemDetails.ui.bottomSheet.SheetValue
 import view.consts.Paddings
 
 @OptIn(ExperimentalSharedTransitionApi::class)

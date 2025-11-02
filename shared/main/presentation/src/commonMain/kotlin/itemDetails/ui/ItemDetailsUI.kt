@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import itemDetails.components.ItemDetailsComponent
+import itemDetails.ui.bottomSheet.ItemDetailsSheetContent
 import itemDetails.ui.bottomSheet.rememberCustomSheetState
 import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
