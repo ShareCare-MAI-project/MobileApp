@@ -3,8 +3,8 @@ package flow.components
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.slot.SlotNavigation
+import com.arkivanov.decompose.router.slot.activate
 import com.arkivanov.decompose.router.slot.childSlot
-import com.arkivanov.decompose.router.slot.navigate
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.active
@@ -58,12 +58,14 @@ class RealMainFlowComponent(
         get() = _detailsSlot
 
 
+    private fun openItemDetails(id: String) {
+        detailsNav.activate(DetailsConfig(id = id))
+    }
+
     private fun child(config: Config, childContext: ComponentContext): Child {
         return when (config) {
             Config.FindHelp -> FindHelpChild(
-                RealFindHelpComponent(childContext, openItemDetails = { id ->
-                    detailsNav.navigate({ DetailsConfig(id = id) })
-                })
+                RealFindHelpComponent(childContext, openItemDetails = ::openItemDetails)
             )
 
             Config.ShareCare -> ShareCareChild(

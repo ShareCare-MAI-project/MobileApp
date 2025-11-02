@@ -22,9 +22,17 @@ class DetailedItemAnimationManager(
     val onBackClicked: () -> Unit,
     val coroutineScope: CoroutineScope,
 ) {
+    var isInitialized = false
+        private set
+
+    var isBackGesture = false
+        private set
+    var isClosing = false
+        private set
 
     fun onBackProgress(progress: Float) {
         coroutineScope.launch {
+            isBackGesture = true
             async {
                 seekableTransitionState.seekTo(
                     progress,
@@ -41,30 +49,46 @@ class DetailedItemAnimationManager(
 
     fun onBackSuccessful() {
         coroutineScope.launch {
+            isBackGesture = false
+            isClosing = true
             val imageAnimation =
-                async { seekableTransitionState.animateTo(SheetValue.Collapsed, tween(700)) }
+                async { seekableTransitionState.animateTo(SheetValue.Collapsed) }
             val sheetAnimation = async { sheetState.animateTo(SheetValue.Collapsed, tween(700)) }
 // with await doesn't work
             imageAnimation.join()
             sheetAnimation.join()
             onBackClicked()
+
         }
     }
 
 
     fun onBackFailure() {
         coroutineScope.launch {
-            seekableTransitionState.snapTo(SheetValue.Expanded)
-            sheetState.animateTo(SheetValue.Expanded)
+            isBackGesture = false
+            async { seekableTransitionState.snapTo(SheetValue.Expanded) }
+            async { sheetState.animateTo(SheetValue.Expanded) }
         }
     }
 
-    fun onSheetDrag(float: Float) {
+    fun animateOpen() {
         coroutineScope.launch {
-            seekableTransitionState.seekTo(float, SheetValue.Collapsed)
+            val imageAnimation = async { seekableTransitionState.animateTo(SheetValue.Expanded) }
+            val sheetAnimation = async { sheetState.animateTo(SheetValue.Expanded) }
+            imageAnimation.join()
+            sheetAnimation.join()
+            isInitialized = true
+        }
+    }
 
-            if (float == 1f) {
-                onBackClicked()
+    fun onSheetDrag(progress: () -> Float) {
+        if (isInitialized && !isClosing && !isBackGesture) {
+            coroutineScope.launch {
+                val p = progress()
+                seekableTransitionState.seekTo(p, SheetValue.Collapsed)
+                if (p == 1f) {
+                    onBackClicked()
+                }
             }
         }
     }

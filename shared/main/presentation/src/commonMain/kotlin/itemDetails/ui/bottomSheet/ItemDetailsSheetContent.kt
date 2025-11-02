@@ -12,8 +12,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import dev.cardTitle
 import dev.chrisbanes.haze.HazeState
 import flow.ui.DetailedItemAnimationManager
@@ -26,6 +28,7 @@ fun BoxScope.ItemDetailsSheetContent(
     sharedTransitionScope: SharedTransitionScope,
     detailedItemAnimationManager: DetailedItemAnimationManager
 ) {
+    val density = LocalDensity.current
     CustomBottomSheet(
         hazeState = hazeState,
         modifier = with(sharedTransitionScope) {
@@ -35,8 +38,11 @@ fun BoxScope.ItemDetailsSheetContent(
         sheetState = detailedItemAnimationManager.sheetState,
         height = detailedItemAnimationManager.sheetHeight,
         onDrag = { offset ->
-            val newBackProgress = offset / detailedItemAnimationManager.sheetHeightPx
-            detailedItemAnimationManager.onSheetDrag(newBackProgress.coerceIn(0f, 1f))
+            detailedItemAnimationManager.onSheetDrag {
+                val newBackProgress =
+                    with(density) { (offset - 50.dp.toPx()) / (detailedItemAnimationManager.sheetHeightPx - 50.dp.toPx()) }
+                newBackProgress.coerceIn(0f, 1f)
+            }
         }
     ) {
         Text(

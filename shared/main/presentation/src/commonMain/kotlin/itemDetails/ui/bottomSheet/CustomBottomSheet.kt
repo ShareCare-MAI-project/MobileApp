@@ -49,7 +49,7 @@ fun SheetValue.isExpanded() = this == SheetValue.Expanded
 @Composable
 fun rememberCustomSheetState(heightPx: Float, key: Any?) = remember(key) {
     AnchoredDraggableState(
-        initialValue = SheetValue.Expanded,
+        initialValue = SheetValue.Collapsed,
         anchors = DraggableAnchors {
             SheetValue.Expanded at 0f
             SheetValue.Collapsed at heightPx

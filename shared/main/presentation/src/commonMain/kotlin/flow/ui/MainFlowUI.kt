@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.safeContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -46,15 +47,19 @@ fun SharedTransitionScope.MainFlowUI(
 
     val details = detailsSlot.child?.instance
 
+    LaunchedEffect(details?.itemId) {
+        println("checkit: ${details?.itemId}")
+    }
+
     val hazeState = HazeState()
 
+
     val seekableTransitionState = remember(details?.itemId) {
-        SeekableTransitionState(SheetValue.Expanded)
+        SeekableTransitionState(SheetValue.Collapsed)
     }
     val transition = rememberTransition(transitionState = seekableTransitionState)
 
     val coroutineScope = rememberCoroutineScope()
-
 
     val sheetHeightPx =
         with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height - 300.dp.toPx() - topPadding.toPx() }
@@ -64,19 +69,26 @@ fun SharedTransitionScope.MainFlowUI(
         key = details?.itemId
     )
 
-    val detailedItemAnimationManager = DetailedItemAnimationManager(
-        detailedItemId = details?.itemId,
-        transition = transition,
-        seekableTransitionState = seekableTransitionState,
-        sheetState = sheetState,
-        sheetHeight = sheetHeight,
-        sheetHeightPx = sheetHeightPx,
-        coroutineScope = coroutineScope,
-        onBackClicked = {
-            component.detailsNav.dismiss()
-        }
-    )
-
+    val detailedItemAnimationManager = remember(details?.itemId) {
+        val manager =  DetailedItemAnimationManager(
+            detailedItemId = details?.itemId,
+            transition = transition,
+            seekableTransitionState = seekableTransitionState,
+            sheetState = sheetState,
+            sheetHeight = sheetHeight,
+            sheetHeightPx = sheetHeightPx,
+            coroutineScope = coroutineScope,
+            onBackClicked = {
+                // иначе он был уже удалён
+                // получаем из detailsSlot, т.к. находимся в remember (старое значение)
+                if (details?.itemId == detailsSlot.child?.instance?.itemId) {
+                    component.detailsNav.dismiss()
+                }
+            }
+        )
+        manager.animateOpen()
+        manager
+    }
 
 
     CompositionLocalProvider(
