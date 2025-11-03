@@ -5,6 +5,9 @@ import androidx.compose.animation.core.Transition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.animateTo
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Dp
 import itemDetails.ui.bottomSheet.SheetValue
 import kotlinx.coroutines.CoroutineScope
@@ -30,8 +33,14 @@ class DetailedItemAnimationManager(
     var isClosing = false
         private set
 
+
+    // Никаких анимаций, всё стоит на месте в фулловом виде
+    var isStableDetailed by mutableStateOf(false)
+        private set
+
     fun onBackProgress(progress: Float) {
         coroutineScope.launch {
+            isStableDetailed = false
             isBackGesture = true
             async {
                 seekableTransitionState.seekTo(
@@ -49,6 +58,7 @@ class DetailedItemAnimationManager(
 
     fun onBackSuccessful() {
         coroutineScope.launch {
+            isStableDetailed = false
             isBackGesture = false
             isClosing = true
             val imageAnimation =
@@ -66,6 +76,7 @@ class DetailedItemAnimationManager(
     fun onBackFailure() {
         coroutineScope.launch {
             isBackGesture = false
+            isStableDetailed = true
             async { seekableTransitionState.snapTo(SheetValue.Expanded) }
             async { sheetState.animateTo(SheetValue.Expanded) }
         }
@@ -78,6 +89,7 @@ class DetailedItemAnimationManager(
             imageAnimation.join()
             sheetAnimation.join()
             isInitialized = true
+            isStableDetailed = true
         }
     }
 
@@ -86,6 +98,7 @@ class DetailedItemAnimationManager(
             coroutineScope.launch {
                 val p = progress()
                 seekableTransitionState.seekTo(p, SheetValue.Collapsed)
+                isStableDetailed = p == 0f
                 if (p == 1f) {
                     onBackClicked()
                 }

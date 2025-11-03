@@ -33,6 +33,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import dev.chrisbanes.haze.ExperimentalHazeApi
+import dev.chrisbanes.haze.HazeInputScale
 import dev.chrisbanes.haze.HazeProgressive
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeEffect
@@ -58,7 +60,7 @@ fun rememberCustomSheetState(heightPx: Float, key: Any?) = remember(key) {
 }
 
 
-@OptIn(ExperimentalHazeMaterialsApi::class)
+@OptIn(ExperimentalHazeMaterialsApi::class, ExperimentalHazeApi::class)
 @Composable
 fun CustomBottomSheet(
     sheetState: AnchoredDraggableState<SheetValue>,
@@ -82,15 +84,19 @@ fun CustomBottomSheet(
     val dragDragged = dragInteractionSource.collectIsDraggedAsState().value
 
 
-    val endIntensity = if (isDarkTheme) .7f else .6f
+    val endIntensity = if (isDarkTheme) .8f else .7f
 
     val startIntensity by animateFloatAsState(
         if (dragPressed) endIntensity - .45f
-        else if (offset != 0f || dragDragged) endIntensity - .2f
+        else if (offset != 0f || dragDragged) endIntensity
         else .0f,
-        animationSpec = tween(600)
+        animationSpec = tween(700)
     )
 
+    val adaptiveInputScale = with(density) {
+        if (offset != 0f || dragDragged) .3f
+        else 1f
+    }
 
     LaunchedEffect(offset) {
         onDrag(offset)
@@ -113,12 +119,13 @@ fun CustomBottomSheet(
             ) {
                 progressive = HazeProgressive.verticalGradient(
                     endY = with(density) {
-                        50.dp.toPx()
+                        50.dp.toPx() * adaptiveInputScale // remove fade line, when change inputScale
                     },
                     startIntensity = startIntensity,
-                    endIntensity = endIntensity
+                    endIntensity = endIntensity,
+                    preferPerformance = false
                 )
-
+                inputScale = HazeInputScale.Fixed(adaptiveInputScale)
             },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

@@ -21,6 +21,7 @@ import common.ContentType
 import common.ItemCard
 import common.MainLazyGrid
 import common.TransitionColumnHeader
+import dev.cardTitle
 import findHelp.components.FindHelpComponent
 import flow.ui.DetailedItemAnimationManager
 
@@ -57,7 +58,7 @@ internal fun SharedTransitionScope.FindHelpUI(
                 modifier = Modifier
                     .animateItem()
                     .fillMaxSize(),
-                title = "Кроссовки Air Jordan 1 Low #${it}",
+                title = "$cardTitle #${it}",
                 id = id,
                 detailedItemAnimationManager = detailedItemAnimationManager
             ) {

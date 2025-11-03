@@ -44,7 +44,7 @@ fun SharedTransitionScope.ItemDetailsUI(
         topPadding = topPadding,
         hazeState = hazeState,
         component = component,
-        transition = detailedItemAnimationManager.transition,
+        detailedItemAnimationManager = detailedItemAnimationManager,
         sheet = {
             ItemDetailsSheetContent(
                 hazeState = hazeState,

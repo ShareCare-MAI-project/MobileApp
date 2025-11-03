@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -58,6 +59,7 @@ fun GlassCard(
     contentColor: Color = GlassCardFunctions.getContentColor(tint),
     contentPadding: PaddingValues = PaddingValues(Paddings.medium),
     isReversedProgressive: Boolean = false,
+    contentAlignment: Alignment = Alignment.TopStart,
     content: @Composable BoxScope.() -> Unit
 ) {
 
@@ -86,7 +88,7 @@ fun GlassCard(
             color = borderColor
         )
     ) {
-        Box(Modifier.padding(contentPadding)) {
+        Box(Modifier.padding(contentPadding), contentAlignment = contentAlignment) {
 
             content()
         }
