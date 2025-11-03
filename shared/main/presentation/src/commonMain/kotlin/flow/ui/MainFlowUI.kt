@@ -70,7 +70,7 @@ fun SharedTransitionScope.MainFlowUI(
     )
 
     val detailedItemAnimationManager = remember(details?.itemId) {
-        val manager =  DetailedItemAnimationManager(
+        val manager = DetailedItemAnimationManager(
             detailedItemId = details?.itemId,
             transition = transition,
             seekableTransitionState = seekableTransitionState,

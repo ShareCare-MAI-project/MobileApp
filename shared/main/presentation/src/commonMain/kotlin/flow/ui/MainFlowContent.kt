@@ -2,9 +2,13 @@ package flow.ui
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.gestures.BringIntoViewSpec
+import androidx.compose.foundation.gestures.LocalBringIntoViewSpec
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -16,6 +20,7 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,7 +49,11 @@ import foundation.scrollables.ScrollEdgeFade
 import foundation.scrollables.ScrollEdgeShadowHeight
 import view.consts.Paddings
 
-@OptIn(ExperimentalDecomposeApi::class, ExperimentalSharedTransitionApi::class)
+@OptIn(
+    ExperimentalDecomposeApi::class,
+    ExperimentalSharedTransitionApi::class,
+    ExperimentalFoundationApi::class
+)
 @Composable
 fun SharedTransitionScope.MainFlowContent(
     component: MainFlowComponent,
@@ -141,28 +150,61 @@ fun SharedTransitionScope.MainFlowContent(
         val bottomSpacePadding =
             bottomPadding + scaffoldBottomPadding + Paddings.endListPadding
 
+        // For bringIntoView
+        val topShadowWholePadding = topPadding + ScrollEdgeShadowHeight.big + topBarHeight
+        val bottomShadowWholePadding =
+            bottomPadding / 2 + ScrollEdgeShadowHeight.big + bottomBarHeight
 
         Box(modifier = Modifier.fillMaxSize().hazeSource(hazeState, key = "MainFlow")) {
-            Children(
-                stack = stack,
-                modifier = Modifier.fillMaxSize(),
-                animation = predictiveBackAnimation(
-                    backHandler = component.backHandler,
-                    fallbackAnimation = stackAnimation(),
-                    onBack = component::onBackClicked
-                )
-            ) {
-                when (val child = it.instance) {
-                    is Child.FindHelpChild -> FindHelpUI(
-                        topPadding = topSpacePadding,
-                        bottomPadding = bottomSpacePadding,
-                        component = child.findHelpComponent,
-                        lazyGridState = lazyGridStateFindHelp,
-                        currentContentType = currentContentType,
-                        detailedItemAnimationManager = detailedItemAnimationManager
-                    )
+            CompositionLocalProvider(
+                LocalBringIntoViewSpec provides object : BringIntoViewSpec {
+                    override val scrollAnimationSpec: AnimationSpec<Float>
+                        get() = spring(stiffness = Spring.StiffnessVeryLow)
+                    override fun calculateScrollDistance(
+                        offset: Float,
+                        size: Float,
+                        containerSize: Float
+                    ): Float {
+                        with(density) {
+                            println("offset: $offset | size: $size | container: $containerSize")
 
-                    is Child.ShareCareChild -> TODO()
+
+                            val top = topShadowWholePadding.toPx()
+                            val bottom = containerSize - bottomShadowWholePadding.toPx()
+
+                            val finalOffset = if (offset + size > bottom) {
+                                bottom - size
+                            } else if (offset < top) {
+                                top
+                            } else {
+                                offset
+                            }
+                            return offset - finalOffset
+                        }
+                    }
+                }
+            ) {
+                Children(
+                    stack = stack,
+                    modifier = Modifier.fillMaxSize(),
+                    animation = predictiveBackAnimation(
+                        backHandler = component.backHandler,
+                        fallbackAnimation = stackAnimation(),
+                        onBack = component::onBackClicked
+                    )
+                ) {
+                    when (val child = it.instance) {
+                        is Child.FindHelpChild -> FindHelpUI(
+                            topPadding = topSpacePadding,
+                            bottomPadding = bottomSpacePadding,
+                            component = child.findHelpComponent,
+                            lazyGridState = lazyGridStateFindHelp,
+                            currentContentType = currentContentType,
+                            detailedItemAnimationManager = detailedItemAnimationManager
+                        )
+
+                        is Child.ShareCareChild -> TODO()
+                    }
                 }
             }
 
