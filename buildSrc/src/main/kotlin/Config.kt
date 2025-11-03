@@ -17,7 +17,7 @@ object Config {
     object Android {
         const val namespace = "org.top_it.careshare"
         const val compileSdk = 35
-        const val minSdk = 26
+        const val minSdk = 33
         const val targetSdk = 35
 
         fun namespace(module: String): String {

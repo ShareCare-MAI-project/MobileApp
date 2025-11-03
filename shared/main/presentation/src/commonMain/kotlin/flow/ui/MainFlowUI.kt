@@ -23,8 +23,8 @@ import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.router.slot.dismiss
 import common.LocalTransitionHazeState
-import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
 import flow.components.MainFlowComponent
 import itemDetails.ui.ItemDetailsUI
 import itemDetails.ui.bottomSheet.SheetValue
@@ -51,7 +51,7 @@ fun SharedTransitionScope.MainFlowUI(
         println("checkit: ${details?.itemId}")
     }
 
-    val hazeState = HazeState()
+    val hazeState = rememberHazeState()
 
 
     val seekableTransitionState = remember(details?.itemId) {

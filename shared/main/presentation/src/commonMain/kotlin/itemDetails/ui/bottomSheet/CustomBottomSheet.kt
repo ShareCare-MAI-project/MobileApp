@@ -40,6 +40,8 @@ import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
+import platform.Platform
+import platform.currentPlatform
 import view.consts.Paddings
 import view.consts.Sizes
 
@@ -93,10 +95,14 @@ fun CustomBottomSheet(
         animationSpec = tween(700)
     )
 
-    val adaptiveInputScale = with(density) {
-        if (offset != 0f || dragDragged) .3f
-        else 1f
-    }
+    val adaptiveInputScale by animateFloatAsState(
+        if (offset != 0f || dragDragged) {
+            if (currentPlatform == Platform.iOS) .7f
+            else .3f
+        }
+        else 1f,
+        animationSpec = tween(700)
+    )
 
     LaunchedEffect(offset) {
         onDrag(offset)
