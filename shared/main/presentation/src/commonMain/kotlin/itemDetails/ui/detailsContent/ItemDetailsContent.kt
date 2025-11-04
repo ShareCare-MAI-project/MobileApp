@@ -19,10 +19,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import common.detailsTransition.DetailsAnimator
+import common.detailsTransition.LocalDetailsAnimator
+import common.detailsTransition.LocalTransitionHazeState
 import common.detailsTransition.SharedAnimation
 import common.itemCard.ItemImage
-import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import itemDetails.components.ItemDetailsComponent
@@ -35,10 +35,11 @@ import view.consts.Paddings
 @Composable
 fun SharedTransitionScope.ItemDetailsContent(
     component: ItemDetailsComponent,
-    hazeState: HazeState,
-    detailsAnimator: DetailsAnimator,
     sheet: @Composable BoxScope.() -> Unit
 ) {
+    val hazeState = LocalTransitionHazeState.current
+    val detailsAnimator = LocalDetailsAnimator.current
+
     val safeContentPaddings = WindowInsets.safeContent.asPaddingValues()
     val topPadding = safeContentPaddings.calculateTopPadding()
 

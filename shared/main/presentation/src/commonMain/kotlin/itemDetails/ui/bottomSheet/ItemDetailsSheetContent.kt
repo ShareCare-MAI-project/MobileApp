@@ -17,32 +17,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import common.detailsTransition.DetailsAnimator
+import common.detailsTransition.LocalDetailsAnimator
+import common.detailsTransition.LocalTransitionHazeState
 import dev.cardTitle
-import dev.chrisbanes.haze.HazeState
 import itemDetails.ui.ItemDetailsDefaults
 import view.consts.Paddings
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun BoxScope.ItemDetailsSheetContent(
-    hazeState: HazeState,
-    sharedTransitionScope: SharedTransitionScope,
-    detailsAnimator: DetailsAnimator
+    sharedTransitionScope: SharedTransitionScope
 ) {
+    val hazeState = LocalTransitionHazeState.current
+    val detailsAnimator = LocalDetailsAnimator.current
+
+
     val density = LocalDensity.current
 
     val gapHeightPx = remember { with(density) { ItemDetailsDefaults.gapHeight.toPx() } }
 
     CustomBottomSheet(
-        hazeState = hazeState,
         modifier = with(sharedTransitionScope) {
             Modifier.align(Alignment.BottomCenter)
                 .renderInSharedTransitionScopeOverlay(1f)
         },
+        hazeState = hazeState,
+        pagerState = detailsAnimator.pagerState,
         sheetState = detailsAnimator.sheetState,
         height = detailsAnimator.sheetHeight,
-        pagerState = detailsAnimator.pagerState,
         onDrag = { offset ->
             detailsAnimator.onSheetDrag {
                 val newBackProgress =

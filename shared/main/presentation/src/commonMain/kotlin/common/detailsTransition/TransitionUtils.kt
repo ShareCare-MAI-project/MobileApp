@@ -18,9 +18,13 @@ internal val LocalTransitionHazeState: ProvidableCompositionLocal<HazeState> =
         error("No TransitionHazeState provided")
     }
 
+internal val LocalDetailsAnimator: ProvidableCompositionLocal<DetailsAnimator> =
+    staticCompositionLocalOf {
+        error("No DetailsAnimator provided")
+    }
 
 @Composable
-internal fun  DetailsAnimator.SharedAnimation(
+internal fun DetailsAnimator.SharedAnimation(
     modifier: Modifier = Modifier,
     content: @Composable AnimatedContentScope.(SheetValue) -> Unit
 ) {

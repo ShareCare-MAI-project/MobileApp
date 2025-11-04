@@ -33,6 +33,7 @@ import widgets.glass.GlassCardFunctions
 @Composable
 fun BottomBarButton(
     isSelected: Boolean,
+    selectedColor: Color,
     text: String,
     icon: ImageVector,
     hazeState: HazeState,
@@ -49,9 +50,10 @@ fun BottomBarButton(
     val isDarkTheme = isSystemInDarkTheme()
 
     val color by animateColorAsState(
-        (if (isPressed) colorScheme.tertiaryContainer
-        else if (isSelected) colorScheme.secondaryContainer
-        else Color.Transparent).copy(alpha = if (isDarkTheme) .7f else .45f),
+        (
+                if (isSelected || isPressed) selectedColor
+                else Color.Transparent)
+            .copy(alpha = (if (isDarkTheme) .7f else .45f) + if (isPressed) .2f else 0f),
         animationSpec = colorAnimationSpec
     )
 

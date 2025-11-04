@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.router.slot.dismiss
+import common.detailsTransition.LocalDetailsAnimator
 import common.detailsTransition.LocalTransitionHazeState
 import common.detailsTransition.rememberDetailsAnimator
 import dev.chrisbanes.haze.hazeSource
@@ -41,18 +42,17 @@ fun SharedTransitionScope.MainFlowUI(
 
     val hazeState = rememberHazeState() //outHazeState
     CompositionLocalProvider(
-        LocalTransitionHazeState provides hazeState
+        LocalTransitionHazeState provides hazeState,
+        LocalDetailsAnimator provides detailsAnimator
     ) {
 
         MainFlowContent(
             component = component,
-            modifier = Modifier.hazeSource(hazeState),
-            detailsAnimator = detailsAnimator
+            modifier = Modifier.hazeSource(hazeState)
         )
         if (details != null) {
             ItemDetailsUI(
-                details, hazeState = hazeState,
-                detailsAnimator = detailsAnimator
+                details
             )
         }
 

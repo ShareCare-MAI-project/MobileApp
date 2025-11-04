@@ -22,7 +22,6 @@ import view.consts.Paddings
 
 @Suppress("FunctionName")
 internal fun LazyGridScope.TransitionColumnHeader(
-    currentContentType: ContentType?,
     contentType: ContentType,
 ) {
     item(
@@ -30,6 +29,7 @@ internal fun LazyGridScope.TransitionColumnHeader(
         span = { GridItemSpan(maxLineSpan) },
         contentType = contentType
     ) {
+        val currentContentType = LocalCurrentContentType.current
         TransitionHeader(
             isVisible = currentContentType != contentType,
             contentType = contentType,
@@ -46,10 +46,7 @@ internal fun TransitionHeader(
 ) {
     Column { // lol, but animation is better...
         AnimatedContent(
-            if (isVisible) when (contentType) {
-                ContentType.Catalog -> "Каталог"
-                ContentType.MyRequests -> "Мои заявки"
-            } else "",
+            if (isVisible) contentType.parseName() else "",
             transitionSpec = { (fadeIn()).togetherWith(fadeOut()) }
         ) { text ->
             Text(
@@ -60,7 +57,9 @@ internal fun TransitionHeader(
                 maxLines = 1,
                 fontWeight = FontWeight.Medium,
                 style = typography.headlineLargeEmphasized,
-                autoSize = TextAutoSize.StepBased(maxFontSize = typography.headlineLargeEmphasized.fontSize)
+                autoSize = TextAutoSize.StepBased(
+                    maxFontSize = typography.headlineLargeEmphasized.fontSize
+                )
             )
         }
     }

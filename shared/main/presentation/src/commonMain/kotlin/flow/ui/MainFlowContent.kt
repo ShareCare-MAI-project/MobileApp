@@ -33,8 +33,8 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import common.detailsTransition.DetailsAnimator
 import common.grid.ContentType
+import common.grid.LocalCurrentContentType
 import common.grid.LocalSpacePaddings
 import common.grid.SpacePaddings
 import dev.chrisbanes.haze.hazeSource
@@ -47,6 +47,7 @@ import flow.ui.topBar.MainTopBar
 import foundation.scrollables.BottomScrollEdgeFade
 import foundation.scrollables.ScrollEdgeFade
 import foundation.scrollables.ScrollEdgeShadowHeight
+import shareCare.ui.ShareCareUI
 import view.consts.Paddings
 
 @OptIn(
@@ -57,8 +58,7 @@ import view.consts.Paddings
 @Composable
 fun SharedTransitionScope.MainFlowContent(
     component: MainFlowComponent,
-    modifier: Modifier = Modifier,
-    detailsAnimator: DetailsAnimator
+    modifier: Modifier = Modifier
 ) {
     val density = LocalDensity.current
 
@@ -174,7 +174,8 @@ fun SharedTransitionScope.MainFlowContent(
         Box(modifier = Modifier.hazeSource(hazeState, key = "MainFlow")) {
             CompositionLocalProvider(
                 LocalBringIntoViewSpec provides customBringIntoViewSpec,
-                LocalSpacePaddings provides spacePaddings
+                LocalSpacePaddings provides spacePaddings,
+                LocalCurrentContentType provides currentContentType
             ) {
                 Children(
                     stack = stack,
@@ -188,12 +189,13 @@ fun SharedTransitionScope.MainFlowContent(
                     when (val child = it.instance) {
                         is Child.FindHelpChild -> FindHelpUI(
                             lazyGridState = lazyGridStateFindHelp,
-                            currentContentType = currentContentType,
-                            component = child.findHelpComponent,
-                            detailsAnimator = detailsAnimator
+                            component = child.findHelpComponent
                         )
 
-                        is Child.ShareCareChild -> TODO()
+                        is Child.ShareCareChild -> ShareCareUI(
+                            lazyGridState = lazyGridStateShareCare,
+                            component = child.shareCareComponent
+                        )
                     }
                 }
             }

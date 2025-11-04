@@ -20,6 +20,7 @@ import androidx.compose.material.icons.rounded.Handshake
 import androidx.compose.material.icons.rounded.LibraryAdd
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -102,7 +103,9 @@ internal fun MainFAB(
                     modifier = Modifier,
                     fontWeight = FontWeight.Medium,
                     maxLines = 1,
-                    autoSize = TextAutoSize.StepBased()
+                    autoSize = TextAutoSize.StepBased(
+                        maxFontSize = typography.titleMedium.fontSize
+                    )
                 )
             }
         }

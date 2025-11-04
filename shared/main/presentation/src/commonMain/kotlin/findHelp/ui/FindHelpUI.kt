@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
-import common.detailsTransition.DetailsAnimator
+import common.detailsTransition.LocalDetailsAnimator
 import common.grid.ContentType
 import common.grid.MainLazyGrid
 import common.grid.TransitionColumnHeader
@@ -25,23 +25,19 @@ import findHelp.components.FindHelpComponent
 @Composable
 internal fun SharedTransitionScope.FindHelpUI(
     lazyGridState: LazyGridState,
-    currentContentType: ContentType?,
-    component: FindHelpComponent,
-    detailsAnimator: DetailsAnimator
+    component: FindHelpComponent
 ) {
-
-
+    val detailsAnimator = LocalDetailsAnimator.current
     val items = remember { (0..50).toList().toMutableStateList() }
 
     MainLazyGrid(
         lazyGridState = lazyGridState,
     ) {
         TransitionColumnHeader(
-            contentType = ContentType.Catalog,
-            currentContentType = currentContentType
+            contentType = ContentType.ReadyToHelp
         )
 
-        items(items = items.toList(), key = { it }, contentType = { ContentType.Catalog }) {
+        items(items = items.toList(), key = { it }, contentType = { ContentType.ReadyToHelp }) {
             val id = "meow_$it"
             ItemCard(
                 modifier = Modifier
@@ -56,10 +52,9 @@ internal fun SharedTransitionScope.FindHelpUI(
         }
 
         TransitionColumnHeader(
-            contentType = ContentType.MyRequests,
-            currentContentType = currentContentType
+            contentType = ContentType.Catalog
         )
-        items(50, key = { (it + 1) * 100 }, contentType = { ContentType.MyRequests }) {
+        items(50, key = { (it + 1) * 100 }, contentType = { ContentType.Catalog }) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
                 (1..3).forEach { _ ->
                     Text("FindHelp")
