@@ -2,6 +2,7 @@ package itemDetails.ui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.Spring
@@ -21,12 +22,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBackIos
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,15 +41,17 @@ import androidx.compose.ui.unit.dp
 import common.ItemImage
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import flow.ui.DetailedItemAnimationManager
 import itemDetails.components.ItemDetailsComponent
 import itemDetails.ui.bottomSheet.isExpanded
 import resources.RImages
+import utils.fastBackground
 import view.consts.Paddings
 import widgets.glass.GlassCard
 import widgets.glass.GlassCardFunctions
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalHazeMaterialsApi::class)
 @Composable
 fun SharedTransitionScope.ItemDetailsContent(
     component: ItemDetailsComponent,
@@ -60,7 +66,6 @@ fun SharedTransitionScope.ItemDetailsContent(
     ) {
         Box(
             Modifier.pointerInput(Unit) {} // Prohibit Background scrolling
-                .padding(horizontal = Paddings.medium)
                 .padding(top = topPadding)
                 .fillMaxWidth()
         ) {
@@ -72,19 +77,55 @@ fun SharedTransitionScope.ItemDetailsContent(
                         path = RImages.LOGO,
                         modifier = Modifier
                             .align(Alignment.TopCenter)
+                            .padding(horizontal = Paddings.semiMedium)
                             .height(350.dp)
-                            .hazeSource(hazeState),
+                            .hazeSource(hazeState, zIndex = 0f),
                         id = component.itemId,
                         detailedItemId = component.itemId,
                         animatedContentScope = this@AnimatedContent
                     )
                 }
             }
+            val state = rememberPagerState() { 3 }
+            Crossfade(
+                detailedItemAnimationManager.isStableDetailed,
+                modifier = Modifier.renderInSharedTransitionScopeOverlay()
+                    .hazeSource(hazeState, zIndex = 1f),
+                animationSpec = tween(if (state.currentPage == 0) 0 else 300)
+            ) { isPager ->
+                if (isPager) {
+                    HorizontalPager(
+                        state = state,
+                        modifier = Modifier//.align(Alignment.TopCenter)
+                            .height(350.dp)
+                            .fillMaxWidth()
+                            .fastBackground(if (detailedItemAnimationManager.isStableDetailed) colorScheme.background else Color.Transparent)
+                    ) { index ->
+                        ItemImage(
+                            path = when(index) {
+                                0 -> RImages.LOGO
+                                1 -> RImages.LOGO2
+                                2 -> RImages.LOGO3
+                                else -> RImages.LOGO
+                            },
+                            modifier = Modifier
+                                .padding(horizontal = Paddings.semiMedium)
+                                .fillMaxSize(),
+                            id = component.itemId,
+                            detailedItemId = null,
+                            animatedContentScope = null
+                        )
+
+                    }
+                }
+            }
+            val l = rememberCoroutineScope()
             BackButton(
                 isVisible =
                     detailedItemAnimationManager.isStableDetailed,
                 modifier = Modifier
                     .renderInSharedTransitionScopeOverlay()
+                    .padding(horizontal = Paddings.semiMedium)
                     .padding(Paddings.semiSmall),
                 hazeState = hazeState
             ) {
@@ -104,7 +145,6 @@ private fun BackButton(
     hazeState: HazeState,
     onClick: () -> Unit
 ) {
-    val isDarkTheme = isSystemInDarkTheme()
     AnimatedVisibility(
         visible = isVisible,
         modifier = modifier,
@@ -131,13 +171,14 @@ private fun BackButton(
             hazeTint = GlassCardFunctions.getHazeTintColor(
                 tint = null,
                 containerColor = colorScheme.primaryContainer,
-                containerColorAlpha = if (isDarkTheme) .4f else .2f
+                containerColorAlpha = .4f
             ),
             borderColor = GlassCardFunctions.getBorderColor(
                 tint = null,
                 containerColor = colorScheme.primaryContainer,
                 containerColorAlpha = .1f
-            )
+            ),
+            contentColor = Color.White
         ) {
             Icon(Icons.AutoMirrored.Rounded.ArrowBackIos, contentDescription = null)
         }
