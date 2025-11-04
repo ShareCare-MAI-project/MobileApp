@@ -111,13 +111,14 @@ fun CustomBottomSheet(
             },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        SpacerV(Paddings.semiSmall)
         DragHandle(
             startIntensity = startIntensity,
             sheetState = sheetState,
             dragInteractionSource = dragInteractionSource,
-            pagerState = pagerState
+            pagerState = pagerState,
+            isStable = offset == 0f && !dragPressed && !dragDragged
         )
-        SpacerV(Paddings.semiSmall)
         content()
     }
 }
