@@ -6,11 +6,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.backhandler.PredictiveBackHandler
 import androidx.compose.ui.unit.Dp
+import common.detailsTransition.DetailsAnimator
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
-import flow.ui.DetailedItemAnimationManager
 import itemDetails.components.ItemDetailsComponent
 import itemDetails.ui.bottomSheet.ItemDetailsSheetContent
+import itemDetails.ui.detailsContent.ItemDetailsContent
 import kotlin.coroutines.cancellation.CancellationException
 
 
@@ -23,33 +24,32 @@ fun SharedTransitionScope.ItemDetailsUI(
     component: ItemDetailsComponent,
     hazeState: HazeState,
     topPadding: Dp,
-    detailedItemAnimationManager: DetailedItemAnimationManager
+    detailsAnimator: DetailsAnimator
 ) {
     PredictiveBackHandler { progress ->
         try {
             progress.collect { backEvent ->
-                try {
-                    detailedItemAnimationManager.onBackProgress(backEvent.progress)
-                } catch (_: CancellationException) {
+                runCatching {
+                    detailsAnimator.onBackProgress(backEvent.progress)
                 }
             }
-            detailedItemAnimationManager.onBackSuccessful()
+            detailsAnimator.onBackSuccessful()
         } catch (e: CancellationException) {
-            detailedItemAnimationManager.onBackFailure()
+            detailsAnimator.onBackFailure()
             throw e
         }
     }
 
     ItemDetailsContent(
+        component = component,
         topPadding = topPadding,
         hazeState = hazeState,
-        component = component,
-        detailedItemAnimationManager = detailedItemAnimationManager,
+        detailsAnimator = detailsAnimator,
         sheet = {
             ItemDetailsSheetContent(
                 hazeState = hazeState,
                 sharedTransitionScope = this@ItemDetailsUI,
-                detailedItemAnimationManager = detailedItemAnimationManager
+                detailsAnimator = detailsAnimator
             )
         }
     )

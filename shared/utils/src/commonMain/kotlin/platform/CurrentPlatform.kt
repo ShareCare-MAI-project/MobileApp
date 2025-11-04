@@ -1,7 +1,7 @@
 package platform
 
 enum class Platform {
-    iOS, Android
+    IOS, Android
 }
 
 expect val currentPlatform: Platform

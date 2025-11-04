@@ -1,29 +1,33 @@
-package flow.ui
+package common.detailsTransition
 
 import androidx.compose.animation.core.SeekableTransitionState
 import androidx.compose.animation.core.Transition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.animateTo
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Dp
 import itemDetails.ui.bottomSheet.SheetValue
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 
-class DetailedItemAnimationManager(
+class DetailsAnimator(
     val detailedItemId: String?,
     val transition: Transition<SheetValue>,
     val seekableTransitionState: SeekableTransitionState<SheetValue>,
     val sheetState: AnchoredDraggableState<SheetValue>,
     val sheetHeight: Dp,
+    val imageHeight: Dp,
     val sheetHeightPx: Float,
     val onBackClicked: () -> Unit,
     val coroutineScope: CoroutineScope,
+    val pagerState: PagerState
 ) {
     var isInitialized = false
         private set
@@ -39,6 +43,7 @@ class DetailedItemAnimationManager(
         private set
 
     fun onBackProgress(progress: Float) {
+
         coroutineScope.launch {
             isStableDetailed = false
             isBackGesture = true
@@ -48,12 +53,13 @@ class DetailedItemAnimationManager(
                     targetState = SheetValue.Collapsed
                 )
             }
-            async {
+            async(NonCancellable) {
                 sheetState.anchoredDrag {
                     this.dragTo(progress * sheetHeightPx)
                 }
             }
         }
+
     }
 
     fun onBackSuccessful() {

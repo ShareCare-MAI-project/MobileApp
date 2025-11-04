@@ -2,12 +2,10 @@ package flow.ui
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.gestures.BringIntoViewSpec
 import androidx.compose.foundation.gestures.LocalBringIntoViewSpec
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -36,7 +34,8 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import common.ContentType
+import common.detailsTransition.DetailsAnimator
+import common.grid.ContentType
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 import findHelp.ui.FindHelpUI
@@ -60,7 +59,7 @@ fun SharedTransitionScope.MainFlowContent(
     modifier: Modifier = Modifier,
     topPadding: Dp,
     bottomPadding: Dp,
-    detailedItemAnimationManager: DetailedItemAnimationManager
+    detailsAnimator: DetailsAnimator
 ) {
     val density = LocalDensity.current
 
@@ -112,14 +111,6 @@ fun SharedTransitionScope.MainFlowContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = topPadding),
-//                    .then(
-//                        if (detailedItemAnimationManager.detailedItemId != null)
-//                            Modifier.offset(
-//                                y = -(1 - detailedItemAnimationManager.seekableTransitionState.fraction)
-//                                    .coerceIn(0f, 1f) * scaffoldTopPadding
-//                            )
-//                        else Modifier
-//                    ),
                 hazeState = hazeState,
                 currentContentType = currentContentType,
             )
@@ -157,32 +148,9 @@ fun SharedTransitionScope.MainFlowContent(
 
         Box(modifier = Modifier.fillMaxSize().hazeSource(hazeState, key = "MainFlow")) {
             CompositionLocalProvider(
-                LocalBringIntoViewSpec provides object : BringIntoViewSpec {
-                    override val scrollAnimationSpec: AnimationSpec<Float>
-                        get() = spring(stiffness = Spring.StiffnessVeryLow)
-                    override fun calculateScrollDistance(
-                        offset: Float,
-                        size: Float,
-                        containerSize: Float
-                    ): Float {
-                        with(density) {
-                            println("offset: $offset | size: $size | container: $containerSize")
-
-
-                            val top = topShadowWholePadding.toPx()
-                            val bottom = containerSize - bottomShadowWholePadding.toPx()
-
-                            val finalOffset = if (offset + size > bottom) {
-                                bottom - size
-                            } else if (offset < top) {
-                                top
-                            } else {
-                                offset
-                            }
-                            return offset - finalOffset
-                        }
-                    }
-                }
+                LocalBringIntoViewSpec provides customBringIntoViewSpec(0f,0f
+//                    topShadowWholePadding = with(density) { to }
+                )
             ) {
                 Children(
                     stack = stack,
@@ -197,10 +165,10 @@ fun SharedTransitionScope.MainFlowContent(
                         is Child.FindHelpChild -> FindHelpUI(
                             topPadding = topSpacePadding,
                             bottomPadding = bottomSpacePadding,
-                            component = child.findHelpComponent,
                             lazyGridState = lazyGridStateFindHelp,
                             currentContentType = currentContentType,
-                            detailedItemAnimationManager = detailedItemAnimationManager
+                            component = child.findHelpComponent,
+                            detailsAnimator = detailsAnimator
                         )
 
                         is Child.ShareCareChild -> TODO()

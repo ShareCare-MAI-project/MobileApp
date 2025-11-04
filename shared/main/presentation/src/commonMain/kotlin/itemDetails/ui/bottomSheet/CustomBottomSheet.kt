@@ -52,14 +52,16 @@ fun SheetValue.isExpanded() = this == SheetValue.Expanded
 
 @Composable
 fun rememberCustomSheetState(heightPx: Float, key: Any?) = remember(key) {
-    AnchoredDraggableState(
-        initialValue = SheetValue.Collapsed,
-        anchors = DraggableAnchors {
-            SheetValue.Expanded at 0f
-            SheetValue.Collapsed at heightPx
-        },
-    )
+    getCustomSheetState(heightPx)
 }
+
+fun getCustomSheetState(heightPx: Float) = AnchoredDraggableState(
+    initialValue = SheetValue.Collapsed,
+    anchors = DraggableAnchors {
+        SheetValue.Expanded at 0f
+        SheetValue.Collapsed at heightPx
+    },
+)
 
 
 @OptIn(ExperimentalHazeMaterialsApi::class, ExperimentalHazeApi::class)
@@ -97,10 +99,9 @@ fun CustomBottomSheet(
 
     val adaptiveInputScale by animateFloatAsState(
         if (offset != 0f || dragDragged) {
-            if (currentPlatform == Platform.iOS) .7f
+            if (currentPlatform == Platform.IOS) .7f
             else .3f
-        }
-        else 1f,
+        } else 1f,
         animationSpec = tween(700)
     )
 

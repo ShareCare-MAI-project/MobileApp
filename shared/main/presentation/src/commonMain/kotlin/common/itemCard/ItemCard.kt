@@ -1,7 +1,6 @@
-package common
+package common.itemCard
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
@@ -31,24 +30,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import architecture.launchIO
-import dev.chrisbanes.haze.hazeSource
-import flow.ui.DetailedItemAnimationManager
-import foundation.AsyncImage
+import common.detailsTransition.DetailsAnimator
 import itemDetails.ui.bottomSheet.isExpanded
 import resources.RImages
 import utils.SpacerV
 import view.consts.Paddings
 
-
-object ItemCardDefaults {
-    val containerPadding = Paddings.small
-    val cardShapeDp = 25.dp
-    val imageShapeDp = cardShapeDp - containerPadding
-
-    val imageShape = RoundedCornerShape(imageShapeDp)
-}
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -56,7 +44,7 @@ internal fun SharedTransitionScope.ItemCard(
     modifier: Modifier = Modifier,
     title: String,
     id: String,
-    detailedItemAnimationManager: DetailedItemAnimationManager,
+    detailsAnimator: DetailsAnimator,
     onClicked: () -> Unit
 ) {
     val cardShape = RoundedCornerShape(ItemCardDefaults.cardShapeDp)
@@ -83,18 +71,18 @@ internal fun SharedTransitionScope.ItemCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            if (detailedItemAnimationManager.detailedItemId != id) {
+            if (detailsAnimator.detailedItemId != id) {
                 ItemImage(
                     path = RImages.LOGO,
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(1.1f),
                     id = id,
-                    detailedItemId = detailedItemAnimationManager.detailedItemId,
+                    detailedItemId = detailsAnimator.detailedItemId,
                     animatedContentScope = null
                 )
             } else {
-                detailedItemAnimationManager.transition.AnimatedContent(
+                detailsAnimator.transition.AnimatedContent(
                     transitionSpec = { fadeIn(tween(0)).togetherWith(fadeOut(tween(0))) },
                     modifier = Modifier.fillMaxWidth().aspectRatio(1.1f)
                 ) { sheetValue ->
@@ -105,7 +93,7 @@ internal fun SharedTransitionScope.ItemCard(
                                 .fillMaxWidth()
                                 .aspectRatio(1.1f),
                             id = id,
-                            detailedItemId = detailedItemAnimationManager.detailedItemId,
+                            detailedItemId = detailsAnimator.detailedItemId,
                             animatedContentScope = this
                         )
                     }
@@ -134,41 +122,4 @@ internal fun SharedTransitionScope.ItemCard(
             )
         }
     }
-}
-
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Composable
-internal fun SharedTransitionScope.ItemImage(
-    path: String,
-    modifier: Modifier,
-    id: String,
-    animatedContentScope: AnimatedContentScope?,
-    detailedItemId: String?
-) {
-    val isAnimating = detailedItemId == id
-    val hazeState = if (isAnimating) LocalTransitionHazeState.current else null
-
-    AsyncImage(
-        path = path,
-        modifier = modifier
-            // HAZE
-            .then(
-                if (animatedContentScope != null)
-                    Modifier.sharedElement(
-                        rememberSharedContentState(
-                            id
-                        ),
-                        animatedVisibilityScope = animatedContentScope,
-                        renderInOverlayDuringTransition = isAnimating
-
-                    )
-                else Modifier
-            )
-            .clip(ItemCardDefaults.imageShape)
-            .then(
-                if (hazeState != null) Modifier.hazeSource(hazeState)
-                else Modifier
-            ),
-        contentDescription = null // TODO
-    )
 }

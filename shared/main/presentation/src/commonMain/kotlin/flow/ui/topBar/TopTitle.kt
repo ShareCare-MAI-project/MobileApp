@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import common.ContentType
-import common.TransitionHeader
+import common.grid.ContentType
+import common.grid.TransitionHeader
 import dev.chrisbanes.haze.HazeState
 import utils.SpacerH
 import view.consts.Paddings

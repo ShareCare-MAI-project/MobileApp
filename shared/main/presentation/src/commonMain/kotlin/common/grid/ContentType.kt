@@ -1,4 +1,4 @@
-package common
+package common.grid
 
 internal sealed class ContentType(val key: String) {
     data object Catalog : ContentType("catalog_type")

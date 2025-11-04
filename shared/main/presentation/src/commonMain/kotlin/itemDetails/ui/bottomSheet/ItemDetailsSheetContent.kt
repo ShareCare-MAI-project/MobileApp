@@ -10,15 +10,16 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import common.detailsTransition.DetailsAnimator
 import dev.cardTitle
 import dev.chrisbanes.haze.HazeState
-import flow.ui.DetailedItemAnimationManager
+import itemDetails.ui.ItemDetailsDefaults
 import view.consts.Paddings
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -26,21 +27,24 @@ import view.consts.Paddings
 fun BoxScope.ItemDetailsSheetContent(
     hazeState: HazeState,
     sharedTransitionScope: SharedTransitionScope,
-    detailedItemAnimationManager: DetailedItemAnimationManager
+    detailsAnimator: DetailsAnimator
 ) {
     val density = LocalDensity.current
+
+    val gapHeightPx = remember { with(density) { ItemDetailsDefaults.gapHeight.toPx() } }
+
     CustomBottomSheet(
         hazeState = hazeState,
         modifier = with(sharedTransitionScope) {
             Modifier.align(Alignment.BottomCenter)
                 .renderInSharedTransitionScopeOverlay(1f)
         },
-        sheetState = detailedItemAnimationManager.sheetState,
-        height = detailedItemAnimationManager.sheetHeight,
+        sheetState = detailsAnimator.sheetState,
+        height = detailsAnimator.sheetHeight,
         onDrag = { offset ->
-            detailedItemAnimationManager.onSheetDrag {
+            detailsAnimator.onSheetDrag {
                 val newBackProgress =
-                    with(density) { (offset - 50.dp.toPx()) / (detailedItemAnimationManager.sheetHeightPx - 50.dp.toPx()) }
+                    with(density) { (offset - gapHeightPx) / (detailsAnimator.sheetHeightPx - gapHeightPx) }
                 newBackProgress.coerceIn(0f, 1f)
             }
         }
