@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalSharedTransitionApi::class)
 
-package common
+package common.grid
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -27,13 +27,13 @@ internal fun LazyGridScope.TransitionColumnHeader(
 ) {
     item(
         key = contentType.key,
-        span = { GridItemSpan(maxCurrentLineSpan) },
+        span = { GridItemSpan(maxLineSpan) },
         contentType = contentType
     ) {
         TransitionHeader(
             isVisible = currentContentType != contentType,
             contentType = contentType,
-            modifier = Modifier.padding(start = Paddings.medium)
+            modifier = Modifier.padding(start = Paddings.horizontalListPadding)
         )
     }
 }

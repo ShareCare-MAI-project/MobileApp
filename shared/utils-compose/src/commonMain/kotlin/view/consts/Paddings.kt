@@ -23,5 +23,8 @@ object Paddings {
     val semiSmall = 5.dp
 
 
+
     val endListPadding = semiMedium
+
+    val horizontalListPadding = semiMedium
 }

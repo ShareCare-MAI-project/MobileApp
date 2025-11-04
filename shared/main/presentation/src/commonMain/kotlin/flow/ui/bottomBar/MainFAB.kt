@@ -14,6 +14,7 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Handshake
 import androidx.compose.material.icons.rounded.LibraryAdd
@@ -38,7 +39,6 @@ import foundation.ShapeByInteractionDefaults
 import foundation.shapeByInteraction
 import kotlinx.coroutines.delay
 import utils.SpacerH
-import utils.defaultMarquee
 import utils.value
 import view.consts.Paddings
 import widgets.glass.GlassCard
@@ -99,8 +99,10 @@ internal fun MainFAB(
                 SpacerH(Paddings.semiSmall)
                 Text(
                     (if (isFindHelpMode) Res.string.fab_find_help else Res.string.fab_share_care).value,
-                    modifier = Modifier.defaultMarquee(),
-                    fontWeight = FontWeight(450)
+                    modifier = Modifier,
+                    fontWeight = FontWeight.Medium,
+                    maxLines = 1,
+                    autoSize = TextAutoSize.StepBased()
                 )
             }
         }

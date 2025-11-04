@@ -1,44 +1,58 @@
 package findHelp.ui
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
-import common.ContentType
-import common.ItemCard
-import common.MainLazyGrid
-import common.TransitionColumnHeader
+import common.detailsTransition.DetailsAnimator
+import common.grid.ContentType
+import common.grid.MainLazyGrid
+import common.grid.TransitionColumnHeader
+import common.itemCard.ItemCard
+import dev.cardTitle
 import findHelp.components.FindHelpComponent
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-internal fun FindHelpUI(
-    topPadding: Dp,
-    bottomPadding: Dp,
+internal fun SharedTransitionScope.FindHelpUI(
     lazyGridState: LazyGridState,
     currentContentType: ContentType?,
     component: FindHelpComponent,
+    detailsAnimator: DetailsAnimator
 ) {
+
+
+    val items = remember { (0..50).toList().toMutableStateList() }
+
     MainLazyGrid(
-        topPadding = topPadding,
-        emptyBottomPadding = bottomPadding,
-        lazyGridState = lazyGridState
+        lazyGridState = lazyGridState,
     ) {
         TransitionColumnHeader(
             contentType = ContentType.Catalog,
             currentContentType = currentContentType
         )
-        items(50, key = { it }, contentType = { ContentType.Catalog }) {
+
+        items(items = items.toList(), key = { it }, contentType = { ContentType.Catalog }) {
+            val id = "meow_$it"
             ItemCard(
                 modifier = Modifier
-//                    .aspectRatio(0.7f)
-                    .fillMaxWidth(), title = "Чёрная футболка #${it}"
-            )
+                    .animateItem()
+                    .fillMaxSize(),
+                title = "$cardTitle #${it}",
+                id = id,
+                detailsAnimator = detailsAnimator
+            ) {
+                component.onCardClicked(id)
+            }
         }
 
         TransitionColumnHeader(
