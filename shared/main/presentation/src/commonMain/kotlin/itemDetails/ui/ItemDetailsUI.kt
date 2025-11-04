@@ -5,7 +5,6 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.backhandler.PredictiveBackHandler
-import androidx.compose.ui.unit.Dp
 import common.detailsTransition.DetailsAnimator
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
@@ -23,7 +22,6 @@ import kotlin.coroutines.cancellation.CancellationException
 fun SharedTransitionScope.ItemDetailsUI(
     component: ItemDetailsComponent,
     hazeState: HazeState,
-    topPadding: Dp,
     detailsAnimator: DetailsAnimator
 ) {
     PredictiveBackHandler { progress ->
@@ -42,7 +40,6 @@ fun SharedTransitionScope.ItemDetailsUI(
 
     ItemDetailsContent(
         component = component,
-        topPadding = topPadding,
         hazeState = hazeState,
         detailsAnimator = detailsAnimator,
         sheet = {

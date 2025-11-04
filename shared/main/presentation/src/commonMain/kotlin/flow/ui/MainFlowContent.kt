@@ -14,11 +14,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,9 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
@@ -36,6 +35,8 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import common.detailsTransition.DetailsAnimator
 import common.grid.ContentType
+import common.grid.LocalSpacePaddings
+import common.grid.SpacePaddings
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 import findHelp.ui.FindHelpUI
@@ -57,16 +58,13 @@ import view.consts.Paddings
 fun SharedTransitionScope.MainFlowContent(
     component: MainFlowComponent,
     modifier: Modifier = Modifier,
-    topPadding: Dp,
-    bottomPadding: Dp,
     detailsAnimator: DetailsAnimator
 ) {
     val density = LocalDensity.current
 
-    val hazeState = rememberHazeState()
-
-    val stack by component.stack.subscribeAsState()
-
+    val safeContentPaddings = WindowInsets.safeContent.asPaddingValues()
+    val topPadding = safeContentPaddings.calculateTopPadding()
+    val bottomPadding = safeContentPaddings.calculateBottomPadding()
 
     val imeInsetsPaddings = WindowInsets.ime.asPaddingValues()
     val imePadding = imeInsetsPaddings.calculateBottomPadding()
@@ -76,6 +74,8 @@ fun SharedTransitionScope.MainFlowContent(
         else Paddings.semiLarge // if there is no safeContentBottomPadding
     }, animationSpec = spring(stiffness = Spring.StiffnessVeryLow))
 
+
+    val stack by component.stack.subscribeAsState()
     val currentChild = stack.active.instance
     var currentContentType: ContentType? by remember { mutableStateOf(null) }
 
@@ -86,7 +86,7 @@ fun SharedTransitionScope.MainFlowContent(
     val currentLazyGridState =
         if (currentChild is Child.FindHelpChild) lazyGridStateFindHelp else lazyGridStateShareCare
 
-    var scaffoldTopPadding: Dp by remember { mutableStateOf(0.dp) }
+    val hazeState = rememberHazeState()
 
     Scaffold(
         bottomBar = {
@@ -118,39 +118,63 @@ fun SharedTransitionScope.MainFlowContent(
         },
         modifier = modifier
     ) { paddings ->
-        scaffoldTopPadding = max(paddings.calculateTopPadding(), scaffoldTopPadding)
-        val scaffoldBottomPadding = paddings.calculateTopPadding()
+        val scaffoldTopPadding = paddings.calculateTopPadding()
+        val scaffoldBottomPadding = paddings.calculateBottomPadding()
 
-        val topBarHeight = scaffoldTopPadding - topPadding
-        val bottomBarHeight = scaffoldBottomPadding - topPadding
+
+        val topBarHeight =
+            remember(scaffoldTopPadding, topPadding) { scaffoldTopPadding - topPadding }
+        val bottomBarHeight =
+            remember(scaffoldBottomPadding, bottomPadding) { scaffoldBottomPadding - bottomPadding }
 
         val topBarHeightPx = with(density) {
             (scaffoldTopPadding).roundToPx()
         }
 
-        // Получаем первый элемент контента, который находится ниже topBar
-        currentContentType = currentLazyGridState.layoutInfo.visibleItemsInfo
-            .asSequence()
-            .firstOrNull { item ->
-                (item.offset.y + item.size.height) > topBarHeightPx
-            }?.contentType as? ContentType
-
+        LaunchedEffect(
+            currentLazyGridState.scrollIndicatorState?.scrollOffset
+        ) {
+            // Получаем первый элемент контента, который находится ниже topBar
+            currentContentType = currentLazyGridState.layoutInfo.visibleItemsInfo
+                .asSequence()
+                .firstOrNull { item ->
+                    (item.offset.y + item.size.height) > topBarHeightPx
+                }?.contentType as? ContentType
+        }
 
         // просто добавляют отступ в скролл, без тени
-        val topSpacePadding = scaffoldTopPadding + Paddings.medium
-        val bottomSpacePadding =
+        val topSpacePadding = remember(scaffoldTopPadding) { scaffoldTopPadding + Paddings.medium }
+        val bottomSpacePadding = remember(bottomPadding, scaffoldBottomPadding) {
             bottomPadding + scaffoldBottomPadding + Paddings.endListPadding
+        }
 
-        // For bringIntoView
-        val topShadowWholePadding = topPadding + ScrollEdgeShadowHeight.big + topBarHeight
-        val bottomShadowWholePadding =
-            bottomPadding / 2 + ScrollEdgeShadowHeight.big + bottomBarHeight
+        val spacePaddings = remember(topSpacePadding, bottomSpacePadding) {
+            SpacePaddings(
+                top = topSpacePadding,
+                bottom = bottomSpacePadding
+            )
+        }
 
-        Box(modifier = Modifier.fillMaxSize().hazeSource(hazeState, key = "MainFlow")) {
+
+        val topSolidHeight = topPadding
+        val topShadowHeight = ScrollEdgeShadowHeight.big + topBarHeight
+        val bottomSolidHeight = bottomPadding / 2
+        val bottomShadowHeight = ScrollEdgeShadowHeight.big + bottomBarHeight
+
+        val customBringIntoViewSpec =
+            remember(topSolidHeight, topShadowHeight, bottomSolidHeight, bottomShadowHeight) {
+                with(density) {
+                    CustomBringIntoViewSpec(
+                        topShadowWholePaddingPx = (topSolidHeight + topShadowHeight).toPx(),
+                        bottomShadowWholePaddingPx = (bottomSolidHeight + bottomShadowHeight).toPx()
+                    )
+                }
+            }
+
+        Box(modifier = Modifier.hazeSource(hazeState, key = "MainFlow")) {
             CompositionLocalProvider(
-                LocalBringIntoViewSpec provides customBringIntoViewSpec(0f,0f
-//                    topShadowWholePadding = with(density) { to }
-                )
+                LocalBringIntoViewSpec provides customBringIntoViewSpec,
+                LocalSpacePaddings provides spacePaddings
             ) {
                 Children(
                     stack = stack,
@@ -163,8 +187,6 @@ fun SharedTransitionScope.MainFlowContent(
                 ) {
                     when (val child = it.instance) {
                         is Child.FindHelpChild -> FindHelpUI(
-                            topPadding = topSpacePadding,
-                            bottomPadding = bottomSpacePadding,
                             lazyGridState = lazyGridStateFindHelp,
                             currentContentType = currentContentType,
                             component = child.findHelpComponent,
@@ -180,18 +202,17 @@ fun SharedTransitionScope.MainFlowContent(
             ScrollEdgeFade(
                 modifier = Modifier.fillMaxWidth()
                     .align(Alignment.TopStart),
-                solidHeight = topPadding,
-                shadowHeight = ScrollEdgeShadowHeight.big + topBarHeight,
-                isVisible = currentLazyGridState.canScrollBackward// && !this@MainFlowContent.isTransitionActive,
+                solidHeight = topSolidHeight,
+                shadowHeight = topShadowHeight,
+                isVisible = currentLazyGridState.canScrollBackward
             )
 
             BottomScrollEdgeFade(
                 modifier = Modifier.fillMaxWidth().align(Alignment.BottomStart),
-                solidHeight = bottomPadding / 2,
-                shadowHeight = ScrollEdgeShadowHeight.big + bottomBarHeight,
-                isVisible = currentLazyGridState.canScrollForward// && !this@MainFlowContent.isTransitionActive,
+                solidHeight = bottomSolidHeight,
+                shadowHeight = bottomShadowHeight,
+                isVisible = currentLazyGridState.canScrollForward
             )
-
 
             // TODO: back handler
             Text(stack.items.size.toString(), modifier = Modifier.padding(Paddings.big))

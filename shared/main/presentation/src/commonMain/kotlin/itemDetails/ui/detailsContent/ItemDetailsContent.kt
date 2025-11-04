@@ -4,15 +4,17 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.unit.Dp
 import common.detailsTransition.DetailsAnimator
 import common.detailsTransition.SharedAnimation
 import common.itemCard.ItemImage
@@ -28,28 +30,29 @@ import view.consts.Paddings
 @Composable
 fun SharedTransitionScope.ItemDetailsContent(
     component: ItemDetailsComponent,
-    topPadding: Dp,
     hazeState: HazeState,
     detailsAnimator: DetailsAnimator,
     sheet: @Composable BoxScope.() -> Unit
 ) {
+    val safeContentPaddings = WindowInsets.safeContent.asPaddingValues()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
         Box(
             Modifier.pointerInput(Unit) {} // Prohibit Background scrolling
-                .padding(top = topPadding)
+                .padding(top = safeContentPaddings.calculateTopPadding())
                 .fillMaxWidth()
         ) {
 
-            detailsAnimator.transition.SharedAnimation {
-                if (it.isExpanded()) {
+            detailsAnimator.transition.SharedAnimation { sheetValue ->
+                if (sheetValue.isExpanded()) {
                     ItemImage(
                         path = RImages.LOGO,
                         modifier = Modifier
                             .align(Alignment.TopCenter)
-                            .padding(horizontal = Paddings.semiMedium)
+                            .padding(horizontal = Paddings.horizontalListPadding)
                             .height(detailsAnimator.imageHeight)
                             .hazeSource(hazeState, zIndex = 0f),
                         id = component.itemId,
@@ -72,7 +75,7 @@ fun SharedTransitionScope.ItemDetailsContent(
                     detailsAnimator.isStableDetailed,
                 modifier = Modifier
                     .renderInSharedTransitionScopeOverlay()
-                    .padding(horizontal = Paddings.semiMedium)
+                    .padding(horizontal = Paddings.horizontalListPadding) // соответствуем image
                     .padding(Paddings.semiSmall),
                 hazeState = hazeState
             ) {

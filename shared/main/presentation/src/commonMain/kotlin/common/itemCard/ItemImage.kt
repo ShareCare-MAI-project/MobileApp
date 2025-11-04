@@ -25,7 +25,6 @@ internal fun SharedTransitionScope.ItemImage(
     AsyncImage(
         path = path,
         modifier = modifier
-            // HAZE
             .then(
                 if (animatedContentScope != null && id != null)
                     Modifier.sharedElement(

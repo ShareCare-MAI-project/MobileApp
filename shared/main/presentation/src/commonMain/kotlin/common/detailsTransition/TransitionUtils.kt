@@ -14,14 +14,14 @@ import androidx.compose.ui.Modifier
 import dev.chrisbanes.haze.HazeState
 import itemDetails.ui.bottomSheet.SheetValue
 
-val LocalTransitionHazeState: ProvidableCompositionLocal<HazeState> =
+internal val LocalTransitionHazeState: ProvidableCompositionLocal<HazeState> =
     staticCompositionLocalOf {
         error("No TransitionHazeState provided")
     }
 
 
 @Composable
-fun Transition<SheetValue>.SharedAnimation(
+internal fun Transition<SheetValue>.SharedAnimation(
     modifier: Modifier = Modifier,
     content: @Composable AnimatedContentScope.(SheetValue) -> Unit
 ) {

@@ -45,7 +45,7 @@ fun SharedTransitionScope.DetailsImagePager(
                         else -> RImages.LOGO
                     },
                     modifier = Modifier
-                        .padding(horizontal = Paddings.semiMedium)
+                        .padding(horizontal = Paddings.horizontalListPadding)
                         .fillMaxSize(),
                     id = null,
                     detailedItemId = null,

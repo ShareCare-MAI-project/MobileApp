@@ -8,14 +8,6 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 
 
-fun Modifier.optional(bool: Boolean, modifier: Modifier) = this.then(
-    if (bool) {
-        modifier
-    } else {
-        Modifier
-    }
-)
-
 fun Modifier.fastBackground(color: Color) = this.drawBehind {
     drawRect(color)
 }

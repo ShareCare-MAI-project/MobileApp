@@ -41,6 +41,7 @@ fun BoxScope.ItemDetailsSheetContent(
         },
         sheetState = detailsAnimator.sheetState,
         height = detailsAnimator.sheetHeight,
+        pagerState = detailsAnimator.pagerState,
         onDrag = { offset ->
             detailsAnimator.onSheetDrag {
                 val newBackProgress =

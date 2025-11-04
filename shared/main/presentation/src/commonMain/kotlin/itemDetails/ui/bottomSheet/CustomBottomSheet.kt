@@ -2,24 +2,17 @@ package itemDetails.ui.bottomSheet
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.AnchoredDraggableState
-import androidx.compose.foundation.gestures.DraggableAnchors
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.runtime.Composable
@@ -32,7 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.IntOffset
 import dev.chrisbanes.haze.ExperimentalHazeApi
 import dev.chrisbanes.haze.HazeInputScale
 import dev.chrisbanes.haze.HazeProgressive
@@ -40,28 +33,9 @@ import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
+import itemDetails.ui.ItemDetailsDefaults
 import platform.Platform
 import platform.currentPlatform
-import view.consts.Paddings
-import view.consts.Sizes
-
-enum class SheetValue { Collapsed, Expanded }
-
-fun SheetValue.isExpanded() = this == SheetValue.Expanded
-
-
-@Composable
-fun rememberCustomSheetState(heightPx: Float, key: Any?) = remember(key) {
-    getCustomSheetState(heightPx)
-}
-
-fun getCustomSheetState(heightPx: Float) = AnchoredDraggableState(
-    initialValue = SheetValue.Collapsed,
-    anchors = DraggableAnchors {
-        SheetValue.Expanded at 0f
-        SheetValue.Collapsed at heightPx
-    },
-)
 
 
 @OptIn(ExperimentalHazeMaterialsApi::class, ExperimentalHazeApi::class)
@@ -69,41 +43,40 @@ fun getCustomSheetState(heightPx: Float) = AnchoredDraggableState(
 fun CustomBottomSheet(
     sheetState: AnchoredDraggableState<SheetValue>,
     height: Dp,
+    pagerState: PagerState,
     hazeState: HazeState,
     modifier: Modifier,
     onDrag: (Float) -> Unit,
     content: @Composable ColumnScope.() -> Unit
 ) {
+    val offset = sheetState.requireOffset()
 
     val isDarkTheme = isSystemInDarkTheme()
-
     val density = LocalDensity.current
 
 
     val dragInteractionSource = remember { MutableInteractionSource() }
-
-    val offset = sheetState.requireOffset()
-
     val dragPressed = dragInteractionSource.collectIsPressedAsState().value
     val dragDragged = dragInteractionSource.collectIsDraggedAsState().value
 
 
     val endIntensity = if (isDarkTheme) .8f else .7f
-
+    val hazeAnimationSpec = remember { tween<Float>(700) }
     val startIntensity by animateFloatAsState(
         if (dragPressed) endIntensity - .45f
         else if (offset != 0f || dragDragged) endIntensity
         else .0f,
-        animationSpec = tween(700)
+        animationSpec = hazeAnimationSpec
     )
-
     val adaptiveInputScale by animateFloatAsState(
         if (offset != 0f || dragDragged) {
             if (currentPlatform == Platform.IOS) .7f
             else .3f
         } else 1f,
-        animationSpec = tween(700)
+        animationSpec = hazeAnimationSpec
     )
+    val progressiveEndY =
+        with(density) { ItemDetailsDefaults.gapHeight.roundToPx() } * adaptiveInputScale
 
     LaunchedEffect(offset) {
         onDrag(offset)
@@ -113,11 +86,10 @@ fun CustomBottomSheet(
         modifier = modifier
             .height(height)
             .fillMaxWidth()
-            .offset(y = with(density) {
-                offset.toDp()
-            })
+            .offset {
+                IntOffset(y = offset.toInt(), x = 0)
+            }
             .pointerInput(Unit) {} // Prohibit Background scrolling
-
             .clip(shapes.extraExtraLarge)
             // HAZE
             .hazeEffect(
@@ -125,9 +97,7 @@ fun CustomBottomSheet(
                 style = HazeMaterials.thick(colorScheme.background)
             ) {
                 progressive = HazeProgressive.verticalGradient(
-                    endY = with(density) {
-                        50.dp.toPx() * adaptiveInputScale // remove fade line, when change inputScale
-                    },
+                    endY = progressiveEndY,  // remove fade line, when change inputScale
                     startIntensity = startIntensity,
                     endIntensity = endIntensity,
                     preferPerformance = false
@@ -136,20 +106,11 @@ fun CustomBottomSheet(
             },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(
-            Modifier.padding(top = Paddings.semiMedium).size(Sizes.dragHandleSize)
-                .clip(shapes.medium)
-                .background(
-                    colorScheme.onBackground.copy(
-                        alpha = (startIntensity + .6f).coerceAtMost(1f)
-                    )
-                )
-                .anchoredDraggable(
-                    sheetState,
-                    orientation = Orientation.Vertical,
-                    interactionSource = dragInteractionSource
-                )
-                .clickable(dragInteractionSource, null) {}
+        DragHandle(
+            startIntensity = startIntensity,
+            sheetState = sheetState,
+            dragInteractionSource = dragInteractionSource,
+            pagerState = pagerState
         )
 
         content()

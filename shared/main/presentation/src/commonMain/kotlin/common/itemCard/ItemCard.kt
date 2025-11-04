@@ -1,12 +1,7 @@
 package common.itemCard
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import architecture.launchIO
 import common.detailsTransition.DetailsAnimator
+import common.detailsTransition.SharedAnimation
 import itemDetails.ui.bottomSheet.isExpanded
 import resources.RImages
 import utils.SpacerV
@@ -61,8 +57,6 @@ internal fun SharedTransitionScope.ItemCard(
                 }
 
                 onClicked()
-
-
             },
         shape = cardShape
     ) {
@@ -82,8 +76,7 @@ internal fun SharedTransitionScope.ItemCard(
                     animatedContentScope = null
                 )
             } else {
-                detailsAnimator.transition.AnimatedContent(
-                    transitionSpec = { fadeIn(tween(0)).togetherWith(fadeOut(tween(0))) },
+                detailsAnimator.transition.SharedAnimation(
                     modifier = Modifier.fillMaxWidth().aspectRatio(1.1f)
                 ) { sheetValue ->
                     if (!sheetValue.isExpanded()) {
@@ -101,8 +94,6 @@ internal fun SharedTransitionScope.ItemCard(
             }
 
             SpacerV(Paddings.semiSmall)
-
-
 
             Text(
                 title,

@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
 import common.detailsTransition.DetailsAnimator
 import common.grid.ContentType
 import common.grid.MainLazyGrid
@@ -25,8 +24,6 @@ import findHelp.components.FindHelpComponent
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 internal fun SharedTransitionScope.FindHelpUI(
-    topPadding: Dp,
-    bottomPadding: Dp,
     lazyGridState: LazyGridState,
     currentContentType: ContentType?,
     component: FindHelpComponent,
@@ -37,8 +34,6 @@ internal fun SharedTransitionScope.FindHelpUI(
     val items = remember { (0..50).toList().toMutableStateList() }
 
     MainLazyGrid(
-        topPadding = topPadding,
-        emptyBottomPadding = bottomPadding,
         lazyGridState = lazyGridState,
     ) {
         TransitionColumnHeader(
