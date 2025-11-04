@@ -51,7 +51,6 @@ fun SharedTransitionScope.DetailsImagePager(
                     detailedItemId = null,
                     animatedContentScope = null
                 )
-
             }
         }
     }

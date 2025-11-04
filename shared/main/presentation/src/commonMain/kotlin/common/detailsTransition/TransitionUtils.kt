@@ -2,7 +2,6 @@ package common.detailsTransition
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.core.Transition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -21,11 +20,11 @@ internal val LocalTransitionHazeState: ProvidableCompositionLocal<HazeState> =
 
 
 @Composable
-internal fun Transition<SheetValue>.SharedAnimation(
+internal fun  DetailsAnimator.SharedAnimation(
     modifier: Modifier = Modifier,
     content: @Composable AnimatedContentScope.(SheetValue) -> Unit
 ) {
-    this.AnimatedContent(
+    this.transition.AnimatedContent(
         transitionSpec = { fadeIn(tween(0)).togetherWith(fadeOut(tween(0))) },
         modifier = modifier
     ) { sheetValue ->

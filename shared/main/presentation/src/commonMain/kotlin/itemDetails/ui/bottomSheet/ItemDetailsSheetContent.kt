@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,7 +23,7 @@ import dev.chrisbanes.haze.HazeState
 import itemDetails.ui.ItemDetailsDefaults
 import view.consts.Paddings
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun BoxScope.ItemDetailsSheetContent(
     hazeState: HazeState,
@@ -56,7 +57,7 @@ fun BoxScope.ItemDetailsSheetContent(
             style = typography.headlineLargeEmphasized,
             modifier = Modifier
                 .padding(horizontal = Paddings.medium),
-            fontWeight = FontWeight(450)
+            fontWeight = FontWeight.Medium
         )
 
         Column(Modifier.verticalScroll(rememberScrollState())) {

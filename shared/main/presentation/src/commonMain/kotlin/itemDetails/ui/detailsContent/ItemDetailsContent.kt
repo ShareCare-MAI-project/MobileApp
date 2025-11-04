@@ -2,6 +2,8 @@ package itemDetails.ui.detailsContent
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.WindowInsets
@@ -11,7 +13,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -24,6 +28,7 @@ import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import itemDetails.components.ItemDetailsComponent
 import itemDetails.ui.bottomSheet.isExpanded
 import resources.RImages
+import utils.fastBackground
 import view.consts.Paddings
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalHazeMaterialsApi::class)
@@ -35,6 +40,14 @@ fun SharedTransitionScope.ItemDetailsContent(
     sheet: @Composable BoxScope.() -> Unit
 ) {
     val safeContentPaddings = WindowInsets.safeContent.asPaddingValues()
+    val topPadding = safeContentPaddings.calculateTopPadding()
+
+    // idk, why but animateColorAsState is blinking 0_o
+    val animatedTopBackgroundAlpha by animateFloatAsState(
+        if (detailsAnimator.isStableDetailed) 1f
+        else 0f,
+        animationSpec = tween(300)
+    )
 
     Box(
         modifier = Modifier
@@ -42,11 +55,12 @@ fun SharedTransitionScope.ItemDetailsContent(
     ) {
         Box(
             Modifier.pointerInput(Unit) {} // Prohibit Background scrolling
-                .padding(top = safeContentPaddings.calculateTopPadding())
+                .padding(top = topPadding)
                 .fillMaxWidth()
         ) {
-
-            detailsAnimator.transition.SharedAnimation { sheetValue ->
+            detailsAnimator.SharedAnimation(
+                Modifier
+            ) { sheetValue ->
                 if (sheetValue.isExpanded()) {
                     ItemImage(
                         path = RImages.LOGO,
@@ -85,5 +99,13 @@ fun SharedTransitionScope.ItemDetailsContent(
         }
 
         sheet()
+
+
+        // Lol, заливаем топ, чтобы не было видно бэкграунд DetailsImagePager
+        Box(
+            Modifier.fastBackground(colorScheme.background.copy(alpha = animatedTopBackgroundAlpha))
+                .fillMaxWidth().height(topPadding)
+
+        )
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.runtime.Composable
@@ -36,9 +37,13 @@ import dev.chrisbanes.haze.materials.HazeMaterials
 import itemDetails.ui.ItemDetailsDefaults
 import platform.Platform
 import platform.currentPlatform
+import utils.SpacerV
+import view.consts.Paddings
 
 
-@OptIn(ExperimentalHazeMaterialsApi::class, ExperimentalHazeApi::class)
+@OptIn(ExperimentalHazeMaterialsApi::class, ExperimentalHazeApi::class,
+    ExperimentalMaterial3ExpressiveApi::class
+)
 @Composable
 fun CustomBottomSheet(
     sheetState: AnchoredDraggableState<SheetValue>,
@@ -70,9 +75,9 @@ fun CustomBottomSheet(
     )
     val adaptiveInputScale by animateFloatAsState(
         if (offset != 0f || dragDragged) {
-            if (currentPlatform == Platform.IOS) .7f
+            if (currentPlatform == Platform.IOS) .5f
             else .3f
-        } else 1f,
+        } else .8f,
         animationSpec = hazeAnimationSpec
     )
     val progressiveEndY =
@@ -112,7 +117,7 @@ fun CustomBottomSheet(
             dragInteractionSource = dragInteractionSource,
             pagerState = pagerState
         )
-
+        SpacerV(Paddings.semiSmall)
         content()
     }
 }

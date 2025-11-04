@@ -76,15 +76,14 @@ internal fun SharedTransitionScope.ItemCard(
                     animatedContentScope = null
                 )
             } else {
-                detailsAnimator.transition.SharedAnimation(
+                detailsAnimator.SharedAnimation(
                     modifier = Modifier.fillMaxWidth().aspectRatio(1.1f)
                 ) { sheetValue ->
                     if (!sheetValue.isExpanded()) {
                         ItemImage(
                             path = RImages.LOGO,
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .aspectRatio(1.1f),
+                                .fillMaxSize(),
                             id = id,
                             detailedItemId = detailsAnimator.detailedItemId,
                             animatedContentScope = this

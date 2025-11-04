@@ -100,7 +100,7 @@ internal fun MainFAB(
                 Text(
                     (if (isFindHelpMode) Res.string.fab_find_help else Res.string.fab_share_care).value,
                     modifier = Modifier.defaultMarquee(),
-                    fontWeight = FontWeight(450)
+                    fontWeight = FontWeight.Medium
                 )
             }
         }
