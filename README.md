@@ -1,7 +1,7 @@
 # ShareCare
 Мобильное приложение для проекта по "Обучению служением"
 
-Поддерживает Android и iOS
+Поддерживает Android (13+) и iOS
 
 This is a Kotlin Multiplatform project targeting Android, iOS.
 
