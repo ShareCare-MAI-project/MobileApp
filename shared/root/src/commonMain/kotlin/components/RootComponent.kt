@@ -3,8 +3,8 @@ package components
 import architecture.DefaultStack
 import components.RootComponent.Child
 import components.RootComponent.Config
-import flow.components.MainFlowComponent
 import kotlinx.serialization.Serializable
+import mainFlow.components.MainFlowComponent
 
 interface RootComponent : DefaultStack<Config, Child> {
 

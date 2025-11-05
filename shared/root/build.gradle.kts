@@ -9,7 +9,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.core)
 
             implementation(project(Modules.Hello.presentation))
-            implementation(project(Modules.Main.presentation))
+            implementation(project(Modules.Main.Flow.presentation))
         }
     }
 }

@@ -30,6 +30,8 @@ dependencyResolutionManagement {
 
 include(":composeApp")
 
+
+// TODO: refactor this
 val sharedPath = ":shared"
 listOf(
     "core", "di", "root", "utils", "utils-compose"
@@ -37,8 +39,20 @@ listOf(
     include("$sharedPath:$module")
 }
 
+val mainPath = "$sharedPath:main"
+include("$mainPath:flow:presentation")
+include("$mainPath:common:presentation")
 listOf(
-    "hello", "auth", "main", "settings"
+    "share-care", "find-help", "item-details", "item-editor"
+).forEach { module ->
+    val subModules = listOf("data", "domain", "presentation")
+    subModules.forEach { subModule ->
+        include("$mainPath:$module:$subModule")
+    }
+}
+
+listOf(
+    "hello", "auth", "settings"
 ).forEach { module ->
     val subModules = listOf("data", "domain", "presentation")
     subModules.forEach { subModule ->

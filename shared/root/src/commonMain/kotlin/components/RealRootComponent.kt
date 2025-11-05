@@ -8,7 +8,6 @@ import com.arkivanov.decompose.value.Value
 import components.RootComponent.Child
 import components.RootComponent.Config
 import components.outputHandlers.onHelloOutput
-import flow.components.RealMainFlowComponent
 
 class RealRootComponent(
     componentContext: ComponentContext
