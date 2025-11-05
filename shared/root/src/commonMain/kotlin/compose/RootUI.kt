@@ -15,7 +15,7 @@ import components.RootComponent
 import dev.chrisbanes.haze.LocalHazeStyle
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
-import flow.ui.MainFlowUI
+import mainFlow.ui.MainFlowUI
 import ui.HelloUI
 import view.theme.AppTheme
 

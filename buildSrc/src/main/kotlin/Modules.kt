@@ -28,9 +28,39 @@ object Modules {
     object Main {
         private const val modulePath = "$sharedPath:main"
 
-        const val data = "$modulePath:data"
-        const val domain = "$modulePath:domain"
-        const val presentation = "$modulePath:presentation"
+        object Common {
+            private const val modulePath = "${Main.modulePath}:common"
+            const val presentation = "$modulePath:presentation"
+        }
+        object Flow {
+            private const val modulePath = "${Main.modulePath}:flow"
+            const val presentation = "$modulePath:presentation"
+        }
+
+        object ShareCare {
+            private const val modulePath = "${Main.modulePath}:share-care"
+            const val data = "$modulePath:data"
+            const val domain = "$modulePath:domain"
+            const val presentation = "$modulePath:presentation"
+        }
+        object FindHelp {
+            private const val modulePath = "${Main.modulePath}:find-help"
+            const val data = "$modulePath:data"
+            const val domain = "$modulePath:domain"
+            const val presentation = "$modulePath:presentation"
+        }
+        object ItemDetails {
+            private const val modulePath = "${Main.modulePath}:item-details"
+            const val data = "$modulePath:data"
+            const val domain = "$modulePath:domain"
+            const val presentation = "$modulePath:presentation"
+        }
+        object ItemEditor {
+            private const val modulePath = "${Main.modulePath}:item-editor"
+            const val data = "$modulePath:data"
+            const val domain = "$modulePath:domain"
+            const val presentation = "$modulePath:presentation"
+        }
     }
     object Settings {
         private const val modulePath = "$sharedPath:settings"
