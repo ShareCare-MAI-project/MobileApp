@@ -25,11 +25,12 @@ internal fun MainBottomBar(
     child: Child,
     hazeState: HazeState,
     navigateTo: (Config) -> Unit,
+    onFABButtonClick: (Boolean) -> Unit,
     lazyGridStateFindHelp: LazyGridState,
     lazyGridStateShareCare: LazyGridState
 ) {
     val coroutineScope = rememberCoroutineScope()
-
+    val isFindHelp = child is Child.FindHelpChild
 
     ThreeComponentsLayout(
         modifier = modifier,
@@ -38,7 +39,7 @@ internal fun MainBottomBar(
         paddingBetween = Paddings.semiSmall,
         leftContent = {
             BottomBarButton(
-                isSelected = child is Child.FindHelpChild,
+                isSelected = isFindHelp,
                 selectedColor = colorScheme.secondaryContainer,
                 text = Res.string.bar_find_help.value,
                 icon = Icons.Rounded.Interests,
@@ -55,12 +56,14 @@ internal fun MainBottomBar(
         centerContent = {
             MainFAB(
                 hazeState = hazeState,
-                child = child
-            )
+                isFindHelp = isFindHelp
+            ) {
+                onFABButtonClick(isFindHelp)
+            }
         },
         rightContent = {
             BottomBarButton(
-                isSelected = child is Child.ShareCareChild,
+                isSelected = !isFindHelp,
                 selectedColor = colorScheme.tertiaryContainer,
                 text = Res.string.bar_share_care.value,
                 icon = Icons.Rounded.VolunteerActivism,

@@ -20,10 +20,12 @@ import mainFlow.components.MainFlowComponent.Child.FindHelpChild
 import mainFlow.components.MainFlowComponent.Child.ShareCareChild
 import mainFlow.components.MainFlowComponent.Config
 import mainFlow.components.MainFlowComponent.DetailsConfig
+import mainFlow.components.MainFlowComponent.Output
 import shareCare.components.RealShareCareComponent
 
 class RealMainFlowComponent(
     componentContext: ComponentContext,
+    override val output: (Output) -> Unit
 ) : MainFlowComponent, ComponentContext by componentContext {
 
     override val nav = StackNavigation<Config>()

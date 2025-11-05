@@ -8,6 +8,8 @@ import com.arkivanov.decompose.value.Value
 import components.RootComponent.Child
 import components.RootComponent.Config
 import components.outputHandlers.onHelloOutput
+import components.outputHandlers.onMainOutput
+import itemEditor.components.RealItemEditorComponent
 
 class RealRootComponent(
     componentContext: ComponentContext
@@ -36,7 +38,11 @@ class RealRootComponent(
             )
 
             Config.MainFlow -> Child.MainFlowChild(
-                RealMainFlowComponent(childContext)
+                RealMainFlowComponent(childContext, output = ::onMainOutput)
+            )
+
+            Config.ItemEditor -> Child.ItemEditorChild(
+                RealItemEditorComponent(childContext)
             )
         }
     }

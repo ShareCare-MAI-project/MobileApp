@@ -38,7 +38,6 @@ import dev.chrisbanes.haze.HazeState
 import foundation.ShapeByInteractionDefaults
 import foundation.shapeByInteraction
 import kotlinx.coroutines.delay
-import mainFlow.components.MainFlowComponent.Child
 import utils.SpacerH
 import utils.value
 import view.consts.Paddings
@@ -47,23 +46,24 @@ import widgets.glass.GlassCard
 @Composable
 internal fun MainFAB(
     hazeState: HazeState,
-    child: Child
+    isFindHelp: Boolean,
+    onClick: () -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     var isAnimating by remember { mutableStateOf(false) }
-    LaunchedEffect(child) {
+    LaunchedEffect(isFindHelp) {
         isAnimating = true
         delay(400)
         isAnimating = false
     }
 
-    val isFindHelpMode = child is Child.FindHelpChild
-
     val isDarkTheme = isSystemInDarkTheme()
 
     val animatedTint by animateColorAsState(
-        (if (isFindHelpMode) colorScheme.secondaryContainer else colorScheme.tertiaryContainer).copy(alpha = if (isDarkTheme) .7f else .45f),
+        (if (isFindHelp) colorScheme.secondaryContainer else colorScheme.tertiaryContainer).copy(
+            alpha = if (isDarkTheme) .7f else .45f
+        ),
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioLowBouncy,
             stiffness = Spring.StiffnessVeryLow
@@ -84,11 +84,13 @@ internal fun MainFAB(
         tint = animatedTint,
 //        contentColor = Color.White,
         shape = RoundedCornerShape(shape),
-        modifier = Modifier.clickable(interactionSource = interactionSource) {}
+        modifier = Modifier.clickable(interactionSource = interactionSource) {
+            onClick()
+        }
     ) {
 
         AnimatedContent(
-            isFindHelpMode,
+            isFindHelp,
             transitionSpec = { fadeIn().togetherWith(fadeOut()) }
         ) { isFindHelpMode ->
             Row(verticalAlignment = Alignment.CenterVertically) {

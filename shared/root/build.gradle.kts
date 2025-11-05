@@ -10,6 +10,7 @@ kotlin {
 
             implementation(project(Modules.Hello.presentation))
             implementation(project(Modules.Main.Flow.presentation))
+            implementation(project(Modules.ItemEditor.presentation))
         }
     }
 }

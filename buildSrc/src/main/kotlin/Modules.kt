@@ -55,13 +55,16 @@ object Modules {
             const val domain = "$modulePath:domain"
             const val presentation = "$modulePath:presentation"
         }
-        object ItemEditor {
-            private const val modulePath = "${Main.modulePath}:item-editor"
-            const val data = "$modulePath:data"
-            const val domain = "$modulePath:domain"
-            const val presentation = "$modulePath:presentation"
-        }
     }
+
+
+    object ItemEditor {
+        private const val modulePath = "$sharedPath:item-editor"
+        const val data = "$modulePath:data"
+        const val domain = "$modulePath:domain"
+        const val presentation = "$modulePath:presentation"
+    }
+
     object Settings {
         private const val modulePath = "$sharedPath:settings"
 
