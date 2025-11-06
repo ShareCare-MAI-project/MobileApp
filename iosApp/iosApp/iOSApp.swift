@@ -4,7 +4,7 @@ import SwiftUI
 @main
 struct iOSApp: App {
     init() {
-        loadRocketSimConnect()
+
     }
 
     var body: some Scene {

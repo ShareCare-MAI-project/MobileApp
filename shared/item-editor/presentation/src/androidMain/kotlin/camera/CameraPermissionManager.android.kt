@@ -6,6 +6,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 
 actual class CameraPermissionManager {
 
@@ -23,6 +24,12 @@ actual class CameraPermissionManager {
     actual fun requestCameraPermission() {
         cameraPermissionState.launchPermissionRequest()
     }
+
+    @OptIn(ExperimentalPermissionsApi::class)
+    actual fun isDenied(): Boolean {
+        return cameraPermissionState.status.shouldShowRationale
+    }
+
 }
 
 // mb: Remove Composable

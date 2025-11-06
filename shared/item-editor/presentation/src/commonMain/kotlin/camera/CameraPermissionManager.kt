@@ -7,4 +7,6 @@ expect class CameraPermissionManager() {
     fun isCameraAllowed(): Boolean
 
     fun requestCameraPermission()
+
+    fun isDenied(): Boolean
 }

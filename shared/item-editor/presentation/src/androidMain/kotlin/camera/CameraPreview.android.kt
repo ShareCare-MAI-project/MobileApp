@@ -20,7 +20,7 @@ import kotlinx.coroutines.awaitCancellation
 
 @SuppressLint("RestrictedApi")
 @Composable
-actual fun CameraPreview(modifier: Modifier) {
+actual fun CameraPreview(modifier: Modifier, cameraCallback: CameraCallback) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
