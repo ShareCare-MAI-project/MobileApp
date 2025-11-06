@@ -23,15 +23,16 @@ decompose = "3.4.0"
 russhwolf-settings = "1.3.0"
 
 # Compose
-md3="1.10.0-alpha03"
+md3 = "1.10.0-alpha03"
 coil = "3.3.0"
 haze = "1.6.10"
 
 [libraries]
 
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
-accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist"}
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
 
+androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "androidx-camera" }
 androidx-camera-compose = { module = "androidx.camera:camera-compose", version.ref = "androidx-camera" }
 androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "androidx-camera" }
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "androidx-camera" }
@@ -86,6 +87,8 @@ serialization = ["kotlinx-serialization-core", "kotlinx-serialization-json"]
 decompose = ["decompose-core", "decompose-compose"]
 haze = ["compose-haze-core", "compose-haze-materials"]
 coil = ["coil-compose", "coil-network-ktor3", "coil-svg"]
+androidx-camera = ["androidx-camera-core", "androidx-camera-compose", "androidx-camera-lifecycle", "androidx-camera-camera2"]
+
 
 [plugins]
 # For root and composeApp build.gradle.kts

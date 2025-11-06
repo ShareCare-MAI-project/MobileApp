@@ -12,13 +12,14 @@ import androidx.compose.ui.Modifier
 import animations.iosSlide
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
+import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import components.RootComponent
 import dev.chrisbanes.haze.LocalHazeStyle
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
-import itemEditor.ui.ItemEditorUI
+import itemEditorFlow.ui.ItemEditorFlowUI
 import mainFlow.ui.MainFlowUI
 import ui.HelloUI
 import view.theme.AppTheme
@@ -42,15 +43,17 @@ fun RootUI(
                 Surface(Modifier.fillMaxSize()) {
                     Children(
                         stack = stack,
-                        animation = stackAnimation(
-                            animator = iosSlide()
+                        animation = predictiveBackAnimation(
+                            backHandler = component.backHandler,
+                            fallbackAnimation = stackAnimation(iosSlide()),
+                            onBack = component::onBackClicked
                         )
                     ) {
 
                         when (val child = it.instance) {
                             is RootComponent.Child.HelloChild -> HelloUI(child.helloComponent)
                             is RootComponent.Child.MainFlowChild -> MainFlowUI(child.mainFlowComponent)
-                            is RootComponent.Child.ItemEditorChild -> ItemEditorUI(child.itemEditorComponent)
+                            is RootComponent.Child.ItemEditorChild -> ItemEditorFlowUI(child.itemEditorComponent)
                         }
                     }
                 }

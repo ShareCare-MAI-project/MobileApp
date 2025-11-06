@@ -9,13 +9,13 @@ import components.RootComponent.Child
 import components.RootComponent.Config
 import components.outputHandlers.onHelloOutput
 import components.outputHandlers.onMainOutput
-import itemEditor.components.RealItemEditorComponent
+import itemEditorFlow.components.RealItemEditorFlowComponent
 
 class RealRootComponent(
     componentContext: ComponentContext
 ) : RootComponent, ComponentContext by componentContext {
 
-    override val nav  = StackNavigation<Config>()
+    override val nav = StackNavigation<Config>()
     private val _stack =
         childStack(
             source = nav,
@@ -42,7 +42,9 @@ class RealRootComponent(
             )
 
             Config.ItemEditor -> Child.ItemEditorChild(
-                RealItemEditorComponent(childContext)
+                RealItemEditorFlowComponent(
+                    childContext,
+                    exitFromFlow = { popOnce(Child.ItemEditorChild::class) })
             )
         }
     }
