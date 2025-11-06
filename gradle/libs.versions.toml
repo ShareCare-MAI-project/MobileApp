@@ -7,6 +7,8 @@ cmp = "1.9.2"
 # Android
 agp = "8.10.1"
 androidx-activity = "1.10.1"
+androidx-camera = "1.5.1"
+accompanist = "0.37.3"
 
 # Kotlinx
 ktor = "3.3.0"
@@ -28,6 +30,11 @@ haze = "1.6.10"
 [libraries]
 
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist"}
+
+androidx-camera-compose = { module = "androidx.camera:camera-compose", version.ref = "androidx-camera" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "androidx-camera" }
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "androidx-camera" }
 
 # Kotlinx
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -76,7 +83,7 @@ gradle-plugin-ksp = { module = "com.google.devtools.ksp:com.google.devtools.ksp.
 settings = ["settings-core", "settings-no-arg"]
 ktor = ["ktor-client-core", "ktor-client-cio", "ktor-client-negotiation", "ktor-client-logging", "kotlinx-serialization-json"]
 serialization = ["kotlinx-serialization-core", "kotlinx-serialization-json"]
-decompose-with-compose = ["decompose-core", "decompose-compose"]
+decompose = ["decompose-core", "decompose-compose"]
 haze = ["compose-haze-core", "compose-haze-materials"]
 coil = ["coil-compose", "coil-network-ktor3", "coil-svg"]
 
