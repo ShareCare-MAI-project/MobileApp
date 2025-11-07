@@ -11,6 +11,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import itemEditorFlow.components.ItemEditorFlowComponent
+import itemManager.ui.ItemManagerUI
 import photoTaker.ui.PhotoTakerUI
 import utils.fastBackground
 
@@ -33,6 +34,8 @@ fun ItemEditorFlowUI(
         when (val child = it.instance) {
             is ItemEditorFlowComponent.Child.PhotoTakerChild ->
                 PhotoTakerUI(child.photoTakerComponent)
+
+            is ItemEditorFlowComponent.Child.ItemManagerChild -> ItemManagerUI(child.itemManagerComponent)
         }
     }
 }

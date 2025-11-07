@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.update
 
 class RealPhotoTakerComponent(
     componentContext: ComponentContext,
-    override val onBackClick: () -> Unit,
-): ComponentContext by componentContext, PhotoTakerComponent {
+    override val goBack: () -> Unit,
+) : ComponentContext by componentContext, PhotoTakerComponent {
 
 
     private val _pickedPhotos = MutableStateFlow<List<ImageBitmap>>(emptyList())
@@ -18,7 +18,7 @@ class RealPhotoTakerComponent(
 
     override fun onPhotoPick(imageBitmap: ImageBitmap) {
         if (_pickedPhotos.value.size < 5) {
-            _pickedPhotos.update { current -> current + imageBitmap }
+            _pickedPhotos.update { current -> listOf(imageBitmap) + current }
         }
     }
 
