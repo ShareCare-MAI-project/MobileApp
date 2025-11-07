@@ -6,4 +6,6 @@ interface ItemManagerComponent {
     val photoTakerComponent: PhotoTakerComponent
 
     val closeFlow: () -> Unit
+
+    val openPhotoTakerComponent: () -> Unit
 }

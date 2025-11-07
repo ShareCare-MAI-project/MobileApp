@@ -18,7 +18,8 @@ class RealPhotoTakerComponent(
 
     override fun onPhotoPick(imageBitmap: ImageBitmap) {
         if (_pickedPhotos.value.size < 5) {
-            _pickedPhotos.update { current -> listOf(imageBitmap) + current }
+            // IMPORTANT: реверсия, т.к. иначе скролл лагает (wtf)
+            _pickedPhotos.update { current -> listOf<ImageBitmap>() + current + imageBitmap }
         }
     }
 

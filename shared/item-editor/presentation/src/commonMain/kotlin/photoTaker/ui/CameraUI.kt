@@ -90,7 +90,7 @@ internal fun CameraUI(
             cameraCallback = cameraCallback
         )
 
-        Box(Modifier.padding(top = topPadding + Paddings.small, start = Paddings.medium)) {
+        Box(Modifier.padding(top = topPadding + Paddings.small, start = Paddings.horizontalListPadding)) {
             BackGlassButton(modifier = Modifier, hazeState = hazeState) {
                 component.goBack()
             }
@@ -103,7 +103,8 @@ internal fun CameraUI(
 
             ImagesRow(
                 photosRowLazyState = photosRowLazyState,
-                images = images
+                images = images.asReversed(),
+                isReversedNumeric = true
             ) { image ->
                 component.deletePhoto(image)
             }
@@ -161,7 +162,7 @@ internal fun CameraUI(
                             icon = Icons.Rounded.Done,
                             color = colorScheme.tertiaryContainer
                         ) {
-
+                            component.goBack()
                         }
                     }
                 }

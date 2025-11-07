@@ -12,10 +12,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,8 +37,10 @@ import view.consts.Paddings
 
 @Composable
 internal fun ImagesRow(
-    photosRowLazyState: LazyListState,
+    addButton: (() -> Unit)? = null,
+    photosRowLazyState: LazyListState = rememberLazyListState(),
     images: List<ImageBitmap>,
+    isReversedNumeric: Boolean = false,
     onDeleteClick: (ImageBitmap) -> Unit,
 ) {
     val density = LocalDensity.current
@@ -43,21 +48,36 @@ internal fun ImagesRow(
     val photoWidth = remember(containerSize.width) {
         with(density) { (containerSize.width / 3).toDp() }
     }
+    val aspectRatio = .9f
 
     LazyRow(
         Modifier.animateContentSize().fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-        state = photosRowLazyState
+        horizontalArrangement = if (addButton == null) Arrangement.Center else Arrangement.Start,
+        state = photosRowLazyState,
     ) {
+
         item {
-            SpacerH(Paddings.big)
+            if (addButton == null) {
+                SpacerH(Paddings.big)
+            } else {
+                if (images.size < 5) {
+                    Box(
+                        Modifier.padding(start = Paddings.horizontalListPadding, end = Paddings.small).width(photoWidth).aspectRatio(aspectRatio).clip(shapes.large)
+                            .fastBackground(colorScheme.surfaceContainer).clickable {
+                                addButton()
+                            }, contentAlignment = Alignment.Center
+                    ) {
+                        Icon(Icons.Rounded.Add, null)
+                    }
+                }
+            }
         }
         itemsIndexed(items = images, key = { i, x -> x.hashCode() }) { index, image ->
             Box(Modifier.animateItem()) {
                 Image(
                     image, contentDescription = null,
                     modifier = Modifier.padding(horizontal = Paddings.small)
-                        .width(photoWidth).aspectRatio(.9f)
+                        .width(photoWidth).aspectRatio(aspectRatio)
                         .clip(shapes.large),
                     contentScale = ContentScale.Crop
                 )
@@ -80,8 +100,12 @@ internal fun ImagesRow(
                             onDeleteClick(image)
                         }
                 ) {
-                    Text((images.size - index).toString(), modifier = Modifier.padding(horizontal = Paddings.small))
+                    Text(
+                        (if (!isReversedNumeric)  index + 1 else images.size-index).toString(),
+                        modifier = Modifier.padding(horizontal = Paddings.small)
+                    )
                 }
+
             }
         }
         item {

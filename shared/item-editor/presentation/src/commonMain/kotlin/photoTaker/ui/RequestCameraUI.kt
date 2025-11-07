@@ -25,9 +25,5 @@ internal fun RequestCameraUI(
         Button(onClick = { cameraPermissionManager.requestCameraPermission() }) {
             Text("Разрешить камеру")
         }
-
-        Button(onClick = {}) {
-            Text("Далее")
-        }
     }
 }
