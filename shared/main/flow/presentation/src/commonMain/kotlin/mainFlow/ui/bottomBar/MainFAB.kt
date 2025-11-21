@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import careshare.shared.main.flow.presentation.generated.resources.Res
 import careshare.shared.main.flow.presentation.generated.resources.fab_find_help
 import careshare.shared.main.flow.presentation.generated.resources.fab_share_care
@@ -93,21 +94,30 @@ internal fun MainFAB(
             isFindHelp,
             transitionSpec = { fadeIn().togetherWith(fadeOut()) }
         ) { isFindHelpMode ->
+            var shouldShowIcon: Boolean? by remember { mutableStateOf(null) }
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    if (isFindHelpMode) Icons.Rounded.LibraryAdd else Icons.Rounded.Handshake,
-                    contentDescription = null
-                )
+                if (shouldShowIcon != false) {
+                    Icon(
+                        if (isFindHelpMode) Icons.Rounded.LibraryAdd else Icons.Rounded.Handshake,
+                        contentDescription = null
+                    )
 
-                SpacerH(Paddings.semiSmall)
+                    SpacerH(Paddings.semiSmall)
+                }
+
                 Text(
                     (if (isFindHelpMode) Res.string.fab_find_help else Res.string.fab_share_care).value,
-                    modifier = Modifier,
                     fontWeight = FontWeight.Medium,
                     maxLines = 1,
                     autoSize = TextAutoSize.StepBased(
                         maxFontSize = typography.titleMedium.fontSize
-                    )
+                    ),
+                    onTextLayout = { textLayout ->
+                        if (shouldShowIcon == null) {
+                            shouldShowIcon = !textLayout.hasVisualOverflow
+                        }
+                    },
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }

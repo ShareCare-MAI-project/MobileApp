@@ -31,7 +31,7 @@ class RealRootComponent(
     private fun child(config: Config, childContext: ComponentContext): Child {
         return when (config) {
             Config.Hello -> Child.HelloChild(
-                RealHelloComponent(
+                 RealHelloComponent(
                     childContext,
                     output = ::onHelloOutput
                 )

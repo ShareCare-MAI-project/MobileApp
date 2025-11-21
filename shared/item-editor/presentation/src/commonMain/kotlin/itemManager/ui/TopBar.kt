@@ -1,5 +1,8 @@
 package itemManager.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -21,6 +24,7 @@ import widgets.glass.BackGlassButton
 
 @Composable
 internal fun TopBar(
+    isVisible: Boolean,
     topPadding: Dp,
     hazeState: HazeState,
     onBackClick: () -> Unit
@@ -34,13 +38,19 @@ internal fun TopBar(
         BackGlassButton(hazeState = hazeState) {
             onBackClick()
         }
-        Text(
-            text = "Подарить вещь",
-            fontWeight = FontWeight.SemiBold,
-            style = typography.headlineMedium,
-            maxLines = 1,
-            autoSize = TextAutoSize.StepBased(maxFontSize = typography.headlineMedium.fontSize)
-        )
+        AnimatedVisibility(
+            isVisible,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            Text(
+                text = "Подарить вещь",
+                fontWeight = FontWeight.SemiBold,
+                style = typography.headlineMedium,
+                maxLines = 1,
+                autoSize = TextAutoSize.StepBased(maxFontSize = typography.headlineMedium.fontSize)
+            )
+        }
         Box(Modifier.size(24.dp + Paddings.semiMedium))
     }
 }

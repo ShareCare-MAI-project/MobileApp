@@ -1,4 +1,4 @@
-package widgets.surfaceTextField
+package widgets
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -35,31 +35,35 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import view.consts.Paddings
+
+
+object SurfaceTextFieldDefaults {
+    val textFieldModifier = Modifier.minimumInteractiveComponentSize().fillMaxWidth()
+}
 
 @Composable
 fun SurfaceTextField(
     state: TextFieldState,
     modifier: Modifier = Modifier,
     paddings: PaddingValues = PaddingValues.Zero,
-    textFieldModifier: Modifier = Modifier.minimumInteractiveComponentSize().fillMaxWidth(),
+    textFieldModifier: Modifier = SurfaceTextFieldDefaults.textFieldModifier,
     shape: Shape = shapes.large,
     singleLine: Boolean = false,
     textStyle: TextStyle = LocalTextStyle.current,
     placeholderText: String? = null,
-    imeAction: ImeAction = ImeAction.Unspecified
+    imeAction: ImeAction = ImeAction.Unspecified,
+    readOnly: Boolean = false
 ) {
 
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
 
-    var prevValue: Rect? = remember { null }
+    var prevCursorRect: Rect? = remember { null }
 
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
-
 
     val isPlaceholderInField = state.text.isEmpty() && !isFocused
 
@@ -85,6 +89,7 @@ fun SurfaceTextField(
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = imeAction
                 ),
+                readOnly = readOnly,
 
                 modifier = textFieldModifier.bringIntoViewRequester(bringIntoViewRequester),
                 state = state,
@@ -114,17 +119,18 @@ fun SurfaceTextField(
                 onTextLayout = {
                     val flow = it.asFlow()
                     coroutineScope.launch {
-                        flow.collectLatest { textLayoutResult ->
+                        flow.collect { textLayoutResult ->
                             textLayoutResult?.let {
-                                var cursorRect =
-                                    textLayoutResult.getCursorRect(state.selection.start)
-                                cursorRect = cursorRect.copy(bottom = cursorRect.bottom + 140f)
-                                if (prevValue != cursorRect) {
-                                    prevValue = cursorRect
-                                    println("wtf to: ${cursorRect}")
+                                val cursorRect =
+                                    with(textLayoutResult.getCursorRect(state.selection.start)) {
+                                        this.copy(bottom = this.bottom + 240f) // some padding
+                                    }
+                                if (prevCursorRect != cursorRect && isFocused) {
+                                    prevCursorRect = cursorRect
                                     bringIntoViewRequester.bringIntoView(
                                         cursorRect
                                     )
+                                    println("checkai: ${state.text}")
                                 }
 
                             }

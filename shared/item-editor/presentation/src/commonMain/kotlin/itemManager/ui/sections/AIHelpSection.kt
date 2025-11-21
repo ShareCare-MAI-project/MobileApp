@@ -1,10 +1,11 @@
-package itemManager.ui
+package itemManager.ui.sections
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material3.ButtonDefaults
@@ -16,6 +17,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import utils.SpacerH
 import utils.SpacerV
 import view.consts.Paddings
@@ -47,7 +49,8 @@ fun AIHelpSection(
                     Text(
                         "ИИ сгенерирует описание предмета",
                         style = typography.bodySmall,
-                        color = colorScheme.onBackground.copy(alpha = .7f)
+                        color = colorScheme.onBackground.copy(alpha = .7f),
+                        textAlign = TextAlign.Center
                     )
                 }
             }
@@ -58,7 +61,9 @@ fun AIHelpSection(
                 Text(
                     "Добавьте фотографию, чтобы увидеть some magic ✨",
                     style = typography.bodySmall,
-                    color = colorScheme.onBackground.copy(alpha = .7f)
+                    color = colorScheme.onBackground.copy(alpha = .7f),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = Paddings.horizontalListPadding)
                 )
             }
         }

@@ -2,9 +2,8 @@ package photoTaker.components
 
 import androidx.compose.ui.graphics.ImageBitmap
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.essenty.instancekeeper.retainedSimpleInstance
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class RealPhotoTakerComponent(
@@ -13,17 +12,16 @@ class RealPhotoTakerComponent(
 ) : ComponentContext by componentContext, PhotoTakerComponent {
 
 
-    private val _pickedPhotos = MutableStateFlow<List<ImageBitmap>>(emptyList())
-    override val pickedPhotos: StateFlow<List<ImageBitmap>> = _pickedPhotos.asStateFlow()
+    override val pickedPhotos = retainedSimpleInstance("photos") { MutableStateFlow<List<ImageBitmap>>(emptyList()) }
 
     override fun onPhotoPick(imageBitmap: ImageBitmap) {
-        if (_pickedPhotos.value.size < 5) {
+        if (pickedPhotos.value.size < 5) {
             // IMPORTANT: реверсия, т.к. иначе скролл лагает (wtf)
-            _pickedPhotos.update { current -> listOf<ImageBitmap>() + current + imageBitmap }
+            this.pickedPhotos.update { current -> listOf<ImageBitmap>() + current + imageBitmap }
         }
     }
 
     override fun deletePhoto(imageBitmap: ImageBitmap) {
-        _pickedPhotos.update { current -> current - imageBitmap }
+        this.pickedPhotos.update { current -> current - imageBitmap }
     }
 }

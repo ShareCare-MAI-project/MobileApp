@@ -26,7 +26,6 @@ class MainActivity : ComponentActivity() {
         }
 
         val rootComponent: RootComponent = retainedComponent { RealRootComponent(defaultComponentContext()) }
-
         screenSetup()
 
         setContent {

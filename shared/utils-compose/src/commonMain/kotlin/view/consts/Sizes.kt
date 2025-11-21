@@ -5,6 +5,8 @@ import androidx.compose.ui.unit.dp
 
 object Sizes {
 
+    val minimumInteractiveComponentSize = 48.dp
+
     val hugeCircularButton = 75.dp
 
     val columnWidth = 150.dp
