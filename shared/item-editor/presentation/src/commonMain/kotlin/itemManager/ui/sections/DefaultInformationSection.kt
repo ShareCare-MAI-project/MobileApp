@@ -41,13 +41,13 @@ internal fun DefaultInformationSection(
         imeAction = ImeAction.Next
     )
 
-    SpacerV(Paddings.semiMedium)
+    SpacerV(Paddings.small)
     DefaultInformationTextField(
         placeholderText = "Описание",
         state = descState,
         imeAction = ImeAction.Done
     )
-    SpacerV(Paddings.semiMedium)
+    SpacerV(Paddings.small)
 
     CategoryTextField(itemCategory) {
         onItemCategoryClick(it)

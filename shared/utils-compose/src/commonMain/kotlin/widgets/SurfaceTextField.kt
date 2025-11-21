@@ -1,6 +1,10 @@
 package widgets
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterExitState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
@@ -19,21 +23,29 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.shapes
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
 import view.consts.Paddings
@@ -67,21 +79,11 @@ fun SurfaceTextField(
 
     val isPlaceholderInField = state.text.isEmpty() && !isFocused
 
-    Column(Modifier.padding(paddings)) {
-        placeholderText?.let { text ->
-
-            AnimatedPlaceholder(
-                isVisible = !isPlaceholderInField,
-                text = text,
-                textStyle = textStyle,
-                alpha = 1f,
-                modifier = Modifier.padding(start = Paddings.small)
-            )
-        }
+    Box(Modifier.padding(paddings)) {
 
 
         Surface(
-            modifier = modifier,
+            modifier = modifier.padding(top = with(LocalDensity.current) { typography.labelSmall.fontSize.toDp() } + 2.dp),
             shape = shape,
             color = colorScheme.surfaceContainerHigh,
         ) {
@@ -110,7 +112,8 @@ fun SurfaceTextField(
                                 isVisible = isPlaceholderInField,
                                 text = text,
                                 textStyle = textStyle,
-                                alpha = .8f
+                                alpha = .8f,
+                                isWithBackground = false
                             )
                         }
                         innerTextField()
@@ -142,25 +145,62 @@ fun SurfaceTextField(
                 interactionSource = interactionSource,
             )
         }
+        placeholderText?.let { text ->
+
+            AnimatedPlaceholder(
+                isVisible = !isPlaceholderInField,
+                text = text,
+                textStyle = textStyle,
+                alpha = 1f,
+                modifier = Modifier.padding(start = Paddings.small),
+                isWithBackground = true
+            )
+        }
     }
 }
 
 @Composable
 private fun AnimatedPlaceholder(
     isVisible: Boolean,
+    isWithBackground: Boolean,
     text: String,
     textStyle: TextStyle,
     alpha: Float,
     modifier: Modifier = Modifier,
 ) {
+    // workaround laggy drop shadow shape ... (during animation there is no shape 0_o)
+    var isAnimationEnded by remember { mutableStateOf(false) }
+    val animatedAlpha by animateFloatAsState(
+        if (isAnimationEnded) .2f else 0f,
+        animationSpec = tween(300)
+    )
     Column {
         AnimatedVisibility(isVisible) {
+            isAnimationEnded = isWithBackground && this.transition.currentState == EnterExitState.Visible
+
             Text(
                 text = text,
-                style = textStyle.copy(fontWeight = FontWeight.Medium),
+                style = textStyle
+                    .copy(
+                        fontWeight = FontWeight.Medium,
+                        fontSize = if (isWithBackground) typography.labelSmall.fontSize else textStyle.fontSize
+                    ),
                 color = colorScheme.onSurfaceVariant.copy(alpha = alpha),
                 maxLines = 1,
-                modifier = modifier
+                modifier = modifier.then(
+                    if (isWithBackground) Modifier
+                        .dropShadow(shapes.medium) {
+                            radius = 10f
+                            spread = 1f
+                            offset = Offset(x = 0f, y = 5f)
+                            this.alpha = animatedAlpha
+
+                        }
+                        .clip(shapes.medium)
+                        .background(colorScheme.surfaceContainerHigh)
+                        .padding(horizontal = Paddings.small)
+                    else Modifier
+                )
             )
         }
     }
