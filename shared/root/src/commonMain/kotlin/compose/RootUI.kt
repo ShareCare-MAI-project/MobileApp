@@ -10,6 +10,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import animations.iosSlide
+import auth.ui.AuthUI
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
@@ -52,6 +53,7 @@ fun RootUI(
 
                         when (val child = it.instance) {
                             is RootComponent.Child.HelloChild -> HelloUI(child.helloComponent)
+                            is RootComponent.Child.AuthChild -> AuthUI(child.authComponent)
                             is RootComponent.Child.MainFlowChild -> MainFlowUI(child.mainFlowComponent)
                             is RootComponent.Child.ItemEditorChild -> ItemEditorFlowUI(child.itemEditorComponent)
                         }

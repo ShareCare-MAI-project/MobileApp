@@ -9,6 +9,6 @@ fun RootComponent.onHelloOutput(
     output: HelloComponent.Output
 ) {
     when (output) {
-        HelloComponent.Output.NavigateToMainFlow -> nav.replaceAll(Config.MainFlow)
+        HelloComponent.Output.NavigateToAuth -> nav.replaceAll(Config.Auth)
     }
 }

@@ -4,10 +4,8 @@ package ui
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.sizeIn
@@ -44,6 +42,7 @@ import utils.SpacerH
 import utils.SpacerV
 import utils.value
 import view.consts.Paddings
+import view.consts.Sizes.logoMaxSize
 
 
 @Composable
@@ -56,7 +55,6 @@ fun HelloUI(
     val windowInsets = WindowInsets.safeContent
     val density = LocalDensity.current
 
-    val logoMaxSize = remember { 400.dp }
     val descriptionMaxSize = remember { 500.dp }
 
     VerticalScrollableBox(
@@ -81,15 +79,13 @@ fun HelloUI(
 
             SpacerV(Paddings.medium)
 
-            (1..21).toList().forEach {
-                Text(
-                    text = Res.string.hello_title.value,
-                    textAlign = TextAlign.Center,
-                    autoSize = TextAutoSize.StepBased(maxFontSize = typography.headlineSmallEmphasized.fontSize),
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.padding(horizontal = Paddings.large)
-                )
-            }
+            Text(
+                text = Res.string.hello_title.value,
+                textAlign = TextAlign.Center,
+                autoSize = TextAutoSize.StepBased(maxFontSize = typography.headlineSmallEmphasized.fontSize),
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(horizontal = Paddings.large)
+            )
 
             SpacerV(Paddings.medium)
 
@@ -127,7 +123,7 @@ fun HelloUI(
 
             Button(
                 onClick = {
-                    component.output(Output.NavigateToMainFlow)
+                    component.output(Output.NavigateToAuth)
                 }
             ) {
                 Icon(Icons.Rounded.FavoriteBorder, null)

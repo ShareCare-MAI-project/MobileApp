@@ -5,7 +5,10 @@ import androidx.compose.ui.unit.dp
 
 object Sizes {
 
+    val logoMaxSize = 400.dp
+
     val minimumInteractiveComponentSize = 48.dp
+    val minTextFieldHeight = 60.dp
 
     val hugeCircularButton = 75.dp
 

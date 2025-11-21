@@ -21,8 +21,8 @@ import androidx.compose.ui.text.input.ImeAction
 import itemManager.components.ItemCategory
 import utils.SpacerV
 import view.consts.Paddings
-import widgets.SurfaceTextField
-import widgets.SurfaceTextFieldDefaults
+import widgets.textField.SurfaceTextField
+import widgets.textField.SurfaceTextFieldDefaults
 
 
 @Composable

@@ -4,7 +4,9 @@ plugins {
 
 kotlin {
     sourceSets {
-
+        commonMain.dependencies {
+            implementation(libs.backhandler)
+        }
     }
 }
 

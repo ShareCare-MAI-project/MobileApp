@@ -8,6 +8,6 @@ interface HelloComponent {
     val output: (Output) -> Unit
 
     sealed class Output {
-        data object NavigateToMainFlow : Output()
+        data object NavigateToAuth : Output()
     }
 }

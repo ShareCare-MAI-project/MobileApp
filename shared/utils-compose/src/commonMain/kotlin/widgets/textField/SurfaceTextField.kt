@@ -1,4 +1,4 @@
-package widgets
+package widgets.textField
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterExitState
@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -18,8 +20,10 @@ import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.shapes
@@ -41,18 +45,23 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
+import utils.SpacerH
 import view.consts.Paddings
+import view.consts.Sizes
 
 
 object SurfaceTextFieldDefaults {
     val textFieldModifier = Modifier.minimumInteractiveComponentSize().fillMaxWidth()
+        .defaultMinSize(minHeight = Sizes.minTextFieldHeight)
 }
 
 @Composable
@@ -61,11 +70,14 @@ fun SurfaceTextField(
     modifier: Modifier = Modifier,
     paddings: PaddingValues = PaddingValues.Zero,
     textFieldModifier: Modifier = SurfaceTextFieldDefaults.textFieldModifier,
-    shape: Shape = shapes.large,
+    shape: Shape = shapes.extraLarge,
     singleLine: Boolean = false,
     textStyle: TextStyle = LocalTextStyle.current,
     placeholderText: String? = null,
+    icon: ImageVector? = null,
     imeAction: ImeAction = ImeAction.Unspecified,
+    keyboardType: KeyboardType = KeyboardType.Unspecified,
+    inputTransformation: InputTransformation? = null,
     readOnly: Boolean = false
 ) {
 
@@ -89,7 +101,8 @@ fun SurfaceTextField(
         ) {
             BasicTextField(
                 keyboardOptions = KeyboardOptions.Default.copy(
-                    imeAction = imeAction
+                    imeAction = imeAction,
+                    keyboardType = keyboardType
                 ),
                 readOnly = readOnly,
 
@@ -107,18 +120,25 @@ fun SurfaceTextField(
                             ),
                         contentAlignment = Alignment.CenterStart
                     ) {
-                        placeholderText?.let { text ->
-                            AnimatedPlaceholder(
-                                isVisible = isPlaceholderInField,
-                                text = text,
-                                textStyle = textStyle,
-                                alpha = .8f,
-                                isWithBackground = false
-                            )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            icon?.let {
+                                Icon(icon, null)
+                                SpacerH(Paddings.small)
+                            }
+                            placeholderText?.let { text ->
+                                AnimatedPlaceholder(
+                                    isVisible = isPlaceholderInField,
+                                    text = text,
+                                    textStyle = textStyle,
+                                    alpha = .8f,
+                                    isWithBackground = false
+                                )
+                            }
+                            innerTextField()
                         }
-                        innerTextField()
                     }
                 },
+                inputTransformation = inputTransformation,
                 onTextLayout = {
                     val flow = it.asFlow()
                     coroutineScope.launch {
@@ -143,6 +163,7 @@ fun SurfaceTextField(
 
                 },
                 interactionSource = interactionSource,
+
             )
         }
         placeholderText?.let { text ->
@@ -176,7 +197,8 @@ private fun AnimatedPlaceholder(
     )
     Column {
         AnimatedVisibility(isVisible) {
-            isAnimationEnded = isWithBackground && this.transition.currentState == EnterExitState.Visible
+            isAnimationEnded =
+                isWithBackground && this.transition.currentState == EnterExitState.Visible
 
             Text(
                 text = text,
