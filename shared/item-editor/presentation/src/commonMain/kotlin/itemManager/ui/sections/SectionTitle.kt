@@ -1,0 +1,23 @@
+package itemManager.ui.sections
+
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.TextAutoSize
+import androidx.compose.material3.MaterialTheme.typography
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import view.consts.Paddings
+
+@Composable
+internal fun SectionTitle(text: String) {
+    Text(
+        text,
+        fontWeight = FontWeight.Medium,
+        style = typography.headlineSmall,
+        maxLines = 1,
+        autoSize = TextAutoSize.StepBased(maxFontSize = typography.headlineSmall.fontSize),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = Paddings.horizontalListPadding)
+    )
+}

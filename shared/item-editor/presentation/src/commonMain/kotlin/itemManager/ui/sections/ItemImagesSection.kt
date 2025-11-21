@@ -1,0 +1,29 @@
+package itemManager.ui.sections
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
+import common.ImagesRow
+import utils.SpacerV
+import view.consts.Paddings
+
+
+@Composable
+internal fun ItemImagesSection(
+    images: List<ImageBitmap>,
+    onAddButtonClick: () -> Unit,
+    onDeleteClick: (ImageBitmap) -> Unit
+) {
+    Column(Modifier.fillMaxWidth()) {
+        SectionTitle("Фотографии")
+        SpacerV(Paddings.small)
+        ImagesRow(
+            addButton = onAddButtonClick,
+            images = images,
+            onDeleteClick = { onDeleteClick(it) },
+            isReversedNumeric = false
+        )
+    }
+}

@@ -11,6 +11,7 @@ kotlin {
 //            implementation(project(Modules.core))
 
             implementation(libs.bundles.settings)
+
         }
     }
 }

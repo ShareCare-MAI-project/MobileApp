@@ -10,6 +10,7 @@ import androidx.compose.foundation.gestures.LocalBringIntoViewSpec
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
@@ -45,6 +46,7 @@ import foundation.scrollables.ScrollEdgeFade
 import foundation.scrollables.ScrollEdgeShadowHeight
 import mainFlow.components.MainFlowComponent
 import mainFlow.components.MainFlowComponent.Child
+import mainFlow.components.MainFlowComponent.Output
 import mainFlow.ui.bottomBar.MainBottomBar
 import mainFlow.ui.topBar.MainTopBar
 import ui.ShareCareUI
@@ -101,7 +103,14 @@ fun SharedTransitionScope.MainFlowContent(
                 hazeState = hazeState,
                 lazyGridStateFindHelp = lazyGridStateFindHelp,
                 lazyGridStateShareCare = lazyGridStateShareCare,
-                navigateTo = { cfg -> component.navigateTo(cfg) }
+                navigateTo = { cfg -> component.navigateTo(cfg) },
+                onFABButtonClick = { isFindHelp ->
+                    if (isFindHelp) {
+
+                    } else {
+                        component.output(Output.NavigateToItemEditor)
+                    }
+                }
             )
 
         },

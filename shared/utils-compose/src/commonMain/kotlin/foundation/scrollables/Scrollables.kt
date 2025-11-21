@@ -5,14 +5,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import utils.SpacerV
+import view.consts.Paddings
 
 @Composable
 fun VerticalScrollableBox(
@@ -23,6 +28,7 @@ fun VerticalScrollableBox(
     contentAlignment: Alignment = Alignment.TopStart,
     propagateMinConstraints: Boolean = false,
     isBottomPadding: Boolean = true,
+    bottomPaddingExtraHeight: Dp = Paddings.endListPadding,
     content: @Composable BoxScope.() -> Unit,
 ) {
     val density = LocalDensity.current
@@ -49,14 +55,19 @@ fun VerticalScrollableBox(
 
 
             if (isBottomPadding && isScrollable) {
-                SpacerV(bottomInsetsHeightDp)
+                // imePadding workaround
+                SpacerV(
+                    (
+                            if (bottomInsetsHeightDp >= Paddings.small) bottomInsetsHeightDp else Paddings.medium
+                            ) + bottomPaddingExtraHeight
+                )
             }
         }
 
         if (isScrollable) {
             ScrollEdgeFade(
                 modifier = Modifier.fillMaxWidth().align(Alignment.TopStart),
-                solidHeight = topInsetsHeightDp/2,
+                solidHeight = topInsetsHeightDp / 2,
                 shadowHeight = topInsetsHeightDp,
                 isVisible = scrollState.canScrollBackward,
             )
@@ -65,6 +76,7 @@ fun VerticalScrollableBox(
                 modifier = Modifier.fillMaxWidth().align(Alignment.BottomStart),
                 solidHeight = bottomInsetsHeightDp,
                 isVisible = scrollState.canScrollForward
+                        && WindowInsets.ime.asPaddingValues().calculateBottomPadding() == 0.dp
             )
         }
 

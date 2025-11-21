@@ -16,11 +16,12 @@ import view.consts.Paddings
 
 @Composable
 fun BackGlassButton(
+    modifier: Modifier = Modifier,
     hazeState: HazeState,
     onClick: () -> Unit
 ) {
     GlassCard(
-        modifier = Modifier
+        modifier = modifier
             .clickable {
                 onClick()
             },

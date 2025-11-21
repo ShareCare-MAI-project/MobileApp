@@ -1,19 +1,25 @@
 package components
 
+import auth.components.RealAuthComponent
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
 import components.RootComponent.Child
+import components.RootComponent.Child.HelloChild
+import components.RootComponent.Child.ItemEditorChild
+import components.RootComponent.Child.MainFlowChild
 import components.RootComponent.Config
 import components.outputHandlers.onHelloOutput
+import components.outputHandlers.onMainOutput
+import itemEditorFlow.components.RealItemEditorFlowComponent
 
 class RealRootComponent(
     componentContext: ComponentContext
 ) : RootComponent, ComponentContext by componentContext {
 
-    override val nav  = StackNavigation<Config>()
+    override val nav = StackNavigation<Config>()
     private val _stack =
         childStack(
             source = nav,
@@ -28,20 +34,30 @@ class RealRootComponent(
 
     private fun child(config: Config, childContext: ComponentContext): Child {
         return when (config) {
-            Config.Hello -> Child.HelloChild(
+            Config.Hello -> HelloChild(
                 RealHelloComponent(
                     childContext,
                     output = ::onHelloOutput
                 )
             )
 
-            Config.MainFlow -> Child.MainFlowChild(
-                RealMainFlowComponent(childContext)
+            Config.MainFlow -> MainFlowChild(
+                RealMainFlowComponent(childContext, output = ::onMainOutput)
+            )
+
+            Config.ItemEditor -> ItemEditorChild(
+                RealItemEditorFlowComponent(
+                    childContext,
+                    exitFromFlow = { popOnce(Child.ItemEditorChild::class) })
+            )
+
+            Config.Auth -> Child.AuthChild(
+                RealAuthComponent(childContext)
             )
         }
     }
 
     private fun getInitialStack(): List<Config> {
-        return listOf(Config.Hello, Config.MainFlow)
+        return listOf(Config.Hello)
     }
 }

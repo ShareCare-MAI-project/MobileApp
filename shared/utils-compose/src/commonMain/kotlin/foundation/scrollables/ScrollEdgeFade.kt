@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -42,9 +43,9 @@ fun ScrollEdgeFade(
     solidHeight: Dp = 0.dp,
     shadowHeight: Dp = ScrollEdgeShadowHeight.big,
     isVisible: Boolean = true,
-    isReversed: Boolean = false
+    isReversed: Boolean = false,
+    color: Color = colorScheme.background
 ) {
-    val back = colorScheme.background
     val density = LocalDensity.current
     val (solidHeightPx, shadowHeightPx) = with(density) {
         listOf(solidHeight.toPx(), shadowHeight.toPx())
@@ -68,9 +69,9 @@ fun ScrollEdgeFade(
                     endY = if (isReversed) 0f else totalHeight,
                     colorStops =
                         arrayOf(
-                            0f to back,
-                            (solidHeightPx / totalHeight) to back.copy(.9f),
-                            ((solidHeightPx + shadowHeightPx / 2) / totalHeight) to back.copy(.5f),
+                            0f to color,
+                            (solidHeightPx / totalHeight) to color.copy(.9f),
+                            ((solidHeightPx + shadowHeightPx / 2) / totalHeight) to color.copy(.5f),
                             1f to Transparent
                         )
                 ),

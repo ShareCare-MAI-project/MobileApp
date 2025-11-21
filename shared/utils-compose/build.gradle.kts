@@ -8,12 +8,13 @@ kotlin {
         commonMain {
             kotlin.srcDir(project.layout.buildDirectory.dir("generated/sources/resourceObjects"))
             dependencies {
-//                api(project(Modules.utils))
+                implementation(project(Modules.utils))
 
 //                implementation(libs.kotlinx.coroutines)
                 implementation(libs.bundles.coil)
                 implementation(compose.components.resources)
 
+                implementation(libs.bundles.decompose)
             }
 
         }

@@ -5,7 +5,7 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("org.jetbrains.compose.ui:ui-backhandler:1.9.1")
+            implementation(libs.backhandler)
             implementation(project(Modules.Main.Common.presentation))
         }
     }

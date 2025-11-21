@@ -9,7 +9,9 @@ kotlin {
             implementation(libs.kotlinx.serialization.core)
 
             implementation(project(Modules.Hello.presentation))
+            implementation(project(Modules.Auth.presentation))
             implementation(project(Modules.Main.Flow.presentation))
+            implementation(project(Modules.ItemEditor.presentation))
         }
     }
 }

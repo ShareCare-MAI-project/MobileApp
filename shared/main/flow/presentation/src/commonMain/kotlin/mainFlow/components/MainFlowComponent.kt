@@ -37,4 +37,10 @@ interface MainFlowComponent : DefaultStack<Config, Child> {
     }
 
     fun navigateTo(cfg: Config)
+
+    val output: (Output) -> Unit
+
+    sealed class Output {
+        data object NavigateToItemEditor : Output()
+    }
 }
