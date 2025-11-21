@@ -51,6 +51,7 @@ ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktor-client-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-client-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 # Koin
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
@@ -86,7 +87,7 @@ gradle-plugin-ksp = { module = "com.google.devtools.ksp:com.google.devtools.ksp.
 
 [bundles]
 settings = ["settings-core", "settings-no-arg"]
-ktor = ["ktor-client-core", "ktor-client-cio", "ktor-client-negotiation", "ktor-client-logging", "kotlinx-serialization-json"]
+ktor = ["ktor-client-core", "ktor-client-cio", "ktor-client-negotiation", "ktor-client-logging", "kotlinx-serialization-json", "ktor-client-json"]
 serialization = ["kotlinx-serialization-core", "kotlinx-serialization-json"]
 decompose = ["decompose-core", "decompose-compose"]
 haze = ["compose-haze-core", "compose-haze-materials"]

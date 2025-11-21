@@ -8,6 +8,8 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.bundles.ktor)
             implementation(libs.bundles.settings)
+
+            implementation(project(Modules.utils))
         }
     }
 }

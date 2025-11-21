@@ -9,9 +9,11 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.logging.SIMPLE
-import io.ktor.client.plugins.websocket.WebSockets
+import io.ktor.client.request.header
 import io.ktor.http.ContentType
+import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 
@@ -26,7 +28,6 @@ internal fun createHttpClient(enableLogging: Boolean): HttpClient {
             }
         }
 
-        install(WebSockets)
 
         install(HttpTimeout) {
             connectTimeoutMillis = 15000
@@ -34,15 +35,23 @@ internal fun createHttpClient(enableLogging: Boolean): HttpClient {
         }
 
         install(ContentNegotiation) {
-            Json {
-                isLenient = true
-                ignoreUnknownKeys = true
-                prettyPrint = true
-            }
+            json(
+                Json {
+                    isLenient = true
+                    ignoreUnknownKeys = true
+                    prettyPrint = true
+                }, contentType = ContentType.Any
+            )
         }
 
         defaultRequest {
+            header("Content-Type", "application/json; charset=UTF-8")
             contentType(ContentType.Application.Json)
+            url {
+                host = "10.0.2.2" // `localhost` but from android studio emulator
+                protocol = URLProtocol.HTTP
+            }
+            port = 8080
         }
     }
 }
