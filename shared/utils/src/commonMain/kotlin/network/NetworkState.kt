@@ -19,6 +19,10 @@ sealed class NetworkState<out T> {
         is Success -> onSuccess(this)
     }
 
+    fun onError(onError: (Error) -> Unit) {
+        if (this is Error) onError(this)
+    }
+
     fun handle(onError: (Error) -> Unit = {}, onSuccess: (Success<out T>) -> Unit = {}) {
         if (this is Success) {
             onSuccess(this)

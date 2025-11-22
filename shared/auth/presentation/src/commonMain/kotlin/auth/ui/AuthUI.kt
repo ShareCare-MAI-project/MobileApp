@@ -22,6 +22,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -31,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import architecture.launchIO
 import auth.components.AuthComponent
 import auth.components.AuthProgressState
 import foundation.scrollables.VerticalScrollableBox
@@ -55,6 +57,18 @@ fun AuthUI(
     }
 
     val snackbarHostState = remember { SnackbarHostState() }
+
+
+    val verifyCodeResult by component.verifyCodeResult.collectAsState()
+
+    LaunchedEffect(verifyCodeResult) {
+        verifyCodeResult.onError { result ->
+            this.launchIO {
+                snackbarHostState.showSnackbar(message = result.prettyPrint)
+            }
+        }
+    }
+
     Scaffold(
         Modifier.imePadding().fillMaxSize().fastBackground(colorScheme.background),
         snackbarHost = {
@@ -102,9 +116,12 @@ fun AuthUI(
                             }
 
                             AuthProgressState.OTPCode -> {
-                                OTPCodeProgressStateUI(component) { error ->
-                                    snackbarHostState.showSnackbar(message = error)
-                                }
+                                OTPCodeProgressStateUI(
+                                    OTPCode = component.OTPCode,
+                                    isLoading = verifyCodeResult.isLoading(),
+                                    onNextClick = { component.onVerifyCodeClick() },
+                                    onBackClick = { component.onBackClick() }
+                                )
                             }
                         }
                     }
