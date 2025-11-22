@@ -12,6 +12,8 @@ interface AuthComponent {
     val currentProgressState: StateFlow<AuthProgressState>
 
     val requestCodeResult: StateFlow<NetworkState<Unit>>
+    val verifyCodeResult: StateFlow<NetworkState<Boolean>>
+
 
     fun onSendCodeClick()
     fun onVerifyCodeClick()

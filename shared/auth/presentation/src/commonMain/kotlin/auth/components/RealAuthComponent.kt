@@ -26,6 +26,9 @@ class RealAuthComponent(
     override val requestCodeResult: MutableStateFlow<NetworkState<Unit>> =
         MutableStateFlow(NetworkState.AFK)
 
+    override val verifyCodeResult: MutableStateFlow<NetworkState<Boolean>> =
+        MutableStateFlow(NetworkState.AFK)
+
     override val currentProgressState = MutableStateFlow(AuthProgressState.PHONE)
 
     override fun onSendCodeClick() {
@@ -36,13 +39,28 @@ class RealAuthComponent(
 
             if (requestCodeResult.value is NetworkState.Success)
                 currentProgressState.value = AuthProgressState.OTPCode
-
         }
     }
 
     override fun onVerifyCodeClick() {
         coroutineScope.launchIO {
-            // some logic
+            authUseCases.verifyCode(
+                phone = phoneNumber.text.toString(),
+                otp = OTPCode.text.toString()
+            ).collect {
+                verifyCodeResult.value = it
+            }
+
+            if (verifyCodeResult.value is NetworkState.Success) {
+                if ((verifyCodeResult.value as NetworkState.Success<Boolean>).data) {
+                    println("Have To reg")
+                    // have to registration
+                } else {
+                    // already registered -> go to main
+                }
+            } else if (verifyCodeResult.value is NetworkState.Error) {
+                println("ERROR: ${(verifyCodeResult.value as NetworkState.Error).error}")
+            }
         }
     }
 

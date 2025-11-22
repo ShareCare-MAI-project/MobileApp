@@ -17,10 +17,14 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.MaterialTheme.typography
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -50,54 +54,64 @@ fun AuthUI(
         component.onBackClick()
     }
 
-    VerticalScrollableBox(
-        modifier = Modifier.imePadding().fillMaxSize().fastBackground(colorScheme.background),
-        windowInsets = windowInsets,
-        contentAlignment = Alignment.Center
+    val snackbarHostState = remember { SnackbarHostState() }
+    Scaffold(
+        Modifier.imePadding().fillMaxSize().fastBackground(colorScheme.background),
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
+        }
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.animateContentSize()
+        VerticalScrollableBox(
+            modifier = Modifier.fillMaxSize(),
+            windowInsets = windowInsets,
+            contentAlignment = Alignment.Center
         ) {
-            SpacerV(Paddings.medium)
-            Card(
-                modifier = Modifier
-                    .padding(horizontal = Paddings.medium)
-                    .sizeIn(maxWidth = logoMaxSize, maxHeight = logoMaxSize)
-                    .fillMaxWidth()
-                    .aspectRatio(1f),
-                shape = shapes.extraLarge
-            ) {}
-            SpacerV(Paddings.medium)
-            Text(
-                "ДоброДар",
-                textAlign = TextAlign.Center,
-                style = typography.headlineLargeEmphasized,
-                fontWeight = FontWeight.Medium
-            )
-            SpacerV(Paddings.semiMedium)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.animateContentSize()
+            ) {
+                SpacerV(Paddings.medium)
+                Card(
+                    modifier = Modifier
+                        .padding(horizontal = Paddings.medium)
+                        .sizeIn(maxWidth = logoMaxSize, maxHeight = logoMaxSize)
+                        .fillMaxWidth()
+                        .aspectRatio(1f),
+                    shape = shapes.extraLarge
+                ) {}
+                SpacerV(Paddings.medium)
+                Text(
+                    "ДоброДар",
+                    textAlign = TextAlign.Center,
+                    style = typography.headlineLargeEmphasized,
+                    fontWeight = FontWeight.Medium
+                )
+                SpacerV(Paddings.semiMedium)
 
-            Crossfade(authProgressState) { progressState ->
+                Crossfade(authProgressState) { progressState ->
 
-                Column(
-                    Modifier
-                        .sizeIn(maxWidth = logoMaxSize)
-                        .padding(horizontal = Paddings.medium),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    when (progressState) {
-                        AuthProgressState.PHONE -> {
-                            PhoneProgressStateUI(component)
-                        }
+                    Column(
+                        Modifier
+                            .sizeIn(maxWidth = logoMaxSize)
+                            .padding(horizontal = Paddings.medium),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        when (progressState) {
+                            AuthProgressState.PHONE -> {
+                                PhoneProgressStateUI(component)
+                            }
 
-                        AuthProgressState.OTPCode -> {
-                            OTPCodeProgressStateUI(component)
+                            AuthProgressState.OTPCode -> {
+                                OTPCodeProgressStateUI(component) { error ->
+                                    snackbarHostState.showSnackbar(message = error)
+                                }
+                            }
                         }
                     }
                 }
+
             }
 
         }
-
     }
 }

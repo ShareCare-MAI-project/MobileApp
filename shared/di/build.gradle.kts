@@ -14,8 +14,9 @@ kotlin {
 
 
 
-            // Cannot access class 'HttpClient'.
-            implementation(libs.ktor.client.core)
+
+            implementation(libs.ktor.client.core) // Cannot access class 'HttpClient'
+            implementation(libs.settings.core) // Cannot access class 'Settings'
         }
     }
 }

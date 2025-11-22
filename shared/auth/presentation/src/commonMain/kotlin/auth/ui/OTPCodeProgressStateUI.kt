@@ -1,9 +1,11 @@
 package auth.ui
 
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Message
 import androidx.compose.material.icons.automirrored.rounded.NavigateBefore
 import androidx.compose.material.icons.automirrored.rounded.NavigateNext
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
@@ -12,23 +14,32 @@ import androidx.compose.material3.SplitButtonLayout
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import auth.components.AuthComponent
+import network.NetworkState
 import utils.SpacerH
 import utils.SpacerV
 import view.consts.Paddings
+import view.consts.Sizes
 import widgets.textField.SurfaceTextField
 
 
 @Composable
 internal fun OTPCodeProgressStateUI(
-    component: AuthComponent
+    component: AuthComponent,
+    onError: suspend (String) -> Unit
 ) {
 
-    //validate otp-code
-    LaunchedEffect(component.OTPCode.text) {
+    val verifyCodeResult by component.verifyCodeResult.collectAsState()
 
+    LaunchedEffect(verifyCodeResult) {
+        if (verifyCodeResult.isErrored()) {
+            onError((verifyCodeResult as NetworkState.Error).prettyPrint)
+        }
     }
 
     SurfaceTextField(
@@ -55,7 +66,6 @@ internal fun OTPCodeProgressStateUI(
     )
 
     SpacerV(Paddings.big)
-
     SplitButtonLayout(
         leadingButton = {
             SplitButtonDefaults.LeadingButton(
@@ -68,12 +78,20 @@ internal fun OTPCodeProgressStateUI(
         },
         trailingButton = {
             SplitButtonDefaults.TrailingButton(
-                onClick = {}
+                onClick = {
+                    component.onVerifyCodeClick()
+                },
+                enabled = component.OTPCode.text.length == 4
+                        && component.OTPCode.text.all { it.isDigit() }
+                        && !verifyCodeResult.isLoading()
             ) {
                 SpacerH(Paddings.semiSmall)
                 Text("Далее")
                 SpacerH(Paddings.semiSmall)
-                Icon(Icons.AutoMirrored.Rounded.NavigateNext, null)
+                if (!verifyCodeResult.isLoading())
+                    Icon(Icons.AutoMirrored.Rounded.NavigateNext, null)
+                else
+                    CircularProgressIndicator(Modifier.size(Sizes.iconSize))
             }
         }
     )

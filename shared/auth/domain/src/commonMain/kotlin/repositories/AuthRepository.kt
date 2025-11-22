@@ -5,4 +5,5 @@ import network.NetworkState
 
 interface AuthRepository {
     fun requestCode(phone: String) : Flow<NetworkState<Unit>>
+    fun verifyCode(phone: String, otp: String) : Flow<NetworkState<Boolean>>
 }

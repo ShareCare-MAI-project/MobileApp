@@ -41,21 +41,17 @@ inline fun <reified T> HttpClient.defaultPost(
             }
 
             else -> {
-                emit(NetworkState.Error(Throwable("${response.status}: ${response.bodyAsText()}")))
+                emit(
+                    NetworkState.Error(
+                        Throwable("${response.status}: ${response.bodyAsText()}"),
+                        // is there another way?
+                        prettyPrint = response.bodyAsText().removePrefix("{\"detail\":\"").removeSuffix("\"}")
+                    )
+                )
             }
         }
     } catch (e: Exception) {
-        emit(NetworkState.Error(e))
+        emit(NetworkState.Error(e, "Что-то пошло не так"))
     }
 
 }.flowOn(Dispatchers.IO)
-//
-//suspend fun HttpResponse.throwIfNoOK() {
-//    if (this.status != HttpStatusCode.OK) {
-//        throw NoOkException(
-//            "${this.status.value} ${
-//                this.call.request.url.encodedPath.removeSuffix("/").removePrefix("/")
-//            }\n${this.bodyAsText()}"
-//        )
-//    }
-//}
