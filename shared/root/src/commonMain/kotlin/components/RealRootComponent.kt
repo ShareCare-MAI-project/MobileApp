@@ -7,24 +7,30 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
 import components.RootComponent.Child
+import components.RootComponent.Child.AuthChild
 import components.RootComponent.Child.HelloChild
 import components.RootComponent.Child.ItemEditorChild
 import components.RootComponent.Child.MainFlowChild
 import components.RootComponent.Config
+import components.outputHandlers.onAuthOutput
 import components.outputHandlers.onHelloOutput
 import components.outputHandlers.onMainOutput
 import itemEditorFlow.components.RealItemEditorFlowComponent
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import registration.components.RealRegistrationComponent
+import usecases.AuthUseCases
 
 class RealRootComponent(
     componentContext: ComponentContext
-) : RootComponent, ComponentContext by componentContext {
+) : RootComponent, KoinComponent, ComponentContext by componentContext {
 
     override val nav = StackNavigation<Config>()
     private val _stack =
         childStack(
             source = nav,
             serializer = Config.serializer(),
-            initialStack = { getInitialStack() },
+            initialConfiguration = getInitialConfig(),
             childFactory = ::child,
             handleBackButton = true
         )
@@ -48,16 +54,30 @@ class RealRootComponent(
             Config.ItemEditor -> ItemEditorChild(
                 RealItemEditorFlowComponent(
                     childContext,
-                    exitFromFlow = { popOnce(Child.ItemEditorChild::class) })
+                    exitFromFlow = { popOnce(ItemEditorChild::class) })
             )
 
-            Config.Auth -> Child.AuthChild(
-                RealAuthComponent(childContext)
+            Config.Auth -> AuthChild(
+                RealAuthComponent(
+                    childContext,
+                    output = ::onAuthOutput
+                )
+            )
+
+            Config.Registration -> Child.RegistrationChild(
+                RealRegistrationComponent(childContext)
             )
         }
     }
 
-    private fun getInitialStack(): List<Config> {
-        return listOf(Config.Hello)
+    private fun getInitialConfig(): Config {
+        val authUseCases: AuthUseCases = get()
+        val hasToken = authUseCases.fetchToken() != null
+        val hasName = authUseCases.fetchName() != null
+
+        return if (hasToken) {
+            if (hasName) Config.MainFlow
+            else Config.Registration
+        } else Config.Hello
     }
 }

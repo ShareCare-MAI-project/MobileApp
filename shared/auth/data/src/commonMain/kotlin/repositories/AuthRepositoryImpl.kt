@@ -28,4 +28,7 @@ class AuthRepositoryImpl(
         }
     }.flowOn(Dispatchers.IO)
 
+    override fun fetchToken(): String? = localDataSource.fetchToken()
+
+    override fun fetchName(): String? = localDataSource.fetchName()
 }

@@ -5,14 +5,17 @@ import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.retainedSimpleInstance
 import decompose.componentCoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.withContext
 import network.NetworkState
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import usecases.AuthUseCases
 
 class RealAuthComponent(
-    componentContext: ComponentContext
+    componentContext: ComponentContext,
+    private val output: (AuthComponent.Output) -> Unit
 ) : AuthComponent, KoinComponent, ComponentContext by componentContext {
 
 
@@ -59,11 +62,14 @@ class RealAuthComponent(
                     verifyCodeResult.value = it
                 }
 
-                verifyCodeResult.value.handle { result ->
-                    if (result.data) { // have to register
-
-                    } else {
-                        // already registered -> go to main
+                withContext(Dispatchers.Main) {
+                    verifyCodeResult.value.handle { result ->
+                        if (result.data) { // have to register
+                            output(AuthComponent.Output.NavigateToRegistration)
+                        } else {
+                            // already registered -> go to main
+                            output(AuthComponent.Output.NavigateToMain)
+                        }
                     }
                 }
             }

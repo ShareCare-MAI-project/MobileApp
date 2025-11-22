@@ -17,7 +17,12 @@ class AuthLocalDataSource(
         return token.ifEmpty { null }
     }
 
+    fun fetchName(): String? {
+        return settings[NAME_KEY, ""].ifEmpty { null }
+    }
+
     companion object {
         const val TOKEN_KEY = "tokenKey"
+        const val NAME_KEY = "nameKey"
     }
 }

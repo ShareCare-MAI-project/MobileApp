@@ -20,4 +20,9 @@ interface AuthComponent {
 
 
     fun onBackClick()
+
+    sealed class Output {
+        data object NavigateToRegistration : Output()
+        data object NavigateToMain : Output()
+    }
 }
