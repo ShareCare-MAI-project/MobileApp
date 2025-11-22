@@ -1,4 +1,4 @@
-package ktor.bodies
+package ktor.models.requests
 
 import kotlinx.serialization.Serializable
 

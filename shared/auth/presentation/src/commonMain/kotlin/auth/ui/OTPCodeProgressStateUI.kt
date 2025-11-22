@@ -83,7 +83,6 @@ internal fun OTPCodeProgressStateUI(
                 },
                 enabled = component.OTPCode.text.length == 4
                         && component.OTPCode.text.all { it.isDigit() }
-                        && !verifyCodeResult.isLoading()
             ) {
                 SpacerH(Paddings.semiSmall)
                 Text("Далее")

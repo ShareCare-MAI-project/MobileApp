@@ -1,10 +1,10 @@
 package ktor
 
-import VerifyCodeBody
 import VerifyCodeResponseDTO
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.flow.Flow
-import ktor.bodies.RequestCodeBody
+import ktor.models.requests.RequestCodeBody
+import ktor.models.requests.VerifyCodeBody
 import network.NetworkState
 
 
