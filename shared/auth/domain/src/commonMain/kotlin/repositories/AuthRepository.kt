@@ -4,9 +4,10 @@ import kotlinx.coroutines.flow.Flow
 import network.NetworkState
 
 interface AuthRepository {
-    fun requestCode(phone: String) : Flow<NetworkState<Unit>>
-    fun verifyCode(phone: String, otp: String) : Flow<NetworkState<Boolean>>
+    fun requestCode(phone: String): Flow<NetworkState<Unit>>
+    fun verifyCode(phone: String, otp: String): Flow<NetworkState<Boolean>>
 
+    fun register(name: String, telegram: String): Flow<NetworkState<Unit>>
 
     fun fetchToken(): String?
     fun fetchName(): String?

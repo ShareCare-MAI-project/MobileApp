@@ -5,6 +5,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.value.Value
 import components.RootComponent.Child
 import components.RootComponent.Child.AuthChild
@@ -65,7 +66,9 @@ class RealRootComponent(
             )
 
             Config.Registration -> Child.RegistrationChild(
-                RealRegistrationComponent(childContext)
+                RealRegistrationComponent(childContext) {
+                    nav.replaceAll(Config.MainFlow)
+                }
             )
         }
     }

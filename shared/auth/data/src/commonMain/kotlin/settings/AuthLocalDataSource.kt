@@ -12,6 +12,10 @@ class AuthLocalDataSource(
         settings[TOKEN_KEY] = token
     }
 
+    fun saveName(name: String) {
+        settings[NAME_KEY] = name
+    }
+
     fun fetchToken(): String? {
         val token = settings[TOKEN_KEY, ""]
         return token.ifEmpty { null }

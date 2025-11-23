@@ -28,6 +28,19 @@ class AuthRepositoryImpl(
         }
     }.flowOn(Dispatchers.IO)
 
+    override fun register(
+        name: String,
+        telegram: String
+    ): Flow<NetworkState<Unit>> = flow {
+        remoteDataSource.registerUser(name = name, telegram = telegram.removePrefix("@"))
+            .collect { registerResponse ->
+                emit(registerResponse.defaultWhen { response ->
+                    localDataSource.saveName(name)
+                    response
+                })
+            }
+    }.flowOn(Dispatchers.IO)
+
     override fun fetchToken(): String? = localDataSource.fetchToken()
 
     override fun fetchName(): String? = localDataSource.fetchName()

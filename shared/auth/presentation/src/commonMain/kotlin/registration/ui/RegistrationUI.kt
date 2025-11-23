@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.insert
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.NavigateNext
@@ -23,6 +22,8 @@ import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -44,6 +45,8 @@ fun RegistrationUI(component: RegistrationComponent) {
 
 
     val windowInsets = WindowInsets.safeContent.exclude(WindowInsets.ime)
+
+    val registrationResult by component.registrationResult.collectAsState()
 
     VerticalScrollableBox(
         modifier = Modifier.fillMaxSize().fastBackground(colorScheme.background).imePadding(),
@@ -74,7 +77,7 @@ fun RegistrationUI(component: RegistrationComponent) {
 
 
             SurfaceTextField(
-                state = TextFieldState(),
+                state = component.name,
                 placeholderText = "Ваше имя",
                 icon = Icons.Rounded.Person,
                 singleLine = true,
@@ -82,7 +85,7 @@ fun RegistrationUI(component: RegistrationComponent) {
                 inputTransformation = {
                     val text = this.asCharSequence()
 
-                    if (text.any { !it.isLetter() && it != ' ' }) revertAllChanges()
+                    if (text.any { !it.isLetter() && it != ' ' } || text.length > 20) revertAllChanges()
                     else if (text.isNotEmpty()) {
                         val firstChar = text.first()
                         if (firstChar == ' ') revertAllChanges()
@@ -94,15 +97,27 @@ fun RegistrationUI(component: RegistrationComponent) {
 
 
             SurfaceTextField(
-                state = TextFieldState(),
+                state = component.telegram,
                 placeholderText = "Телеграм @username",
                 icon = Icons.Rounded.Telegram,
                 singleLine = true,
                 inputTransformation = {
                     val text = this.asCharSequence()
-                    if (text.isNotBlank() && text.first() != '@') {
-                        this.insert(0, "@")
+
+                    if (text.isNotEmpty()) {
+                        if (text.first() != '@') {
+                            this.insert(0, "@")
+                        }
+
+                        if (text.length > 1) {
+                            val usernamePart = text.substring(1).lowercase()
+                            val regex = Regex("^[a-z][a-z0-9_]{0,31}$")
+                            if (!usernamePart.matches(regex)) {
+                                revertAllChanges()
+                            }
+                        }
                     }
+
                 }
             )
             SpacerV(Paddings.small)
@@ -116,16 +131,16 @@ fun RegistrationUI(component: RegistrationComponent) {
 
             SpacerV(Paddings.big)
             Button(
-                enabled = true,
+                enabled = component.name.text.isNotEmpty() && component.telegram.text.length >= 5 + 1, //at least 5 characters + @
                 onClick = {
-
+                    component.onRegistrationClick()
                 }
             ) {
                 Text("Зарегистрироваться")
                 SpacerH(Paddings.semiSmall)
                 NetworkButtonIconAnimation(
                     icon = Icons.AutoMirrored.Rounded.NavigateNext,
-                    isLoading = false
+                    isLoading = registrationResult.isLoading()
                 )
             }
         }

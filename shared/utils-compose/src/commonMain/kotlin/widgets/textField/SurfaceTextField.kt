@@ -7,6 +7,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -112,19 +113,23 @@ fun SurfaceTextField(
                 lineLimits = if (singleLine) TextFieldLineLimits.SingleLine else TextFieldLineLimits.Default,
                 textStyle = textStyle.copy(color = colorScheme.onSurface), // wtf? idk
                 decorator = { innerTextField ->
-                    Box(
-                        Modifier.width(IntrinsicSize.Max)
+                    Row(
+                        modifier = Modifier.width(IntrinsicSize.Max)
                             .padding(
                                 horizontal = Paddings.semiMedium,
                                 vertical = Paddings.small
                             ),
-                        contentAlignment = Alignment.CenterStart
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            icon?.let {
-                                Icon(icon, null)
-                                SpacerH(Paddings.small)
-                            }
+                        icon?.let {
+                            Icon(icon, null)
+                            SpacerH(Paddings.small)
+                        }
+                        Box(
+                            Modifier,
+                            contentAlignment = Alignment.CenterStart
+                        ) {
                             placeholderText?.let { text ->
                                 AnimatedPlaceholder(
                                     isVisible = isPlaceholderInField,
@@ -153,7 +158,6 @@ fun SurfaceTextField(
                                     bringIntoViewRequester.bringIntoView(
                                         cursorRect
                                     )
-                                    println("checkai: ${state.text}")
                                 }
 
                             }
@@ -164,7 +168,7 @@ fun SurfaceTextField(
                 },
                 interactionSource = interactionSource,
 
-            )
+                )
         }
         placeholderText?.let { text ->
 
