@@ -54,14 +54,13 @@ fun VerticalScrollableBox(
             }
 
 
-            if (isBottomPadding && isScrollable) {
-                // imePadding workaround
-                SpacerV(
-                    (
-                            if (bottomInsetsHeightDp >= Paddings.small) bottomInsetsHeightDp else Paddings.medium
-                            ) + bottomPaddingExtraHeight
-                )
-            }
+
+            SpacerV(
+                (
+                        if (bottomInsetsHeightDp >= Paddings.small) bottomInsetsHeightDp else Paddings.medium
+                        ) + if (isBottomPadding && isScrollable) bottomPaddingExtraHeight else 0.dp
+            )
+
         }
 
         if (isScrollable) {

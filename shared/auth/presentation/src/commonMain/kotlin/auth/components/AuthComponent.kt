@@ -12,10 +12,17 @@ interface AuthComponent {
     val currentProgressState: StateFlow<AuthProgressState>
 
     val requestCodeResult: StateFlow<NetworkState<Unit>>
+    val verifyCodeResult: StateFlow<NetworkState<Boolean>>
+
 
     fun onSendCodeClick()
     fun onVerifyCodeClick()
 
 
     fun onBackClick()
+
+    sealed class Output {
+        data object NavigateToRegistration : Output()
+        data object NavigateToMain : Output()
+    }
 }

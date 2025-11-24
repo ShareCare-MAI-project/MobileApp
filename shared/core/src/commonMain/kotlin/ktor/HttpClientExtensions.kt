@@ -3,8 +3,10 @@ package ktor
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
@@ -21,11 +23,9 @@ inline fun <reified T> HttpClient.defaultPost(
     path: String,
     body: Any? = null,
     crossinline block: HttpRequestBuilder.() -> Unit = {}
-): Flow<NetworkState<T>> = flow {
-    emit(NetworkState.Loading)
-
-    try {
-        val response = post {
+): Flow<NetworkState<T>> = defaultRequest(
+    response = {
+        post {
             url {
                 contentType(ContentType.Application.Json)
                 path(path)
@@ -33,6 +33,33 @@ inline fun <reified T> HttpClient.defaultPost(
                 block()
             }
         }
+    }
+)
+
+inline fun <reified T> HttpClient.defaultGet(
+    path: String,
+    crossinline block: HttpRequestBuilder.() -> Unit = {}
+): Flow<NetworkState<T>> = defaultRequest(
+    response = {
+        get {
+            url {
+                contentType(ContentType.Application.Json)
+                path(path)
+                block()
+            }
+        }
+    }
+)
+
+
+
+inline fun <reified T> HttpClient.defaultRequest(
+    crossinline response: suspend () -> HttpResponse
+): Flow<NetworkState<T>> = flow {
+    emit(NetworkState.Loading)
+
+    try {
+        val response = response()
 
         when {
             response.status.isSuccess() -> {
@@ -41,21 +68,18 @@ inline fun <reified T> HttpClient.defaultPost(
             }
 
             else -> {
-                emit(NetworkState.Error(Throwable("${response.status}: ${response.bodyAsText()}")))
+                emit(
+                    NetworkState.Error(
+                        Throwable("${response.status}: ${response.bodyAsText()}"),
+                        // is there another way?
+                        prettyPrint = response.bodyAsText().removePrefix("{\"detail\":\"").removeSuffix("\"}"),
+                        code = response.status.value
+                    )
+                )
             }
         }
     } catch (e: Exception) {
-        emit(NetworkState.Error(e))
+        // code == 0 -> Ошибку прислал не сервер
+        emit(NetworkState.Error(e, "Что-то пошло не так", code = 0))
     }
-
 }.flowOn(Dispatchers.IO)
-//
-//suspend fun HttpResponse.throwIfNoOK() {
-//    if (this.status != HttpStatusCode.OK) {
-//        throw NoOkException(
-//            "${this.status.value} ${
-//                this.call.request.url.encodedPath.removeSuffix("/").removePrefix("/")
-//            }\n${this.bodyAsText()}"
-//        )
-//    }
-//}

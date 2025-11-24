@@ -22,6 +22,7 @@ import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import itemEditorFlow.ui.ItemEditorFlowUI
 import mainFlow.ui.MainFlowUI
+import registration.ui.RegistrationUI
 import ui.HelloUI
 import view.theme.AppTheme
 
@@ -54,6 +55,9 @@ fun RootUI(
                         when (val child = it.instance) {
                             is RootComponent.Child.HelloChild -> HelloUI(child.helloComponent)
                             is RootComponent.Child.AuthChild -> AuthUI(child.authComponent)
+                            is RootComponent.Child.RegistrationChild -> RegistrationUI(child.registrationComponent)
+
+
                             is RootComponent.Child.MainFlowChild -> MainFlowUI(child.mainFlowComponent)
                             is RootComponent.Child.ItemEditorChild -> ItemEditorFlowUI(child.itemEditorComponent)
                         }

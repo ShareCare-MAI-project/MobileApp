@@ -3,15 +3,19 @@ package auth.components
 import androidx.compose.foundation.text.input.TextFieldState
 import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.essenty.instancekeeper.retainedSimpleInstance
 import decompose.componentCoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.withContext
 import network.NetworkState
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import usecases.AuthUseCases
 
 class RealAuthComponent(
-    componentContext: ComponentContext
+    componentContext: ComponentContext,
+    private val output: (AuthComponent.Output) -> Unit
 ) : AuthComponent, KoinComponent, ComponentContext by componentContext {
 
 
@@ -19,30 +23,56 @@ class RealAuthComponent(
 
     private val coroutineScope = componentCoroutineScope()
 
-    override val phoneNumber: TextFieldState = TextFieldState("+7")
-    override val OTPCode: TextFieldState = TextFieldState()
+    override val phoneNumber: TextFieldState =
+        retainedSimpleInstance("phoneNumber") { TextFieldState("+7") }
+    override val OTPCode: TextFieldState = retainedSimpleInstance("OTPCode") { TextFieldState() }
+
+    override val currentProgressState =
+        retainedSimpleInstance("currentProgressState") { MutableStateFlow(AuthProgressState.PHONE) }
 
 
     override val requestCodeResult: MutableStateFlow<NetworkState<Unit>> =
         MutableStateFlow(NetworkState.AFK)
 
-    override val currentProgressState = MutableStateFlow(AuthProgressState.PHONE)
+    override val verifyCodeResult: MutableStateFlow<NetworkState<Boolean>> =
+        MutableStateFlow(NetworkState.AFK)
+
 
     override fun onSendCodeClick() {
-        coroutineScope.launchIO {
-            authUseCases.requestCode(phoneNumber.text.toString()).collect {
-                requestCodeResult.value = it
+        if (!requestCodeResult.value.isLoading()) {
+            coroutineScope.launchIO {
+                authUseCases.requestCode(phoneNumber.text.toString()).collect {
+                    requestCodeResult.value = it
+                }
+
+                requestCodeResult.value.handle {
+                    currentProgressState.value = AuthProgressState.OTPCode
+                }
             }
-
-            if (requestCodeResult.value is NetworkState.Success)
-                currentProgressState.value = AuthProgressState.OTPCode
-
         }
     }
 
     override fun onVerifyCodeClick() {
-        coroutineScope.launchIO {
-            // some logic
+        if (!verifyCodeResult.value.isLoading()) {
+            coroutineScope.launchIO {
+                authUseCases.verifyCode(
+                    phone = phoneNumber.text.toString(),
+                    otp = OTPCode.text.toString()
+                ).collect {
+                    verifyCodeResult.value = it
+                }
+
+                withContext(Dispatchers.Main) {
+                    verifyCodeResult.value.handle { result ->
+                        if (result.data) { // have to register
+                            output(AuthComponent.Output.NavigateToRegistration)
+                        } else {
+                            // already registered -> go to main
+                            output(AuthComponent.Output.NavigateToMain)
+                        }
+                    }
+                }
+            }
         }
     }
 

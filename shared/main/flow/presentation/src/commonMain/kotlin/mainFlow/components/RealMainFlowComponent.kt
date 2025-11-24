@@ -1,6 +1,7 @@
-package components
+package mainFlow.components
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.childContext
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.slot.SlotNavigation
 import com.arkivanov.decompose.router.slot.activate
@@ -14,7 +15,8 @@ import com.arkivanov.decompose.value.Value
 import findHelp.components.RealFindHelpComponent
 import itemDetails.components.ItemDetailsComponent
 import itemDetails.components.RealItemDetailsComponent
-import mainFlow.components.MainFlowComponent
+import loading.components.LoadingComponent
+import loading.components.RealLoadingComponent
 import mainFlow.components.MainFlowComponent.Child
 import mainFlow.components.MainFlowComponent.Child.FindHelpChild
 import mainFlow.components.MainFlowComponent.Child.ShareCareChild
@@ -27,6 +29,14 @@ class RealMainFlowComponent(
     componentContext: ComponentContext,
     override val output: (Output) -> Unit
 ) : MainFlowComponent, ComponentContext by componentContext {
+
+
+    override val loadingComponent: LoadingComponent =
+        RealLoadingComponent(
+            componentContext.childContext("loadingComponent"),
+            navigateToAuth = { output(Output.NavigateToAuth) },
+            navigateToRegistration = { output(Output.NavigateToRegistration) }
+        )
 
     override val nav = StackNavigation<Config>()
 

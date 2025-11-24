@@ -1,5 +1,6 @@
 package auth.ui
 
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Message
 import androidx.compose.material.icons.automirrored.rounded.NavigateBefore
@@ -11,10 +12,9 @@ import androidx.compose.material3.SplitButtonDefaults
 import androidx.compose.material3.SplitButtonLayout
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import auth.components.AuthComponent
+import animations.NetworkButtonIconAnimation
 import utils.SpacerH
 import utils.SpacerV
 import view.consts.Paddings
@@ -23,16 +23,16 @@ import widgets.textField.SurfaceTextField
 
 @Composable
 internal fun OTPCodeProgressStateUI(
-    component: AuthComponent
+    OTPCode: TextFieldState,
+    isLoading: Boolean,
+    onNextClick: () -> Unit,
+    onBackClick: () -> Unit
 ) {
 
-    //validate otp-code
-    LaunchedEffect(component.OTPCode.text) {
 
-    }
 
     SurfaceTextField(
-        state = component.OTPCode,
+        state = OTPCode,
         placeholderText = "Код",
         icon = Icons.AutoMirrored.Rounded.Message,
         singleLine = true,
@@ -55,12 +55,11 @@ internal fun OTPCodeProgressStateUI(
     )
 
     SpacerV(Paddings.big)
-
     SplitButtonLayout(
         leadingButton = {
             SplitButtonDefaults.LeadingButton(
                 onClick = {
-                    component.onBackClick()
+                    onBackClick()
                 }
             ) {
                 Icon(Icons.AutoMirrored.Rounded.NavigateBefore, null)
@@ -68,12 +67,19 @@ internal fun OTPCodeProgressStateUI(
         },
         trailingButton = {
             SplitButtonDefaults.TrailingButton(
-                onClick = {}
+                onClick = {
+                    onNextClick()
+                },
+                enabled = OTPCode.text.length == 4
+                        && OTPCode.text.all { it.isDigit() }
             ) {
                 SpacerH(Paddings.semiSmall)
                 Text("Далее")
                 SpacerH(Paddings.semiSmall)
-                Icon(Icons.AutoMirrored.Rounded.NavigateNext, null)
+                NetworkButtonIconAnimation(
+                    icon = Icons.AutoMirrored.Rounded.NavigateNext,
+                    isLoading = isLoading
+                )
             }
         }
     )

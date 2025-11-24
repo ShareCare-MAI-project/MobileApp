@@ -7,6 +7,7 @@ import com.arkivanov.decompose.value.Value
 import findHelp.components.FindHelpComponent
 import itemDetails.components.ItemDetailsComponent
 import kotlinx.serialization.Serializable
+import loading.components.LoadingComponent
 import mainFlow.components.MainFlowComponent.Child
 import mainFlow.components.MainFlowComponent.Config
 import shareCare.components.ShareCareComponent
@@ -14,9 +15,10 @@ import shareCare.components.ShareCareComponent
 
 interface MainFlowComponent : DefaultStack<Config, Child> {
 
-    val detailsNav: SlotNavigation<DetailsConfig>
+    val loadingComponent: LoadingComponent
 
-    val detailsSlot : Value<ChildSlot<*, ItemDetailsComponent>>
+    val detailsNav: SlotNavigation<DetailsConfig>
+    val detailsSlot: Value<ChildSlot<*, ItemDetailsComponent>>
 
     @Serializable
     data class DetailsConfig(
@@ -32,6 +34,7 @@ interface MainFlowComponent : DefaultStack<Config, Child> {
     sealed interface Config {
         @Serializable
         data object FindHelp : Config
+
         @Serializable
         data object ShareCare : Config
     }
@@ -42,5 +45,8 @@ interface MainFlowComponent : DefaultStack<Config, Child> {
 
     sealed class Output {
         data object NavigateToItemEditor : Output()
+
+        data object NavigateToRegistration : Output()
+        data object NavigateToAuth : Output()
     }
 }
