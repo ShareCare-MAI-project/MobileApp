@@ -1,11 +1,12 @@
-package ktor
+package ktor.auth
 
 import VerifyCodeResponseDTO
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.flow.Flow
-import ktor.models.requests.RegistrationBody
-import ktor.models.requests.RequestCodeBody
-import ktor.models.requests.VerifyCodeBody
+import ktor.auth.models.requests.RegistrationBody
+import ktor.auth.models.requests.RequestCodeBody
+import ktor.auth.models.requests.VerifyCodeBody
+import ktor.defaultPost
 import network.NetworkState
 
 
@@ -25,6 +26,8 @@ class AuthRemoteDataSource(
             path = REGISTRATION_PATH,
             body = RegistrationBody(name = name, telegram = telegram)
         )
+
+
 
     private companion object {
         const val PRE_PATH = "/auth"

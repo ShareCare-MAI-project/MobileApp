@@ -10,7 +10,8 @@ fun initKoin(
         appDeclaration()
         modules(
             coreModule(enableLogging),
-            authModule
+            authModule,
+            userModule
         )
     }
 }

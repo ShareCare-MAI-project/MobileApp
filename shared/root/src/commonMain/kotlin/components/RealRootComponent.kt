@@ -17,10 +17,12 @@ import components.outputHandlers.onAuthOutput
 import components.outputHandlers.onHelloOutput
 import components.outputHandlers.onMainOutput
 import itemEditorFlow.components.RealItemEditorFlowComponent
+import mainFlow.components.RealMainFlowComponent
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import registration.components.RealRegistrationComponent
 import usecases.AuthUseCases
+import usecases.UserUseCases
 
 class RealRootComponent(
     componentContext: ComponentContext
@@ -75,8 +77,10 @@ class RealRootComponent(
 
     private fun getInitialConfig(): Config {
         val authUseCases: AuthUseCases = get()
+        val userUseCases: UserUseCases = get()
+
         val hasToken = authUseCases.fetchToken() != null
-        val hasName = authUseCases.fetchName() != null
+        val hasName = userUseCases.fetchName() != null
 
         return if (hasToken) {
             if (hasName) Config.MainFlow

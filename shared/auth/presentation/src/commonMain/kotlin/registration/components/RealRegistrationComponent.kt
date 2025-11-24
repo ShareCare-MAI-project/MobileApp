@@ -12,6 +12,7 @@ import network.NetworkState
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import usecases.AuthUseCases
+import usecases.extra.RegisterUseCase
 
 class RealRegistrationComponent(
     componentContext: ComponentContext,
@@ -21,6 +22,7 @@ class RealRegistrationComponent(
     val coroutineScope = componentCoroutineScope()
 
     val authUseCases: AuthUseCases = get()
+    val registerUseCase: RegisterUseCase = get()
 
     override val name: TextFieldState = retainedSimpleInstance("name") { TextFieldState() }
     override val telegram: TextFieldState = retainedSimpleInstance("telegram") { TextFieldState() }
@@ -31,7 +33,7 @@ class RealRegistrationComponent(
     override fun onRegistrationClick() {
         if (!registrationResult.value.isLoading()) {
             coroutineScope.launchIO {
-                authUseCases.registerUser(
+                registerUseCase(
                     name = name.text.toString(),
                     telegram = telegram.text.toString()
                 ).collect {

@@ -1,4 +1,4 @@
-package ktor.models.requests
+package ktor.auth.models.requests
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

@@ -5,7 +5,7 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import ktor.AuthRemoteDataSource
+import ktor.auth.AuthRemoteDataSource
 import network.NetworkState
 import settings.AuthLocalDataSource
 
@@ -31,17 +31,8 @@ class AuthRepositoryImpl(
     override fun register(
         name: String,
         telegram: String
-    ): Flow<NetworkState<Unit>> = flow {
+    ): Flow<NetworkState<Unit>> =
         remoteDataSource.registerUser(name = name, telegram = telegram.removePrefix("@"))
-            .collect { registerResponse ->
-                emit(registerResponse.defaultWhen { response ->
-                    localDataSource.saveName(name)
-                    response
-                })
-            }
-    }.flowOn(Dispatchers.IO)
 
     override fun fetchToken(): String? = localDataSource.fetchToken()
-
-    override fun fetchName(): String? = localDataSource.fetchName()
 }

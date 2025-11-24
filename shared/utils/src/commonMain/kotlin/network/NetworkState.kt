@@ -4,7 +4,7 @@ sealed class NetworkState<out T> {
     object AFK : NetworkState<Nothing>()
     object Loading : NetworkState<Nothing>()
     data class Success<T>(val data: T) : NetworkState<T>()
-    data class Error(val error: Throwable, val prettyPrint: String) : NetworkState<Nothing>()
+    data class Error(val error: Throwable, val prettyPrint: String, val code: Int) : NetworkState<Nothing>()
 
 
     fun isLoading() =

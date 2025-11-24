@@ -9,6 +9,10 @@ kotlin {
             implementation(project(Modules.Main.ShareCare.presentation))
             implementation(project(Modules.Main.FindHelp.presentation))
             implementation(project(Modules.Main.ItemDetails.presentation))
+
+            implementation(project(Modules.Auth.domain))
+
+            implementation(libs.kotlinx.datetime)
         }
     }
 }
