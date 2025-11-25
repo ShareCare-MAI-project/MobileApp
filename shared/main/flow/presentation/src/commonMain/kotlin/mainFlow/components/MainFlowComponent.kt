@@ -48,5 +48,7 @@ interface MainFlowComponent : DefaultStack<Config, Child> {
 
         data object NavigateToRegistration : Output()
         data object NavigateToAuth : Output()
+
+        data object NavigateToProfile : Output()
     }
 }

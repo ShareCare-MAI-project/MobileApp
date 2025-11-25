@@ -13,5 +13,10 @@ fun RootComponent.onMainOutput(
         MainFlowComponent.Output.NavigateToItemEditor -> nav.bringToFront(Config.ItemEditor)
         MainFlowComponent.Output.NavigateToAuth -> nav.replaceAll(Config.Auth)
         MainFlowComponent.Output.NavigateToRegistration -> nav.replaceAll(Config.Registration)
+        MainFlowComponent.Output.NavigateToProfile -> nav.bringToFront(
+            Config.ProfileFlow(
+                userId = null
+            )
+        )
     }
 }

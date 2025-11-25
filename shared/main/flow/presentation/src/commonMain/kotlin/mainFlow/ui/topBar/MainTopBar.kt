@@ -24,11 +24,13 @@ import androidx.compose.ui.unit.times
 import common.grid.ContentType
 import dev.chrisbanes.haze.HazeState
 import foundation.layouts.RightImportantLayout
+import mainFlow.components.MainFlowComponent
 import utils.SpacerH
 import view.consts.Paddings
 
 @Composable
 internal fun MainTopBar(
+    component: MainFlowComponent,
     modifier: Modifier,
     hazeState: HazeState,
     currentContentType: ContentType?
@@ -88,7 +90,9 @@ internal fun MainTopBar(
 
         }, rightSide = {
             SpacerH(paddingBetweenIcons.value)
-            AvatarButton(hazeState)
+            AvatarButton(hazeState) {
+                component.output(MainFlowComponent.Output.NavigateToProfile)
+            }
             SpacerH(Paddings.medium)
         }
     )

@@ -17,10 +17,13 @@ import widgets.glass.GlassCard
 
 @Composable
 internal fun AvatarButton(
-    hazeState: HazeState
+    hazeState: HazeState,
+    onClick: () -> Unit
 ) {
     GlassCard(
-        modifier = Modifier.aspectRatio(1f).clickable {},
+        modifier = Modifier.aspectRatio(1f).clickable {
+            onClick()
+        },
         hazeState = hazeState,
         shape = CircleShape,
         isReversedProgressive = true,

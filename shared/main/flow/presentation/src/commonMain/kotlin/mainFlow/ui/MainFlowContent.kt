@@ -10,7 +10,6 @@ import androidx.compose.foundation.gestures.LocalBringIntoViewSpec
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
@@ -122,6 +121,7 @@ fun SharedTransitionScope.MainFlowContent(
                     .padding(top = topPadding),
                 hazeState = hazeState,
                 currentContentType = currentContentType,
+                component = component
             )
 
         },

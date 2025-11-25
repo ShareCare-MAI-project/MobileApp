@@ -65,8 +65,8 @@ object Modules {
         const val presentation = "$modulePath:presentation"
     }
 
-    object Settings {
-        private const val modulePath = "$sharedPath:settings"
+    object Profile {
+        private const val modulePath = "$sharedPath:profile"
 
         const val data = "$modulePath:data"
         const val domain = "$modulePath:domain"

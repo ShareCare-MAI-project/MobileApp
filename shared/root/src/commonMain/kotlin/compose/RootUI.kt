@@ -22,6 +22,7 @@ import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import itemEditorFlow.ui.ItemEditorFlowUI
 import mainFlow.ui.MainFlowUI
+import profileFlow.ui.ProfileFlowUI
 import registration.ui.RegistrationUI
 import ui.HelloUI
 import view.theme.AppTheme
@@ -60,6 +61,7 @@ fun RootUI(
 
                             is RootComponent.Child.MainFlowChild -> MainFlowUI(child.mainFlowComponent)
                             is RootComponent.Child.ItemEditorChild -> ItemEditorFlowUI(child.itemEditorComponent)
+                            is RootComponent.Child.ProfileFlowChild -> ProfileFlowUI(child.profileFlowComponent)
                         }
                     }
                 }

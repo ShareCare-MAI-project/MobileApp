@@ -11,4 +11,5 @@ interface AuthRepository {
 
 
     fun fetchToken(): String?
+    fun fetchUserId(): String?
 }

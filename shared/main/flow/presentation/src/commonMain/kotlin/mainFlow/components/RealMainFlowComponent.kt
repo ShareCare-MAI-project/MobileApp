@@ -40,14 +40,13 @@ class RealMainFlowComponent(
 
     override val nav = StackNavigation<Config>()
 
-    val initialConfig = calculateInitialConfig()
 
 
     private val _stack =
         childStack(
             source = nav,
             serializer = Config.serializer(),
-            initialConfiguration = initialConfig,
+            initialConfiguration = calculateInitialConfig(),
             childFactory = ::child,
         )
 
