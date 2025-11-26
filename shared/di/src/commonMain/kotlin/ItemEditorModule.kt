@@ -7,7 +7,7 @@ import usecases.ItemEditorUseCases
 internal val itemEditorModule = module {
     single<ItemEditorRemoteDataSource> {
         ItemEditorRemoteDataSource(
-            get()
+            get(), get()
         )
     }
 

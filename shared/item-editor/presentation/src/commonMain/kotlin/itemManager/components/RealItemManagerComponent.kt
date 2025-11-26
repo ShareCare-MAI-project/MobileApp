@@ -1,5 +1,7 @@
 package itemManager.components
 
+import alertsManager.AlertState
+import alertsManager.AlertsManager
 import androidx.compose.foundation.text.input.TextFieldState
 import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
@@ -70,9 +72,13 @@ class RealItemManagerComponent(
                     createItemResult.value = it
                 }
 
-                createItemResult.value.handle {
-                    // closeFlow and show that is all ok!
-                    println("TESTII: OKI")
+                createItemResult.value.handle(
+                    onError = { AlertsManager.push(AlertState.SnackBar(it.prettyPrint)) }
+                ) {
+                    AlertsManager.push(
+                        AlertState.SuccessDialog("Предмет создан")
+                    )
+                    closeFlow()
                 }
 
             }.invokeOnCompletion {

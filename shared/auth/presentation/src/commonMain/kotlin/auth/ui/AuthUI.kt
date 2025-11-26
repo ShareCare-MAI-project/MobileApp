@@ -2,6 +2,7 @@ package auth.ui
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
@@ -17,22 +18,16 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import architecture.launchIO
 import auth.components.AuthComponent
 import auth.components.AuthProgressState
 import foundation.scrollables.VerticalScrollableBox
@@ -56,24 +51,11 @@ fun AuthUI(
         component.onBackClick()
     }
 
-    val snackbarHostState = remember { SnackbarHostState() }
-
 
     val verifyCodeResult by component.verifyCodeResult.collectAsState()
 
-    LaunchedEffect(verifyCodeResult) {
-        verifyCodeResult.onError { result ->
-            this.launchIO {
-                snackbarHostState.showSnackbar(message = result.prettyPrint)
-            }
-        }
-    }
-
-    Scaffold(
+    Box(
         Modifier.imePadding().fillMaxSize().fastBackground(colorScheme.background),
-        snackbarHost = {
-            SnackbarHost(snackbarHostState)
-        }
     ) {
         VerticalScrollableBox(
             modifier = Modifier.fillMaxSize(),

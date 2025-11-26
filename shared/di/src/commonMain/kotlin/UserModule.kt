@@ -9,7 +9,7 @@ import usecases.UserUseCases
 internal val userModule = module {
     single<UserRemoteDataSource> {
         UserRemoteDataSource(
-            get()
+            get(), get()
         )
     }
     single<UserLocalDataSource> {

@@ -19,7 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import entities.enums.ItemCategory
-import itemManager.components.title
+import itemManager.ui.title
 import utils.SpacerV
 import view.consts.Paddings
 import widgets.SectionTitle

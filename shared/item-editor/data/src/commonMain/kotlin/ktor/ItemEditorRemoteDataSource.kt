@@ -6,11 +6,12 @@ import kotlinx.coroutines.flow.Flow
 import network.NetworkState
 
 class ItemEditorRemoteDataSource(
-    private val hc: HttpClient
+    private val hc: HttpClient,
+    private val tokenProvider: TokenProvider
 ) {
 
     fun createItem(item: ItemDTO): Flow<NetworkState<Unit>> =
-        hc.defaultPost(path = CREATE_ITEM_PATH, body = item)
+        hc.defaultPost(path = CREATE_ITEM_PATH, body = item, tokenProvider = tokenProvider)
 
 
     private companion object {

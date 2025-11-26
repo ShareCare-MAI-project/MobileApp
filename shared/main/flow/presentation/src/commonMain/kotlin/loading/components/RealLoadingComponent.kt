@@ -2,7 +2,6 @@ package loading.components
 
 import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.essenty.instancekeeper.retainedSimpleInstance
 import decompose.componentCoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -49,7 +48,7 @@ class RealLoadingComponent(
                     updateUserInfoResult.value.onError { result ->
                         if (result.code == 400) { // Не зареган (с токеном всё ок)
                             navigateToRegistration()
-                        } else if (result.code == 401) { // Токен умер
+                        } else if (result.code == 401 || result.code == 403) { // Токен умер
                             navigateToAuth()
                         }
                     }

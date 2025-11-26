@@ -1,5 +1,7 @@
 package registration.components
 
+import alertsManager.AlertState
+import alertsManager.AlertsManager
 import androidx.compose.foundation.text.input.TextFieldState
 import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
@@ -39,8 +41,12 @@ class RealRegistrationComponent(
                 ).collect {
                     registrationResult.value = it
                 }
+
                 withContext(Dispatchers.Main) {
-                    registrationResult.value.handle {
+                    registrationResult.value.handle(
+                        onError = { AlertsManager.push(AlertState.SnackBar(it.prettyPrint)) }
+                    ) {
+
                         goMain()
                     }
                 }

@@ -1,4 +1,4 @@
-package itemManager.components
+package itemManager.ui
 
 import entities.enums.DeliveryType
 import entities.enums.DeliveryType.Mail
