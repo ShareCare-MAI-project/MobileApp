@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import itemManager.components.DeliveryType
 import utils.SpacerV
 import view.consts.Paddings
+import widgets.SectionTitle
 
 
 @Composable

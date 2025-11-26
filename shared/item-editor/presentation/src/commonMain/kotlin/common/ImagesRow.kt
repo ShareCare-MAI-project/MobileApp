@@ -102,7 +102,8 @@ internal fun ImagesRow(
                 ) {
                     Text(
                         (if (!isReversedNumeric)  index + 1 else images.size-index).toString(),
-                        modifier = Modifier.padding(horizontal = Paddings.small)
+                        modifier = Modifier.padding(horizontal = Paddings.small),
+                        color = Color.White
                     )
                 }
 

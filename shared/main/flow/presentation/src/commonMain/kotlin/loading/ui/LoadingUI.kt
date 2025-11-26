@@ -65,7 +65,7 @@ fun LoadingUI(
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    if (result.isLoading()) {
+                    if (result.isLoading() || result.isAFK()) {
                         LoadingIndicator()
                     } else if (result.isErrored()) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {

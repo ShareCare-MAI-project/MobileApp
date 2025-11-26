@@ -3,12 +3,12 @@ package registration.components
 import androidx.compose.foundation.text.input.TextFieldState
 import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.essenty.instancekeeper.retainedSimpleInstance
 import decompose.componentCoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import network.NetworkState
+import network.NetworkState.AFK.onCoroutineDeath
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import usecases.AuthUseCases
@@ -24,8 +24,8 @@ class RealRegistrationComponent(
     val authUseCases: AuthUseCases = get()
     val registerUseCase: RegisterUseCase = get()
 
-    override val name: TextFieldState = retainedSimpleInstance("name") { TextFieldState() }
-    override val telegram: TextFieldState = retainedSimpleInstance("telegram") { TextFieldState() }
+    override val name: TextFieldState = TextFieldState()
+    override val telegram: TextFieldState = TextFieldState()
     override val registrationResult  =
         MutableStateFlow<NetworkState<Unit>>(NetworkState.AFK)
 
@@ -44,6 +44,8 @@ class RealRegistrationComponent(
                         goMain()
                     }
                 }
+            }.invokeOnCompletion {
+                registrationResult.value = registrationResult.value.onCoroutineDeath()
             }
         }
     }

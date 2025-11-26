@@ -1,12 +1,12 @@
 package itemManager.components
 
 enum class DeliveryType {
-    PICKUP, MAIL, SELF_DELIVERY;
+    PICKUP, MAIL, OWNER_DELIVERY;
 
     val title: String
         get() = when (this) {
             PICKUP -> "Самовывоз"
             MAIL -> "Доставка почтой"
-            SELF_DELIVERY -> "Человек доставит сам"
+            OWNER_DELIVERY -> "Человек доставит сам"
         }
 }

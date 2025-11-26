@@ -33,5 +33,8 @@ class UserRepositoryImpl(
     override fun saveName(name: String) = localDataSource.saveName(name)
 
     override fun fetchName(): String? = localDataSource.fetchName()
+    override fun fetchIsVerified(): Boolean = localDataSource.fetchIsVerified()
+
+    override fun fetchOrganizationName(): String? = localDataSource.fetchOrganizationName()
 
 }

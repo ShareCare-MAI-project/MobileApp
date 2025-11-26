@@ -67,6 +67,7 @@ internal fun createHttpClient(
             contentType(ContentType.Application.Json)
             url {
                 host = "10.0.2.2" // `localhost` but from android studio emulator
+//                host = "10.230.221.145" // `localhost` but from device and wifi hotspot
                 protocol = URLProtocol.HTTP
             }
             port = 8080

@@ -7,9 +7,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
-fun ComponentContext.componentCoroutineScope(): CoroutineScope {
-    val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+fun ComponentContext.componentCoroutineScope(context: CoroutineContext = EmptyCoroutineContext): CoroutineScope {
+    val scope = CoroutineScope(context + SupervisorJob() + Dispatchers.Main.immediate)
     if (lifecycle.state != Lifecycle.State.DESTROYED) {
         lifecycle.doOnDestroy {
             scope.cancel()

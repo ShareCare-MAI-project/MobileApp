@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.LocalOverscrollFactory
 import androidx.compose.runtime.CompositionLocalProvider
-import com.arkivanov.decompose.defaultComponentContext
 import com.arkivanov.decompose.retainedComponent
 import components.RealRootComponent
 import components.RootComponent
@@ -25,7 +24,9 @@ class MainActivity : ComponentActivity() {
             androidContext(applicationContext)
         }
 
-        val rootComponent: RootComponent = retainedComponent { RealRootComponent(defaultComponentContext()) }
+        val rootComponent: RootComponent = retainedComponent { componentContext ->
+            RealRootComponent(componentContext)
+        }
         screenSetup()
 
         setContent {
