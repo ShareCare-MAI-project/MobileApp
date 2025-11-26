@@ -12,6 +12,8 @@ import components.RootComponent.Child.AuthChild
 import components.RootComponent.Child.HelloChild
 import components.RootComponent.Child.ItemEditorChild
 import components.RootComponent.Child.MainFlowChild
+import components.RootComponent.Child.ProfileFlowChild
+import components.RootComponent.Child.RegistrationChild
 import components.RootComponent.Config
 import components.outputHandlers.onAuthOutput
 import components.outputHandlers.onHelloOutput
@@ -20,6 +22,7 @@ import itemEditorFlow.components.RealItemEditorFlowComponent
 import mainFlow.components.RealMainFlowComponent
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import profileFlow.components.RealProfileFlowComponent
 import registration.components.RealRegistrationComponent
 import usecases.AuthUseCases
 import usecases.UserUseCases
@@ -67,10 +70,17 @@ class RealRootComponent(
                 )
             )
 
-            Config.Registration -> Child.RegistrationChild(
+            Config.Registration -> RegistrationChild(
                 RealRegistrationComponent(childContext) {
                     nav.replaceAll(Config.MainFlow)
                 }
+            )
+
+            is Config.ProfileFlow -> ProfileFlowChild(
+                RealProfileFlowComponent(
+                    childContext,
+                    userId = config.userId
+                )
             )
         }
     }

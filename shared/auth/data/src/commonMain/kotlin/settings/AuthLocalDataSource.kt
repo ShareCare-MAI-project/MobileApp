@@ -12,12 +12,22 @@ class AuthLocalDataSource(
         settings[TOKEN_KEY] = token
     }
 
+    fun saveUserId(userId: String) {
+        settings[USER_ID_KEY] = userId
+    }
+
     fun fetchToken(): String? {
         val token = settings[TOKEN_KEY, ""]
         return token.ifEmpty { null }
     }
 
+    fun fetchUserId(): String? {
+        val userId = settings[USER_ID_KEY, ""]
+        return userId.ifEmpty { null }
+    }
+
     companion object {
         const val TOKEN_KEY = "tokenKey"
+        const val USER_ID_KEY = "userIdKey"
     }
 }

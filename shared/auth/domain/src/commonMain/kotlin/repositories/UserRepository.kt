@@ -9,4 +9,8 @@ interface UserRepository {
 
     fun saveName(name: String)
     fun fetchName(): String?
+
+
+    fun fetchIsVerified(): Boolean
+    fun fetchOrganizationName(): String?
 }

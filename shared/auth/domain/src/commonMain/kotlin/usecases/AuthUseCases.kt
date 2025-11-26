@@ -2,6 +2,7 @@ package usecases
 
 import repositories.AuthRepository
 import usecases.auth.FetchTokenUseCase
+import usecases.auth.FetchUserIdUseCase
 import usecases.auth.RequestCodeUseCase
 import usecases.auth.VerifyCodeUseCase
 
@@ -13,4 +14,6 @@ class AuthUseCases(
     val verifyCode = VerifyCodeUseCase(repository)
 
     val fetchToken = FetchTokenUseCase(repository)
+
+    val fetchUserId = FetchUserIdUseCase(repository)
 }

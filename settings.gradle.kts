@@ -52,7 +52,7 @@ listOf(
 }
 
 listOf(
-    "hello", "auth", "settings", "item-editor"
+    "hello", "auth", "profile", "item-editor"
 ).forEach { module ->
     val subModules = listOf("data", "domain", "presentation")
     subModules.forEach { subModule ->

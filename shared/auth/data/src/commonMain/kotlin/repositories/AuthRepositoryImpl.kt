@@ -22,7 +22,7 @@ class AuthRepositoryImpl(
         remoteDataSource.verifyCode(phone = phone, code = otp).collect { verifyCodeResponse ->
             emit(verifyCodeResponse.defaultWhen { response ->
                 localDataSource.saveToken(response.data.token)
-                println("SAVED: ${localDataSource.fetchToken()}")
+                localDataSource.saveUserId(response.data.userId)
                 (NetworkState.Success(response.data.name == null))
             })
         }
@@ -35,4 +35,5 @@ class AuthRepositoryImpl(
         remoteDataSource.registerUser(name = name, telegram = telegram.removePrefix("@"))
 
     override fun fetchToken(): String? = localDataSource.fetchToken()
+    override fun fetchUserId(): String? = localDataSource.fetchUserId()
 }

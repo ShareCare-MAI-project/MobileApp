@@ -2,6 +2,7 @@ package loading.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -56,7 +57,7 @@ fun LoadingUI(
 
             Crossfade(
                 updateUserInfoResult,
-                modifier = Modifier.align(Alignment.BottomCenter)
+                modifier = Modifier.animateContentSize().align(Alignment.BottomCenter)
             ) { result ->
                 Box(
                     Modifier
@@ -64,7 +65,7 @@ fun LoadingUI(
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    if (result.isLoading()) {
+                    if (result.isLoading() || result.isAFK()) {
                         LoadingIndicator()
                     } else if (result.isErrored()) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {

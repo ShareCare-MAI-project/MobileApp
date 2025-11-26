@@ -13,6 +13,7 @@ kotlin {
             implementation(project(Modules.Auth.domain))
             implementation(project(Modules.Main.Flow.presentation))
             implementation(project(Modules.ItemEditor.presentation))
+            implementation(project(Modules.Profile.presentation))
         }
     }
 }

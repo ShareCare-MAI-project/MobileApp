@@ -1,18 +1,29 @@
 package network
 
+import kotlinx.coroutines.CancellationException
+
 sealed class NetworkState<out T> {
     object AFK : NetworkState<Nothing>()
     object Loading : NetworkState<Nothing>()
     data class Success<T>(val data: T) : NetworkState<T>()
-    data class Error(val error: Throwable, val prettyPrint: String, val code: Int) : NetworkState<Nothing>()
+    data class Error(val error: Throwable, val prettyPrint: String, val code: Int) :
+        NetworkState<Nothing>()
+
+
+    fun <R> NetworkState<R>.onCoroutineDeath(initialState: NetworkState<R> = Error(CancellationException(""), "coroutineDeath", 0)) =
+        if (isLoading()) AFK else this
 
 
     fun isLoading() =
         this is Loading
+
+    fun isAFK() =
+        this is AFK
+
     fun isErrored() =
         this is Error
 
-    inline fun <R> defaultWhen(onSuccess: (Success<out T>) -> NetworkState<R>) = when(this) {
+    inline fun <R> defaultWhen(onSuccess: (Success<out T>) -> NetworkState<R>) = when (this) {
         AFK -> AFK
         is Error -> this
         Loading -> Loading
@@ -30,7 +41,6 @@ sealed class NetworkState<out T> {
             onError(this)
         }
     }
-
 
 
 }

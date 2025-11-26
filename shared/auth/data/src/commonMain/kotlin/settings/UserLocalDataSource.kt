@@ -30,6 +30,14 @@ class UserLocalDataSource(
         return settings[NAME_KEY, ""].ifEmpty { null }
     }
 
+    fun fetchIsVerified(): Boolean {
+        return settings[IS_VERIFIED_KEY, false]
+    }
+
+    fun fetchOrganizationName(): String? {
+        return settings[ORGANIZATION_KEY, ""].ifEmpty { null }
+    }
+
     companion object {
         const val NAME_KEY = "nameKey"
         const val TELEGRAM_KEY = "telegramKey"

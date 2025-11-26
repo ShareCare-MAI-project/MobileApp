@@ -16,16 +16,14 @@ class RealItemManagerComponent(
 ) : ComponentContext by componentContext, ItemManagerComponent {
 
     private val coroutineScope = componentCoroutineScope()
-    override val title = retainedSimpleInstance("title") { TextFieldState() }
-    override val description = retainedSimpleInstance("desc") { TextFieldState() }
+    override val title = TextFieldState()
+    override val description = TextFieldState()
 
 
-    override val deliveryTypes =
-        retainedSimpleInstance("deliveryTypes") { MutableStateFlow(listOf<DeliveryType>()) }
+    override val deliveryTypes = MutableStateFlow(listOf<DeliveryType>())
 
 
-    override val itemCategory =
-        retainedSimpleInstance("itemCategory") { MutableStateFlow<ItemCategory?>(null) }
+    override val itemCategory = MutableStateFlow<ItemCategory?>(null)
 
 
     override fun updateItemCategory(itemCategory: ItemCategory) {

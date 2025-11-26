@@ -1,4 +1,4 @@
-package itemManager.ui.sections
+package widgets
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -8,16 +8,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import view.consts.Paddings
 
 @Composable
-internal fun SectionTitle(text: String) {
+fun SectionTitle(text: String, horizontalPadding: Dp =  Paddings.horizontalListPadding) {
     Text(
         text,
         fontWeight = FontWeight.Medium,
         style = typography.headlineSmall,
         maxLines = 1,
         autoSize = TextAutoSize.StepBased(maxFontSize = typography.headlineSmall.fontSize),
-        modifier = Modifier.fillMaxWidth().padding(horizontal = Paddings.horizontalListPadding)
+        modifier = Modifier.fillMaxWidth().padding(
+            horizontal = horizontalPadding
+        )
     )
 }

@@ -2,7 +2,6 @@ package photoTaker.components
 
 import androidx.compose.ui.graphics.ImageBitmap
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.essenty.instancekeeper.retainedSimpleInstance
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -12,7 +11,7 @@ class RealPhotoTakerComponent(
 ) : ComponentContext by componentContext, PhotoTakerComponent {
 
 
-    override val pickedPhotos = retainedSimpleInstance("photos") { MutableStateFlow<List<ImageBitmap>>(emptyList()) }
+    override val pickedPhotos = MutableStateFlow<List<ImageBitmap>>(emptyList())
 
     override fun onPhotoPick(imageBitmap: ImageBitmap) {
         if (pickedPhotos.value.size < 5) {

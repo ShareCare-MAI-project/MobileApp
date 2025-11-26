@@ -11,6 +11,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import network.NetworkState
+import network.NetworkState.AFK.onCoroutineDeath
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import usecases.UserUseCases
@@ -26,34 +27,41 @@ class RealLoadingComponent(
 
     private val coroutineScope = componentCoroutineScope()
 
+
+    override val updateUserInfoResult =
+        MutableStateFlow<NetworkState<Unit>>(NetworkState.AFK)
+
+
     init {
         updateUserInfo()
+
     }
 
     override fun updateUserInfo() {
-        coroutineScope.launchIO {
-            // TODO: remove
-            delay(4000)
-            userUseCases.updateCurrentUserInfo().collect {
-                updateUserInfoResult.value = it
-            }
-            withContext(Dispatchers.Main) {
-                updateUserInfoResult.value.onError { result ->
-                    if (result.code == 400) { // Не зареган (с токеном всё ок)
-                        navigateToRegistration()
-                    } else if (result.code == 401) { // Токен умер
-                        navigateToAuth()
+        if (!updateUserInfoResult.value.isLoading()) {
+            coroutineScope.launchIO {
+                // TODO: remove
+                delay(400)
+                userUseCases.updateCurrentUserInfo().collect {
+                    updateUserInfoResult.value = it
+                }
+                withContext(Dispatchers.Main) {
+                    updateUserInfoResult.value.onError { result ->
+                        if (result.code == 400) { // Не зареган (с токеном всё ок)
+                            navigateToRegistration()
+                        } else if (result.code == 401) { // Токен умер
+                            navigateToAuth()
+                        }
                     }
                 }
+            }.invokeOnCompletion {
+                updateUserInfoResult.value = updateUserInfoResult.value.onCoroutineDeath()
             }
         }
     }
 
-    override val updateUserInfoResult = retainedSimpleInstance("loadUserInfoResult") {
-        MutableStateFlow<NetworkState<Unit>>(NetworkState.Loading)
-    }
     override val helloText: String
-        get() = retainedSimpleInstance("helloText") { getNamedHelloText() }
+        get() = getNamedHelloText()
 
     @OptIn(ExperimentalTime::class)
     fun getNamedHelloText(): String {

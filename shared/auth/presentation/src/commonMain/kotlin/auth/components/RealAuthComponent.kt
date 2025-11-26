@@ -3,12 +3,13 @@ package auth.components
 import androidx.compose.foundation.text.input.TextFieldState
 import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.essenty.instancekeeper.retainedSimpleInstance
 import decompose.componentCoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import network.NetworkState
+import network.NetworkState.AFK.onCoroutineDeath
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import usecases.AuthUseCases
@@ -21,14 +22,13 @@ class RealAuthComponent(
 
     private val authUseCases: AuthUseCases = this.get()
 
-    private val coroutineScope = componentCoroutineScope()
+    private val coroutineScope =
+        componentCoroutineScope()
 
-    override val phoneNumber: TextFieldState =
-        retainedSimpleInstance("phoneNumber") { TextFieldState("+7") }
-    override val OTPCode: TextFieldState = retainedSimpleInstance("OTPCode") { TextFieldState() }
+    override val phoneNumber: TextFieldState = TextFieldState("+7")
+    override val OTPCode: TextFieldState = TextFieldState()
 
-    override val currentProgressState =
-        retainedSimpleInstance("currentProgressState") { MutableStateFlow(AuthProgressState.PHONE) }
+    override val currentProgressState = MutableStateFlow(AuthProgressState.PHONE)
 
 
     override val requestCodeResult: MutableStateFlow<NetworkState<Unit>> =
@@ -38,6 +38,7 @@ class RealAuthComponent(
         MutableStateFlow(NetworkState.AFK)
 
 
+    @OptIn(InternalCoroutinesApi::class)
     override fun onSendCodeClick() {
         if (!requestCodeResult.value.isLoading()) {
             coroutineScope.launchIO {
@@ -48,6 +49,8 @@ class RealAuthComponent(
                 requestCodeResult.value.handle {
                     currentProgressState.value = AuthProgressState.OTPCode
                 }
+            }.invokeOnCompletion {
+                requestCodeResult.value = requestCodeResult.value.onCoroutineDeath()
             }
         }
     }
@@ -72,6 +75,8 @@ class RealAuthComponent(
                         }
                     }
                 }
+            }.invokeOnCompletion {
+                verifyCodeResult.value = verifyCodeResult.value.onCoroutineDeath()
             }
         }
     }
