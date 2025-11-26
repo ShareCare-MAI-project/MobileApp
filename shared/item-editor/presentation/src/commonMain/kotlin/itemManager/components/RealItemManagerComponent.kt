@@ -9,8 +9,10 @@ import decompose.componentCoroutineScope
 import entities.Item
 import entities.enums.DeliveryType
 import entities.enums.ItemCategory
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.withContext
 import network.NetworkState
 import network.NetworkState.AFK.onCoroutineDeath
 import org.koin.core.component.KoinComponent
@@ -71,14 +73,15 @@ class RealItemManagerComponent(
                 itemEditorUseCases.createItem(item = preparedItem).collect {
                     createItemResult.value = it
                 }
-
-                createItemResult.value.handle(
-                    onError = { AlertsManager.push(AlertState.SnackBar(it.prettyPrint)) }
-                ) {
-                    AlertsManager.push(
-                        AlertState.SuccessDialog("Предмет создан")
-                    )
-                    closeFlow()
+                withContext(Dispatchers.Main) {
+                    createItemResult.value.handle(
+                        onError = { AlertsManager.push(AlertState.SnackBar(it.prettyPrint)) }
+                    ) {
+                        AlertsManager.push(
+                            AlertState.SuccessDialog("Предмет создан")
+                        )
+                        closeFlow()
+                    }
                 }
 
             }.invokeOnCompletion {
