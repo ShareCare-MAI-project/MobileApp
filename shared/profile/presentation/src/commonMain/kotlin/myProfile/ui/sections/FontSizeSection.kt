@@ -14,17 +14,19 @@ import androidx.compose.ui.unit.dp
 import utils.SpacerV
 import utils.getCoolPrimary
 import view.consts.Paddings
+import view.theme.colors.CustomColors
 import widgets.SectionTitle
 
 @Composable
 internal fun FontSizeSection() {
-
-
     val activeColor = getCoolPrimary()
     val colors = SliderDefaults.colors(
         thumbColor = activeColor,
         activeTrackColor = activeColor,
-        inactiveTrackColor = colorScheme.surfaceContainerHighest
+        activeTickColor = CustomColors.lightPrimary,
+        inactiveTrackColor = colorScheme.surfaceContainerHighest,
+        inactiveTickColor = colorScheme.onBackground,
+
     )
     SectionTitle("Размер шрифта", 0.dp)
     SpacerV(Paddings.small)
@@ -43,7 +45,8 @@ internal fun FontSizeSection() {
                 sliderState = sliderState,
                 modifier = Modifier.height(25.dp),
                 trackCornerSize = 10.dp,
-                colors = colors
+                colors = colors,
+                drawStopIndicator = null
             )
         },
     )

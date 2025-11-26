@@ -8,4 +8,6 @@ object CustomColors {
 
     val greenContainer = Color(225, 249, 220)
     val onGreenContainer = Color.Black
+
+    val lightPrimary = PrimaryLight
 }
