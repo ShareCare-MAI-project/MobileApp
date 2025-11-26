@@ -21,7 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import itemManager.components.DeliveryType
+import entities.enums.DeliveryType
+import itemManager.components.title
 import utils.SpacerV
 import view.consts.Paddings
 import widgets.SectionTitle

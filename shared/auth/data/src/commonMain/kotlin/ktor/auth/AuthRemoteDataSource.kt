@@ -1,6 +1,6 @@
 package ktor.auth
 
-import VerifyCodeResponseDTO
+import VerifyCodeResponse
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.flow.Flow
 import ktor.auth.models.requests.RegistrationBody
@@ -17,7 +17,7 @@ class AuthRemoteDataSource(
         hc.defaultPost(path = REQUEST_CODE_PATH, body = RequestCodeBody(phone = phone))
 
 
-    fun verifyCode(phone: String, code: String): Flow<NetworkState<VerifyCodeResponseDTO>> =
+    fun verifyCode(phone: String, code: String): Flow<NetworkState<VerifyCodeResponse>> =
         hc.defaultPost(path = VERIFY_CODE_PATH, body = VerifyCodeBody(phone = phone, code = code))
 
 

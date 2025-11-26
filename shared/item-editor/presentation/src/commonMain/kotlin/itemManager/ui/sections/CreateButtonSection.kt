@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.FileUpload
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
@@ -17,24 +15,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import animations.NetworkButtonIconAnimation
 import utils.SpacerH
 import utils.SpacerV
 import view.consts.Paddings
 
 @Composable
 internal fun CreateButtonSection(
-    enabled: Boolean
+    enabled: Boolean,
+    isLoading: Boolean,
+    onClick: () -> Unit
 ) {
     Column(
         Modifier.fillMaxWidth().padding(horizontal = Paddings.horizontalListPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(
-            onClick = {},
+            onClick = onClick,
             enabled = enabled
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Rounded.FileUpload, null)
+                NetworkButtonIconAnimation(Icons.Rounded.FileUpload, isLoading)
                 SpacerH(Paddings.small)
                 Text("Выложить предмет")
             }

@@ -18,7 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
-import itemManager.components.ItemCategory
+import entities.enums.ItemCategory
+import itemManager.components.title
 import utils.SpacerV
 import view.consts.Paddings
 import widgets.SectionTitle
@@ -31,6 +32,7 @@ internal fun DefaultInformationSection(
     titleState: TextFieldState,
     descState: TextFieldState,
     itemCategory: ItemCategory?,
+    readOnly: Boolean,
     onItemCategoryClick: (ItemCategory) -> Unit
 ) {
     SectionTitle("Информация")
@@ -39,14 +41,16 @@ internal fun DefaultInformationSection(
     DefaultInformationTextField(
         placeholderText = "Название",
         state = titleState,
-        imeAction = ImeAction.Next
+        imeAction = ImeAction.Next,
+        readOnly = readOnly
     )
 
     SpacerV(Paddings.small)
     DefaultInformationTextField(
         placeholderText = "Описание",
         state = descState,
-        imeAction = ImeAction.Done
+        imeAction = ImeAction.Done,
+        readOnly = readOnly
     )
     SpacerV(Paddings.small)
 

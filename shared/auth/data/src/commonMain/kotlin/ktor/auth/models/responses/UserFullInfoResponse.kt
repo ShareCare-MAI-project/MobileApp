@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserFullInfoResponseDTO(
+data class UserFullInfoResponse(
     val name: String,
     val phone: String,
     @SerialName("telegram_username") val telegram: String,
