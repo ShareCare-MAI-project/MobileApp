@@ -12,6 +12,9 @@ kotlin {
             implementation(project(Modules.Auth.data))
             implementation(project(Modules.ItemEditor.data))
 
+            
+            implementation(project(Modules.Main.ShareCare.data))
+
 
 
 

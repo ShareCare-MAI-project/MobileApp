@@ -1,15 +1,15 @@
 package itemManager.ui
 
-import entities.enums.DeliveryType
-import entities.enums.DeliveryType.Mail
-import entities.enums.DeliveryType.OwnerDelivery
-import entities.enums.DeliveryType.Pickup
-import entities.enums.ItemCategory
-import entities.enums.ItemCategory.Clothes
-import entities.enums.ItemCategory.Electronics
-import entities.enums.ItemCategory.Household
-import entities.enums.ItemCategory.Other
-import entities.enums.ItemCategory.Toys
+import logic.enums.DeliveryType
+import logic.enums.DeliveryType.Mail
+import logic.enums.DeliveryType.OwnerDelivery
+import logic.enums.DeliveryType.Pickup
+import logic.enums.ItemCategory
+import logic.enums.ItemCategory.Clothes
+import logic.enums.ItemCategory.Electronics
+import logic.enums.ItemCategory.Household
+import logic.enums.ItemCategory.Other
+import logic.enums.ItemCategory.Toys
 
 val DeliveryType.title: String
     get() = when (this) {

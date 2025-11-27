@@ -31,6 +31,8 @@ object Modules {
         object Common {
             private const val modulePath = "${Main.modulePath}:common"
             const val presentation = "$modulePath:presentation"
+            const val domain = "$modulePath:domain"
+            const val data = "$modulePath:data"
         }
         object Flow {
             private const val modulePath = "${Main.modulePath}:flow"

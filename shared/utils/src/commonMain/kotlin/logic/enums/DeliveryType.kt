@@ -1,4 +1,4 @@
-package entities.enums
+package logic.enums
 
 enum class DeliveryType {
     Pickup, Mail, OwnerDelivery;

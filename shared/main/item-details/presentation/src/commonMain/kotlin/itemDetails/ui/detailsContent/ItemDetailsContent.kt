@@ -8,11 +8,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -66,7 +64,7 @@ fun SharedTransitionScope.ItemDetailsContent(
             ) { sheetValue ->
                 if (sheetValue.isExpanded()) {
                     ItemImage(
-                        path = RImages.LOGO,
+                        link = RImages.LOGO,
                         modifier = Modifier
                             .align(Alignment.TopCenter)
                             .padding(horizontal = Paddings.horizontalListPadding)

@@ -12,7 +12,8 @@ fun initKoin(
             coreModule(enableLogging),
             authModule,
             userModule,
-            itemEditorModule
+            itemEditorModule,
+            shareCareModule
         )
     }
 }

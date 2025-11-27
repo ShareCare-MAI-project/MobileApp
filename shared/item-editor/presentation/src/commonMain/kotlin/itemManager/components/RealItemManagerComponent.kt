@@ -7,8 +7,8 @@ import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
 import decompose.componentCoroutineScope
 import entities.Item
-import entities.enums.DeliveryType
-import entities.enums.ItemCategory
+import logic.enums.DeliveryType
+import logic.enums.ItemCategory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update

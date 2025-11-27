@@ -38,7 +38,7 @@ fun SharedTransitionScope.DetailsImagePager(
                     .fastBackground(if (isStableDetailed) colorScheme.background else Color.Transparent)
             ) { index ->
                 ItemImage(
-                    path = when(index) {
+                    link = when(index) {
                         0 -> RImages.LOGO
                         1 -> RImages.LOGO2
                         2 -> RImages.LOGO3

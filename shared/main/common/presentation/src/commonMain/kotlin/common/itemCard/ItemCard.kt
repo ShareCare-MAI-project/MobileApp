@@ -29,7 +29,7 @@ import architecture.launchIO
 import common.detailsTransition.DetailsAnimator
 import common.detailsTransition.SharedAnimation
 import itemDetails.ui.bottomSheet.isExpanded
-import resources.RImages
+import network.getImageLink
 import utils.SpacerV
 import view.consts.Paddings
 
@@ -40,6 +40,8 @@ fun SharedTransitionScope.ItemCard(
     modifier: Modifier = Modifier,
     title: String,
     id: String,
+    imagePath: String?,
+    location: String,
     detailsAnimator: DetailsAnimator,
     onClicked: () -> Unit
 ) {
@@ -47,6 +49,9 @@ fun SharedTransitionScope.ItemCard(
 
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
+
+    val imageLink = getImageLink(imagePath)
+
     Card(
         modifier = modifier
             .clip(cardShape)
@@ -67,7 +72,7 @@ fun SharedTransitionScope.ItemCard(
         ) {
             if (detailsAnimator.detailedItemId != id) {
                 ItemImage(
-                    path = RImages.LOGO,
+                    link = imageLink,
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(1.1f),
@@ -81,7 +86,7 @@ fun SharedTransitionScope.ItemCard(
                 ) { sheetValue ->
                     if (!sheetValue.isExpanded()) {
                         ItemImage(
-                            path = RImages.LOGO,
+                            link = imageLink,
                             modifier = Modifier
                                 .fillMaxSize(),
                             id = id,
@@ -104,7 +109,7 @@ fun SharedTransitionScope.ItemCard(
             )
 
             Text(
-                "Москва, метро Славянский бульвар",
+                location,
                 maxLines = 1,
                 style = typography.bodySmall,
                 overflow = TextOverflow.Ellipsis,

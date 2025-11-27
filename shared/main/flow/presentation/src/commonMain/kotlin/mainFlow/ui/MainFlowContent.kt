@@ -157,6 +157,8 @@ fun SharedTransitionScope.MainFlowContent(
             bottomPadding + scaffoldBottomPadding + Paddings.endListPadding
         }
 
+
+
         val spacePaddings = remember(topSpacePadding, bottomSpacePadding) {
             SpacePaddings(
                 top = topSpacePadding,
@@ -164,17 +166,19 @@ fun SharedTransitionScope.MainFlowContent(
             )
         }
 
+        val isTopShadowVisible = currentLazyGridState.canScrollBackward
 
         val topSolidHeight = topPadding
         val topShadowHeight = ScrollEdgeShadowHeight.big + topBarHeight
         val bottomSolidHeight = bottomPadding / 2
         val bottomShadowHeight = ScrollEdgeShadowHeight.big + bottomBarHeight
 
+
         val customBringIntoViewSpec =
-            remember(topSolidHeight, topShadowHeight, bottomSolidHeight, bottomShadowHeight) {
+            remember(topSolidHeight, topShadowHeight, bottomSolidHeight, bottomShadowHeight, isTopShadowVisible) {
                 with(density) {
                     CustomBringIntoViewSpec(
-                        topShadowWholePaddingPx = (topSolidHeight + topShadowHeight).toPx(),
+                        topShadowWholePaddingPx = if (isTopShadowVisible) (topSolidHeight + topShadowHeight).toPx() else 0f,
                         bottomShadowWholePaddingPx = (bottomSolidHeight + bottomShadowHeight).toPx()
                     )
                 }
@@ -215,7 +219,7 @@ fun SharedTransitionScope.MainFlowContent(
                     .align(Alignment.TopStart),
                 solidHeight = topSolidHeight,
                 shadowHeight = topShadowHeight,
-                isVisible = currentLazyGridState.canScrollBackward
+                isVisible = isTopShadowVisible
             )
 
             BottomScrollEdgeFade(

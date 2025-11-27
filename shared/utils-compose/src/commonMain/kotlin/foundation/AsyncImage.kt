@@ -9,9 +9,26 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 
+
+@Composable
+fun AsyncLocalImage(
+    path: String,
+    modifier: Modifier = Modifier,
+    contentDescription: String?,
+    contentScale: ContentScale = ContentScale.Crop
+) {
+    AsyncImage(
+        link = SharedRes.getUri(path),
+        modifier = modifier,
+        contentDescription = contentDescription,
+        contentScale = contentScale
+    )
+
+}
+
 @Composable
 fun AsyncImage(
-    path: String,
+    link: String,
     modifier: Modifier = Modifier,
     contentDescription: String?,
     contentScale: ContentScale = ContentScale.Crop
@@ -21,7 +38,7 @@ fun AsyncImage(
         .networkCachePolicy(CachePolicy.ENABLED)
         .diskCachePolicy(CachePolicy.DISABLED) // TODO
         .data(
-            SharedRes.getUri(path)
+            link
         ).build()
 
     AsyncImage(
@@ -30,14 +47,4 @@ fun AsyncImage(
         contentScale = contentScale,
         contentDescription = contentDescription
     )
-//    SubcomposeAsyncImage(
-//        model = ,
-//        contentDescription = contentDescription,
-//        modifier = modifier,
-//        contentScale = contentScale
-//    ) {
-//        val state by painter.state.collectAsState()
-//        this.SubcomposeAsyncImageContent()
-//    }
-
 }

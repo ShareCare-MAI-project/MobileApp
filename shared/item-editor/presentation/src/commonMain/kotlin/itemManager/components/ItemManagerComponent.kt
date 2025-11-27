@@ -1,8 +1,8 @@
 package itemManager.components
 
 import androidx.compose.foundation.text.input.TextFieldState
-import entities.enums.DeliveryType
-import entities.enums.ItemCategory
+import logic.enums.DeliveryType
+import logic.enums.ItemCategory
 import kotlinx.coroutines.flow.StateFlow
 import network.NetworkState
 import photoTaker.components.PhotoTakerComponent

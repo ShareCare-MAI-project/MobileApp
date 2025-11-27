@@ -13,7 +13,7 @@ import foundation.AsyncImage
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.ItemImage(
-    path: String,
+    link: String,
     modifier: Modifier,
     id: String?,
     animatedContentScope: AnimatedContentScope?,
@@ -23,7 +23,7 @@ fun SharedTransitionScope.ItemImage(
     val hazeState = if (isAnimating) LocalTransitionHazeState.current else null
 
     AsyncImage(
-        path = path,
+        link = link,
         modifier = modifier
             .then(
                 if (animatedContentScope != null && id != null)

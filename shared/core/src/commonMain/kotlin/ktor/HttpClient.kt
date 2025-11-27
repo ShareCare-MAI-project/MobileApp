@@ -16,6 +16,7 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import network.NetworkConfig
 
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -54,11 +55,10 @@ internal fun createHttpClient(
 
             contentType(ContentType.Application.Json)
             url {
-                host = "10.0.2.2" // `localhost` but from android studio emulator
-//                host = "10.230.221.145" // `localhost` but from device and wifi hotspot
+                host = NetworkConfig.host
                 protocol = URLProtocol.HTTP
             }
-            port = 8080
+            port = NetworkConfig.port
         }
     }
 }

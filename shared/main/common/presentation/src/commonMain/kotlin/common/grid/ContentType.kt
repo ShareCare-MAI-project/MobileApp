@@ -8,6 +8,7 @@ sealed class ContentType(val key: String) {
     // ShareCare
     data object Responses : ContentType("responses_type")
     data object MyItems : ContentType("my_items_type")
+    data object PeopleSearch : ContentType("people_search")
 }
 
 fun ContentType.parseName(): String {
@@ -16,5 +17,6 @@ fun ContentType.parseName(): String {
         ContentType.Catalog -> "Каталог"
         ContentType.MyItems -> "Мои вещи"
         ContentType.Responses -> "Отклики"
+        ContentType.PeopleSearch -> "Люди ищут"
     }
 }

@@ -1,7 +1,7 @@
 package entities
 
-import entities.enums.DeliveryType
-import entities.enums.ItemCategory
+import logic.enums.DeliveryType
+import logic.enums.ItemCategory
 
 data class Item(
     val images: List<ByteArray>,
