@@ -1,5 +1,6 @@
 package requestDetails.ui.sections
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -14,18 +15,20 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import animations.NetworkButtonIconAnimation
 import logic.enums.DeliveryType
 import logic.enums.ItemCategory
 import utils.SpacerH
+import utils.SpacerV
 import view.consts.Paddings
 import view.theme.colors.CustomColors
-import widgets.sections.CreateButtonSection
 
 @Composable
 internal fun ColumnScope.ButtonSection(
@@ -41,6 +44,8 @@ internal fun ColumnScope.ButtonSection(
     createOrEditRequest: () -> Unit,
     onAcceptClick: () -> Unit
 ) {
+    val allFieldsFilled =
+        (requestText.isNotBlank() && category != null && deliveryTypes.isNotEmpty())
     if (isEditable) {
         Row(Modifier.padding(horizontal = Paddings.medium)) {
             if (isEditing) {
@@ -55,22 +60,35 @@ internal fun ColumnScope.ButtonSection(
                 }
                 SpacerH(Paddings.small)
             }
-            CreateButtonSection(
-                enabled =
-                    (requestText.isNotBlank() && category != null && deliveryTypes.isNotEmpty()) &&
-                            (!isEditing || (
-                                    initialDeliveryTypes != deliveryTypes ||
-                                            initialCategory != category ||
-                                            initialText != requestText
-                                    )),
-                isLoading = isLoading,
-                text = if (isEditing) "Редактировать" else "Создать заявку",
-                icon = if (isEditing) Icons.Rounded.Edit else Icons.Rounded.FileUpload,
-                showAnimation = !isEditing,
+            Button(
+                onClick = createOrEditRequest,
+                enabled = allFieldsFilled &&
+                        (!isEditing || (
+                                (initialDeliveryTypes.toSet() != deliveryTypes.toSet()) ||
+                                        initialCategory != category ||
+                                        initialText != requestText
+                                )),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                createOrEditRequest()
+                val text = if (isEditing) "Редактировать" else "Создать заявку"
+                NetworkButtonIconAnimation(
+                    icon = if (isEditing) Icons.Rounded.Edit else Icons.Rounded.FileUpload,
+                    isLoading = isLoading
+                )
+                SpacerH(Paddings.small)
+                Text(text, maxLines = 1, overflow = TextOverflow.Ellipsis)
+
             }
+        }
+        SpacerV(Paddings.small)
+        AnimatedVisibility(!allFieldsFilled) {
+            Text(
+                "Небходимо заполнить все поля",
+                style = typography.bodyMedium,
+                color = colorScheme.onBackground.copy(alpha = .8f),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     } else {
         val isDark = isSystemInDarkTheme()

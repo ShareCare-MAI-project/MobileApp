@@ -29,7 +29,7 @@ internal fun DeliveryTypesSection(
         pickedDeliveryTypes = if (isEditable) deliveryTypes else listOf(), modifier = Modifier.horizontalScroll(
             rememberScrollState()
         ),
-        initSpacer = Paddings.semiSmall,
+        initSpacer = Paddings.medium,
         allDeliveryTypes = if (isEditable) DeliveryTypesPickerDefaults.allDeliveryTypes else deliveryTypes
     ) {
         updateDeliveryType(it)

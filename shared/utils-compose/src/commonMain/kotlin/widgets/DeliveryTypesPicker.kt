@@ -8,6 +8,7 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FilterChip
@@ -35,7 +36,8 @@ data object DeliveryTypesPickerDefaults {
 fun DeliveryTypesPicker(
     pickedDeliveryTypes: List<DeliveryType>,
     allDeliveryTypes: List<DeliveryType> = DeliveryTypesPickerDefaults.allDeliveryTypes,
-    modifier: Modifier = Modifier.fillMaxWidth().padding(horizontal = Paddings.listHorizontalPadding),
+    modifier: Modifier = Modifier.fillMaxWidth()
+        .padding(horizontal = Paddings.listHorizontalPadding),
     isTransparent: Boolean = false,
     initSpacer: Dp = 0.dp,
     onClick: (DeliveryType) -> Unit
@@ -43,24 +45,30 @@ fun DeliveryTypesPicker(
 
     FlowRow(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(Paddings.small, alignment = Alignment.Start),
+        horizontalArrangement = Arrangement.Start,
         verticalArrangement = Arrangement.spacedBy(Paddings.semiSmall, alignment = Alignment.Top)
     ) {
         SpacerH(initSpacer)
-        for (item in allDeliveryTypes) {
-            AnimatedContent(
-                item in pickedDeliveryTypes,
-                transitionSpec = {
-                    fadeIn(animationSpec = tween(220))
-                        .togetherWith(fadeOut(animationSpec = tween(220)))
-                },
-            ) { selected ->
-                DeliveryTypeItem(
-                    selected = selected,
-                    name = item.title,
-                    isTransparent = isTransparent
-                ) {
-                    onClick(item)
+
+        allDeliveryTypes.forEachIndexed { index, type ->
+            Row {
+                AnimatedContent(
+                    type in pickedDeliveryTypes,
+                    transitionSpec = {
+                        fadeIn(animationSpec = tween(220))
+                            .togetherWith(fadeOut(animationSpec = tween(220)))
+                    },
+                ) { selected ->
+                    DeliveryTypeItem(
+                        selected = selected,
+                        name = type.title,
+                        isTransparent = isTransparent
+                    ) {
+                        onClick(type)
+                    }
+                }
+                if (index != allDeliveryTypes.lastIndex) {
+                    SpacerH(Paddings.small)
                 }
             }
         }
