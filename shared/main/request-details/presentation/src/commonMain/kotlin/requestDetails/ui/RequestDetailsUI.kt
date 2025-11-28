@@ -47,7 +47,7 @@ fun SharedTransitionScope.RequestDetailsUI(
                     requestTextState = component.requestText,
                     category = category,
                     isCreationMode = component.isCreationMode,
-
+                    isLoading = createRequestResult.isLoading()
                     ) { component.updateCategory(it) }
                 SpacerV(Paddings.semiMedium)
 
@@ -63,7 +63,7 @@ fun SharedTransitionScope.RequestDetailsUI(
                         isLoading = createRequestResult.isLoading(),
                         text = "Создать заявку"
                     ) {
-
+                        component.createRequest()
                     }
                 }
             }

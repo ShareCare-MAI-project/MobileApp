@@ -13,7 +13,8 @@ fun initKoin(
             authModule,
             userModule,
             itemEditorModule,
-            shareCareModule
+            shareCareModule,
+            requestDetailsModule
         )
     }
 }

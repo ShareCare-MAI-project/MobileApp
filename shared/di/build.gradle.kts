@@ -10,7 +10,9 @@ kotlin {
             implementation(project(Modules.core))
 
             implementation(project(Modules.Auth.data))
+
             implementation(project(Modules.ItemEditor.data))
+            implementation(project(Modules.Main.RequestDetails.data))
 
             
             implementation(project(Modules.Main.ShareCare.data))

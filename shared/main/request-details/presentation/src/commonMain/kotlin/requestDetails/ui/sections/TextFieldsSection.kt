@@ -16,18 +16,19 @@ internal fun TextFieldsSection(
     requestTextState: TextFieldState,
     category: ItemCategory?,
     isCreationMode: Boolean,
+    isLoading: Boolean,
     updateCategory: (ItemCategory) -> Unit
 ) {
     SurfaceTextField(
         state = requestTextState,
         placeholderText = "Заявка",
         paddings = PaddingValues(horizontal = Paddings.medium),
-        readOnly = !isCreationMode
+        readOnly = !isCreationMode || isLoading
     )
     SpacerV(Paddings.small)
     CategoryTextField(
         category,
-        expandable = isCreationMode,
+        expandable = isCreationMode && !isLoading,
         modifier = Modifier.padding(horizontal = Paddings.medium)
     ) {
         updateCategory(it)

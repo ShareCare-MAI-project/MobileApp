@@ -21,4 +21,6 @@ interface RequestDetailsComponent: DetailsComponent {
     fun updateDeliveryType(deliveryType: DeliveryType)
     fun updateCategory(category: ItemCategory)
 
+    fun createRequest()
+
 }
