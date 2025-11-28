@@ -57,6 +57,12 @@ object Modules {
             const val domain = "$modulePath:domain"
             const val presentation = "$modulePath:presentation"
         }
+        object RequestDetails {
+            private const val modulePath = "${Main.modulePath}:request-details"
+            const val data = "$modulePath:data"
+            const val domain = "$modulePath:domain"
+            const val presentation = "$modulePath:presentation"
+        }
     }
 
 

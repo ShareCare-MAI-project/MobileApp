@@ -19,15 +19,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import common.detailsTransition.LocalDetailsAnimator
-import common.detailsTransition.LocalTransitionHazeState
-import common.detailsTransition.SharedAnimation
 import common.itemCard.ItemImage
+import common.itemDetailsTransition.LocalItemDetailsAnimator
+import common.itemDetailsTransition.LocalTransitionHazeState
+import common.itemDetailsTransition.SharedAnimation
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import itemDetails.components.ItemDetailsComponent
 import itemDetails.ui.bottomSheet.isExpanded
-import resources.RImages
 import utils.fastBackground
 import view.consts.Paddings
 
@@ -38,14 +37,14 @@ fun SharedTransitionScope.ItemDetailsContent(
     sheet: @Composable BoxScope.() -> Unit
 ) {
     val hazeState = LocalTransitionHazeState.current
-    val detailsAnimator = LocalDetailsAnimator.current
+    val itemDetailsAnimator = LocalItemDetailsAnimator.current
 
     val safeContentPaddings = WindowInsets.safeContent.asPaddingValues()
     val topPadding = safeContentPaddings.calculateTopPadding()
 
     // idk, why but animateColorAsState is blinking 0_o
     val animatedTopBackgroundAlpha by animateFloatAsState(
-        if (detailsAnimator.isStableDetailed) 1f
+        if (itemDetailsAnimator.isStableDetailed) 1f
         else 0f,
         animationSpec = tween(300)
     )
@@ -59,19 +58,21 @@ fun SharedTransitionScope.ItemDetailsContent(
                 .padding(top = topPadding)
                 .fillMaxWidth()
         ) {
-            detailsAnimator.SharedAnimation(
+            val imagePath = component.images.firstOrNull() ?: ""
+            itemDetailsAnimator.SharedAnimation(
                 Modifier
             ) { sheetValue ->
                 if (sheetValue.isExpanded()) {
                     ItemImage(
-                        link = RImages.LOGO,
+                        imagePath = imagePath,
                         modifier = Modifier
                             .align(Alignment.TopCenter)
                             .padding(horizontal = Paddings.horizontalListPadding)
-                            .height(detailsAnimator.imageHeight)
+                            .height(itemDetailsAnimator.imageHeight)
+                            .fillMaxWidth()
                             .hazeSource(hazeState, zIndex = 0f),
-                        id = component.itemId,
-                        detailedItemId = component.itemId,
+                        id = component.id,
+                        detailedItemId = component.id,
                         animatedContentScope = this@SharedAnimation
                     )
                 }
@@ -79,22 +80,23 @@ fun SharedTransitionScope.ItemDetailsContent(
 
             DetailsImagePager(
                 modifier = Modifier.renderInSharedTransitionScopeOverlay()
-                    .height(detailsAnimator.imageHeight)
+                    .height(itemDetailsAnimator.imageHeight)
                     .hazeSource(hazeState, zIndex = 1f),
-                isStableDetailed = detailsAnimator.isStableDetailed,
-                state = detailsAnimator.pagerState
+                isStableDetailed = itemDetailsAnimator.isStableDetailed,
+                state = itemDetailsAnimator.pagerState,
+                images = component.images
             )
 
             GlassDetailsBackButton(
                 isVisible =
-                    detailsAnimator.isStableDetailed,
+                    itemDetailsAnimator.isStableDetailed,
                 modifier = Modifier
                     .renderInSharedTransitionScopeOverlay()
                     .padding(horizontal = Paddings.horizontalListPadding) // соответствуем image
                     .padding(Paddings.semiSmall),
                 hazeState = hazeState
             ) {
-                detailsAnimator.onBackSuccessful()
+                itemDetailsAnimator.onBackSuccessful()
             }
 
         }

@@ -1,4 +1,4 @@
-package common.detailsTransition
+package common.itemDetailsTransition
 
 import androidx.compose.animation.core.SeekableTransitionState
 import androidx.compose.animation.core.Transition
@@ -17,7 +17,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 
-class DetailsAnimator(
+class ItemDetailsAnimator(
     val detailedItemId: String?,
     val transition: Transition<SheetValue>,
     val seekableTransitionState: SeekableTransitionState<SheetValue>,

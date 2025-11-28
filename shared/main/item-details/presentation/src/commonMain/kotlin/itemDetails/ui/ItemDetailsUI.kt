@@ -5,7 +5,7 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.backhandler.PredictiveBackHandler
-import common.detailsTransition.LocalDetailsAnimator
+import common.itemDetailsTransition.LocalItemDetailsAnimator
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import itemDetails.components.ItemDetailsComponent
 import itemDetails.ui.bottomSheet.ItemDetailsSheetContent
@@ -21,17 +21,17 @@ import kotlin.coroutines.cancellation.CancellationException
 fun SharedTransitionScope.ItemDetailsUI(
     component: ItemDetailsComponent
 ) {
-    val detailsAnimator = LocalDetailsAnimator.current
+    val itemDetailsAnimator = LocalItemDetailsAnimator.current
     PredictiveBackHandler { progress ->
         try {
             progress.collect { backEvent ->
                 runCatching {
-                    detailsAnimator.onBackProgress(backEvent.progress)
+                    itemDetailsAnimator.onBackProgress(backEvent.progress)
                 }
             }
-            detailsAnimator.onBackSuccessful()
+            itemDetailsAnimator.onBackSuccessful()
         } catch (e: CancellationException) {
-            detailsAnimator.onBackFailure()
+            itemDetailsAnimator.onBackFailure()
             throw e
         }
     }

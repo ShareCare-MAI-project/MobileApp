@@ -7,13 +7,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.router.slot.dismiss
-import common.detailsTransition.LocalDetailsAnimator
-import common.detailsTransition.LocalTransitionHazeState
-import common.detailsTransition.rememberDetailsAnimator
+import common.itemDetailsTransition.LocalItemDetailsAnimator
+import common.itemDetailsTransition.LocalTransitionHazeState
+import common.itemDetailsTransition.rememberItemDetailsAnimator
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
+import itemDetails.components.ItemDetailsComponent
 import itemDetails.ui.ItemDetailsUI
 import mainFlow.components.MainFlowComponent
+import requestDetails.components.RequestDetailsComponent
+import requestDetails.ui.RequestDetailsUI
 
 @Composable
 fun SharedTransitionScope.MainFlowScreen(
@@ -21,12 +24,14 @@ fun SharedTransitionScope.MainFlowScreen(
 ) {
     val detailsSlot by component.detailsSlot.subscribeAsState()
     val details = detailsSlot.child?.instance
-    val detailsAnimator = rememberDetailsAnimator(
-        detailedItemId = details?.itemId
+
+    val itemDetailsAnimator = rememberItemDetailsAnimator(
+        detailedItemId = details?.id,
+        imagesCount = if (details is ItemDetailsComponent) details.images.size else 0
     ) {
         // иначе он был уже удалён
-        // получаем из detailsSlot, т.к. находимся в remember (старое значение)
-        if (it == detailsSlot.child?.instance?.itemId) {
+        // получаем из itemDetailsSlot, т.к. находимся в remember (старое значение)
+        if (it == detailsSlot.child?.instance?.id) {
             component.detailsNav.dismiss()
         }
     }
@@ -35,7 +40,7 @@ fun SharedTransitionScope.MainFlowScreen(
     val hazeState = rememberHazeState() //outHazeState
     CompositionLocalProvider(
         LocalTransitionHazeState provides hazeState,
-        LocalDetailsAnimator provides detailsAnimator
+        LocalItemDetailsAnimator provides itemDetailsAnimator
     ) {
 
         MainFlowContent(
@@ -43,9 +48,15 @@ fun SharedTransitionScope.MainFlowScreen(
             modifier = Modifier.hazeSource(hazeState)
         )
         if (details != null) {
-            ItemDetailsUI(
-                details
-            )
+            when (details) {
+                is ItemDetailsComponent ->
+                    ItemDetailsUI(
+                        details
+                    )
+
+                is RequestDetailsComponent ->
+                    RequestDetailsUI(details)
+            }
         }
 
     }

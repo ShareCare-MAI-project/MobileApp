@@ -26,10 +26,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import architecture.launchIO
-import common.detailsTransition.DetailsAnimator
-import common.detailsTransition.SharedAnimation
+import common.itemDetailsTransition.ItemDetailsAnimator
+import common.itemDetailsTransition.SharedAnimation
 import itemDetails.ui.bottomSheet.isExpanded
-import network.getImageLink
 import utils.SpacerV
 import view.consts.Paddings
 
@@ -40,9 +39,9 @@ fun SharedTransitionScope.ItemCard(
     modifier: Modifier = Modifier,
     title: String,
     id: String,
-    imagePath: String?,
+    imagePath: String,
     location: String,
-    detailsAnimator: DetailsAnimator,
+    itemDetailsAnimator: ItemDetailsAnimator,
     onClicked: () -> Unit
 ) {
     val cardShape = RoundedCornerShape(ItemCardDefaults.cardShapeDp)
@@ -50,7 +49,6 @@ fun SharedTransitionScope.ItemCard(
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
 
-    val imageLink = getImageLink(imagePath)
 
     Card(
         modifier = modifier
@@ -70,27 +68,27 @@ fun SharedTransitionScope.ItemCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            if (detailsAnimator.detailedItemId != id) {
+            if (itemDetailsAnimator.detailedItemId != id) {
                 ItemImage(
-                    link = imageLink,
+                    imagePath = imagePath,
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(1.1f),
                     id = id,
-                    detailedItemId = detailsAnimator.detailedItemId,
+                    detailedItemId = itemDetailsAnimator.detailedItemId,
                     animatedContentScope = null
                 )
             } else {
-                detailsAnimator.SharedAnimation(
+                itemDetailsAnimator.SharedAnimation(
                     modifier = Modifier.fillMaxWidth().aspectRatio(1.1f)
                 ) { sheetValue ->
                     if (!sheetValue.isExpanded()) {
                         ItemImage(
-                            link = imageLink,
+                            imagePath = imagePath,
                             modifier = Modifier
                                 .fillMaxSize(),
                             id = id,
-                            detailedItemId = detailsAnimator.detailedItemId,
+                            detailedItemId = itemDetailsAnimator.detailedItemId,
                             animatedContentScope = this
                         )
                     }

@@ -5,8 +5,8 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import common.detailsTransition.LocalDetailsAnimator
 import common.grid.MainLazyGrid
+import common.itemDetailsTransition.LocalItemDetailsAnimator
 import shareCare.components.ShareCareComponent
 import shareCare.ui.ItemsSection
 
@@ -18,7 +18,7 @@ fun SharedTransitionScope.ShareCareUI(
 
     val items by component.items.collectAsState()
 
-    val detailsAnimator = LocalDetailsAnimator.current
+    val itemDetailsAnimator = LocalItemDetailsAnimator.current
 
     MainLazyGrid(
         lazyGridState = lazyGridState,
@@ -26,7 +26,8 @@ fun SharedTransitionScope.ShareCareUI(
         ItemsSection(
             items,
             sharedTransitionScope = this@ShareCareUI,
-            detailsAnimator = detailsAnimator
+            itemDetailsAnimator = itemDetailsAnimator,
+            onClick = component.openDetails
         )
 //
 //        TransitionColumnHeader(

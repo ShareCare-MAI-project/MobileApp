@@ -1,4 +1,4 @@
-package itemManager.ui
+package utils
 
 import logic.enums.DeliveryType
 import logic.enums.DeliveryType.Mail

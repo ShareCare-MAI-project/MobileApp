@@ -14,13 +14,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import common.itemCard.ItemImage
-import resources.RImages
 import utils.fastBackground
 import view.consts.Paddings
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.DetailsImagePager(
+    images: List<String>,
     isStableDetailed: Boolean,
     modifier: Modifier,
     state: PagerState
@@ -38,12 +38,7 @@ fun SharedTransitionScope.DetailsImagePager(
                     .fastBackground(if (isStableDetailed) colorScheme.background else Color.Transparent)
             ) { index ->
                 ItemImage(
-                    link = when(index) {
-                        0 -> RImages.LOGO
-                        1 -> RImages.LOGO2
-                        2 -> RImages.LOGO3
-                        else -> RImages.LOGO
-                    },
+                    imagePath = images[index],
                     modifier = Modifier
                         .padding(horizontal = Paddings.horizontalListPadding)
                         .fillMaxSize(),

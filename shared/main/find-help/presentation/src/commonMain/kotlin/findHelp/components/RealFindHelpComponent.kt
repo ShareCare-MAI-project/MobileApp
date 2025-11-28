@@ -1,12 +1,11 @@
 package findHelp.components
 
 import com.arkivanov.decompose.ComponentContext
+import common.detailsInterfaces.DetailsConfig
 
 class RealFindHelpComponent(
     componentContext: ComponentContext,
-    private val openItemDetails: (id: String) -> Unit
+    override val openDetails: (cfg: DetailsConfig) -> Unit
 ) : FindHelpComponent, ComponentContext by componentContext {
-    override fun onCardClicked(id: String) {
-        openItemDetails(id)
-    }
+
 }

@@ -5,8 +5,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.ui.Modifier
-import common.detailsTransition.DetailsAnimator
+import common.detailsInterfaces.DetailsConfig
 import common.itemCard.ItemCard
+import common.itemDetailsTransition.ItemDetailsAnimator
 import entity.ItemResponse
 
 @Suppress("FunctionName")
@@ -14,8 +15,8 @@ fun LazyGridScope.DefaultItemsContent(
     items: List<ItemResponse>,
     contentType: ContentType,
     sharedTransitionScope: SharedTransitionScope,
-    detailsAnimator: DetailsAnimator,
-    onCardClicked: (String) -> Unit
+    itemDetailsAnimator: ItemDetailsAnimator,
+    onCardClicked: (DetailsConfig.ItemDetailsConfig) -> Unit
 ) {
 
     TransitionColumnHeader(
@@ -25,6 +26,7 @@ fun LazyGridScope.DefaultItemsContent(
         items = items,
         key = { it.id },
         contentType = { contentType }) { item ->
+        val imagePath = item.images.firstOrNull() ?: ""
         with(sharedTransitionScope) {
             ItemCard(
                 modifier = Modifier
@@ -32,11 +34,16 @@ fun LazyGridScope.DefaultItemsContent(
                     .fillMaxSize(),
                 title = item.title,
                 id = item.id,
-                imagePath = item.images.firstOrNull(),
+                imagePath = imagePath,
                 location = item.location,
-                detailsAnimator = detailsAnimator
+                itemDetailsAnimator = itemDetailsAnimator
             ) {
-                onCardClicked(item.id)
+                onCardClicked(
+                    DetailsConfig.ItemDetailsConfig(
+                        id = item.id,
+                        images = item.images
+                    )
+                )
             }
         }
     }

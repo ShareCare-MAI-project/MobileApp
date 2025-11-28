@@ -1,4 +1,4 @@
-package common.detailsTransition
+package common.itemDetailsTransition
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentScope
@@ -18,13 +18,13 @@ val LocalTransitionHazeState: ProvidableCompositionLocal<HazeState> =
         error("No TransitionHazeState provided")
     }
 
-val LocalDetailsAnimator: ProvidableCompositionLocal<DetailsAnimator> =
+val LocalItemDetailsAnimator: ProvidableCompositionLocal<ItemDetailsAnimator> =
     staticCompositionLocalOf {
-        error("No DetailsAnimator provided")
+        error("No ItemDetailsAnimator provided")
     }
 
 @Composable
-fun DetailsAnimator.SharedAnimation(
+fun ItemDetailsAnimator.SharedAnimation(
     modifier: Modifier = Modifier,
     content: @Composable AnimatedContentScope.(SheetValue) -> Unit
 ) {

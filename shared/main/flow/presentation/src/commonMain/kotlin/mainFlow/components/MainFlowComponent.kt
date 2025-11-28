@@ -4,8 +4,9 @@ import architecture.DefaultStack
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.slot.SlotNavigation
 import com.arkivanov.decompose.value.Value
+import common.detailsInterfaces.DetailsComponent
+import common.detailsInterfaces.DetailsConfig
 import findHelp.components.FindHelpComponent
-import itemDetails.components.ItemDetailsComponent
 import kotlinx.serialization.Serializable
 import loading.components.LoadingComponent
 import mainFlow.components.MainFlowComponent.Child
@@ -18,12 +19,10 @@ interface MainFlowComponent : DefaultStack<Config, Child> {
     val loadingComponent: LoadingComponent
 
     val detailsNav: SlotNavigation<DetailsConfig>
-    val detailsSlot: Value<ChildSlot<*, ItemDetailsComponent>>
+    val detailsSlot: Value<ChildSlot<*, DetailsComponent>>
 
-    @Serializable
-    data class DetailsConfig(
-        val id: String
-    )
+
+
 
     sealed interface Child {
         data class FindHelpChild(val findHelpComponent: FindHelpComponent) : Child

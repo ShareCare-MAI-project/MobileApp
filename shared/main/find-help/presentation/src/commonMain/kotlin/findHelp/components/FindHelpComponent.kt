@@ -1,7 +1,8 @@
 package findHelp.components
 
+import common.detailsInterfaces.DetailsConfig
+
 interface FindHelpComponent {
-    fun onCardClicked(
-        id: String
-    )
+
+    val openDetails: (cfg: DetailsConfig) -> Unit
 }

@@ -1,5 +1,7 @@
 package itemDetails.components
 
-interface ItemDetailsComponent {
-    val itemId: String
+import common.detailsInterfaces.DetailsComponent
+
+interface ItemDetailsComponent: DetailsComponent {
+    val images: List<String>
 }

@@ -1,4 +1,4 @@
-package common.detailsTransition
+package common.itemDetailsTransition
 
 import androidx.compose.animation.core.SeekableTransitionState
 import androidx.compose.animation.core.rememberTransition
@@ -16,10 +16,11 @@ import itemDetails.ui.bottomSheet.getCustomSheetState
 
 @Suppress("ComposableNaming")
 @Composable
-fun rememberDetailsAnimator(
+fun rememberItemDetailsAnimator(
     detailedItemId: String?,
+    imagesCount: Int,
     onBackClicked: (String?) -> Unit
-): DetailsAnimator {
+): ItemDetailsAnimator {
     val density = LocalDensity.current
 
     val containerSize = LocalWindowInfo.current.containerSize
@@ -45,7 +46,7 @@ fun rememberDetailsAnimator(
 
 
     return remember(detailedItemId) {
-        val manager = DetailsAnimator(
+        val manager = ItemDetailsAnimator(
             detailedItemId = detailedItemId,
             transition = transition,
             seekableTransitionState = seekableTransitionState,
@@ -55,7 +56,7 @@ fun rememberDetailsAnimator(
             coroutineScope = coroutineScope,
             imageHeight = imageHeight,
             onBackClicked = { onBackClicked(detailedItemId) },
-            pagerState = PagerState { 3 }
+            pagerState = PagerState { imagesCount }
         )
         manager.animateOpen()
         manager

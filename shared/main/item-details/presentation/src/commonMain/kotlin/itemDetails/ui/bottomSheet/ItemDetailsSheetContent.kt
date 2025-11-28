@@ -17,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import common.detailsTransition.LocalDetailsAnimator
-import common.detailsTransition.LocalTransitionHazeState
+import common.itemDetailsTransition.LocalItemDetailsAnimator
+import common.itemDetailsTransition.LocalTransitionHazeState
 import dev.cardTitle
 import itemDetails.ui.ItemDetailsDefaults
 import view.consts.Paddings
@@ -29,7 +29,7 @@ fun BoxScope.ItemDetailsSheetContent(
     sharedTransitionScope: SharedTransitionScope
 ) {
     val hazeState = LocalTransitionHazeState.current
-    val detailsAnimator = LocalDetailsAnimator.current
+    val itemDetailsAnimator = LocalItemDetailsAnimator.current
 
 
     val density = LocalDensity.current
@@ -42,13 +42,13 @@ fun BoxScope.ItemDetailsSheetContent(
                 .renderInSharedTransitionScopeOverlay(1f)
         },
         hazeState = hazeState,
-        pagerState = detailsAnimator.pagerState,
-        sheetState = detailsAnimator.sheetState,
-        height = detailsAnimator.sheetHeight,
+        pagerState = itemDetailsAnimator.pagerState,
+        sheetState = itemDetailsAnimator.sheetState,
+        height = itemDetailsAnimator.sheetHeight,
         onDrag = { offset ->
-            detailsAnimator.onSheetDrag {
+            itemDetailsAnimator.onSheetDrag {
                 val newBackProgress =
-                    with(density) { (offset - gapHeightPx) / (detailsAnimator.sheetHeightPx - gapHeightPx) }
+                    with(density) { (offset - gapHeightPx) / (itemDetailsAnimator.sheetHeightPx - gapHeightPx) }
                 newBackProgress.coerceIn(0f, 1f)
             }
         }

@@ -2,6 +2,7 @@ package shareCare.components
 
 import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
+import common.detailsInterfaces.DetailsConfig
 import decompose.componentCoroutineScope
 import entities.ShareCareItems
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +13,8 @@ import org.koin.core.component.get
 import usecases.ShareCareUseCases
 
 class RealShareCareComponent(
-    componentContext: ComponentContext
+    componentContext: ComponentContext,
+    override val openDetails: (cfg: DetailsConfig) -> Unit
 ) : ShareCareComponent, KoinComponent, ComponentContext by componentContext {
 
     private val shareCareUseCases: ShareCareUseCases = get()
