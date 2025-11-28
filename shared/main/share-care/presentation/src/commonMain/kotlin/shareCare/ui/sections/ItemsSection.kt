@@ -1,4 +1,4 @@
-package shareCare.ui
+package shareCare.ui.sections
 
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.lazy.grid.LazyGridScope
@@ -9,7 +9,7 @@ import androidx.compose.ui.text.style.TextAlign
 import common.detailsInterfaces.DetailsConfig
 import common.grid.ColumnHeader
 import common.grid.ContentType
-import common.grid.DefaultItemsContent
+import common.grid.defaults.DefaultItemsContent
 import common.itemDetailsTransition.ItemDetailsAnimator
 import entities.ShareCareItems
 import network.NetworkState
@@ -19,7 +19,8 @@ internal fun LazyGridScope.ItemsSection(
     items: NetworkState<ShareCareItems>,
     sharedTransitionScope: SharedTransitionScope,
     itemDetailsAnimator: ItemDetailsAnimator,
-    onClick: (DetailsConfig.ItemDetailsConfig) -> Unit
+    onClick: (DetailsConfig.ItemDetailsConfig) -> Unit,
+    refreshClick: () -> Unit
 ) {
     when (items) {
         NetworkState.AFK -> {}
@@ -32,7 +33,7 @@ internal fun LazyGridScope.ItemsSection(
                     items.prettyPrint,
                     textAlign = TextAlign.Center,
                 )
-                Button(onClick = {}) {
+                Button(onClick = refreshClick) {
                     Text("Ещё раз")
                 }
             }

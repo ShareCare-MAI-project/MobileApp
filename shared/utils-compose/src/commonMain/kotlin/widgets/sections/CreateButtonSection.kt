@@ -14,7 +14,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import animations.NetworkButtonIconAnimation
 import utils.SpacerH
 import utils.SpacerV
@@ -25,6 +27,8 @@ fun CreateButtonSection(
     enabled: Boolean,
     isLoading: Boolean,
     text: String,
+    icon: ImageVector = Icons.Rounded.FileUpload,
+    showAnimation: Boolean = true,
     modifier: Modifier = Modifier.fillMaxWidth().padding(horizontal = Paddings.listHorizontalPadding),
     onClick: () -> Unit
 ) {
@@ -37,13 +41,13 @@ fun CreateButtonSection(
             enabled = enabled
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                NetworkButtonIconAnimation(Icons.Rounded.FileUpload, isLoading)
+                NetworkButtonIconAnimation(icon, isLoading)
                 SpacerH(Paddings.small)
-                Text(text)
+                Text(text, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
         }
         SpacerV(Paddings.small)
-        AnimatedVisibility(!enabled) {
+        AnimatedVisibility(!enabled && showAnimation) {
             Text(
                 "Небходимо заполнить все поля",
                 style = typography.bodyMedium,

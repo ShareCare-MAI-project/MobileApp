@@ -88,7 +88,10 @@ class RealMainFlowComponent(
                             ctx,
                             id = cfg.id,
                             currentId = currentId,
-                            creatorId = "TODO"
+                            creatorId = cfg.creatorId,
+                            initialText = cfg.text,
+                            initialCategory = cfg.category,
+                            initialDeliveryTypes = cfg.deliveryTypes
                         ) {
                             detailsNav.dismiss()
                         }

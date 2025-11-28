@@ -107,9 +107,17 @@ fun SharedTransitionScope.MainFlowContent(
                 navigateTo = { cfg -> component.navigateTo(cfg) },
                 onFABButtonClick = { isFindHelp ->
                     if (isFindHelp) {
-                        component.detailsNav.activate(DetailsConfig.RequestDetailsConfig(
-                            id = "Create"
-                        ))
+                        component.detailsNav.activate(
+                            DetailsConfig.RequestDetailsConfig(
+                                id = "Create",
+                                creatorId = "",
+                                text = "",
+                                category = null,
+                                location = null,
+                                deliveryTypes = listOf(),
+                                organizationName = null
+                            )
+                        )
                     } else {
                         component.output(Output.NavigateToItemEditor)
                     }
@@ -162,7 +170,6 @@ fun SharedTransitionScope.MainFlowContent(
         }
 
 
-
         val spacePaddings = remember(topSpacePadding, bottomSpacePadding) {
             SpacePaddings(
                 top = topSpacePadding,
@@ -179,7 +186,13 @@ fun SharedTransitionScope.MainFlowContent(
 
 
         val customBringIntoViewSpec =
-            remember(topSolidHeight, topShadowHeight, bottomSolidHeight, bottomShadowHeight, isTopShadowVisible) {
+            remember(
+                topSolidHeight,
+                topShadowHeight,
+                bottomSolidHeight,
+                bottomShadowHeight,
+                isTopShadowVisible
+            ) {
                 with(density) {
                     CustomBringIntoViewSpec(
                         topShadowWholePaddingPx = if (isTopShadowVisible) (topSolidHeight + topShadowHeight).toPx() else 0f,

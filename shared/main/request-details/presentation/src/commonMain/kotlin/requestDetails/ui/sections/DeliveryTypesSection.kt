@@ -11,10 +11,12 @@ import logic.enums.DeliveryType
 import utils.SpacerV
 import view.consts.Paddings
 import widgets.DeliveryTypesPicker
+import widgets.DeliveryTypesPickerDefaults
 
 @Composable
 internal fun DeliveryTypesSection(
     deliveryTypes: List<DeliveryType>,
+    isEditable: Boolean,
     updateDeliveryType: (DeliveryType) -> Unit
 ) {
     Text(
@@ -24,10 +26,11 @@ internal fun DeliveryTypesSection(
     )
     SpacerV(Paddings.semiSmall)
     DeliveryTypesPicker(
-        deliveryTypes, modifier = Modifier.horizontalScroll(
+        pickedDeliveryTypes = if (isEditable) deliveryTypes else listOf(), modifier = Modifier.horizontalScroll(
             rememberScrollState()
         ),
-        initSpacer = Paddings.semiSmall
+        initSpacer = Paddings.semiSmall,
+        allDeliveryTypes = if (isEditable) DeliveryTypesPickerDefaults.allDeliveryTypes else deliveryTypes
     ) {
         updateDeliveryType(it)
     }

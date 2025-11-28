@@ -8,7 +8,7 @@ import androidx.compose.runtime.getValue
 import common.grid.MainLazyGrid
 import common.itemDetailsTransition.LocalItemDetailsAnimator
 import shareCare.components.ShareCareComponent
-import shareCare.ui.ItemsSection
+import shareCare.ui.sections.ItemsSection
 
 @Composable
 fun SharedTransitionScope.ShareCareUI(
@@ -27,7 +27,8 @@ fun SharedTransitionScope.ShareCareUI(
             items,
             sharedTransitionScope = this@ShareCareUI,
             itemDetailsAnimator = itemDetailsAnimator,
-            onClick = component.openDetails
+            onClick = component.openDetails,
+            refreshClick = component::fetchItems
         )
 //
 //        TransitionColumnHeader(

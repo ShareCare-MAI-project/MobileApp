@@ -25,18 +25,26 @@ class RealRequestDetailsComponent(
     override val creatorId: String,
     override val currentId: String,
 
+    override val initialText: String,
+    override val initialCategory: ItemCategory?,
+    override val initialDeliveryTypes: List<DeliveryType>,
+
+
     override val onBackClick: () -> Unit,
 ) : RequestDetailsComponent, KoinComponent, ComponentContext by componentContext {
 
     private val coroutineScope = componentCoroutineScope()
     private val requestDetailsUseCases: RequestDetailsUseCases = get()
 
-    override val isCreationMode: Boolean
-        get() = id == "Create" // meow
+    override val isEditable: Boolean =
+        id == "Create" || currentId == creatorId // meow
+    override val isCreating: Boolean =
+        isEditable && creatorId == ""
 
-    override val requestText: TextFieldState = TextFieldState("")
-    override val category: MutableStateFlow<ItemCategory?> = MutableStateFlow(null)
-    override val deliveryTypes: MutableStateFlow<List<DeliveryType>> = MutableStateFlow(listOf())
+    override val requestText: TextFieldState = TextFieldState(initialText)
+    override val category: MutableStateFlow<ItemCategory?> = MutableStateFlow(initialCategory)
+    override val deliveryTypes: MutableStateFlow<List<DeliveryType>> =
+        MutableStateFlow(initialDeliveryTypes)
     override val createRequestResult: MutableStateFlow<NetworkState<Unit>> =
         MutableStateFlow(NetworkState.AFK)
 
@@ -48,7 +56,14 @@ class RealRequestDetailsComponent(
         }
     }
 
-    override fun createRequest() {
+    override fun createOrEditRequest() {
+        require(isEditable)
+        if (isCreating) {
+            createRequest()
+        }
+    }
+
+    private fun createRequest() {
         if (!createRequestResult.value.isLoading()) {
             coroutineScope.launchIO {
                 val preparedRequest = Request(
@@ -78,7 +93,7 @@ class RealRequestDetailsComponent(
     }
 
     override fun updateDeliveryType(deliveryType: DeliveryType) {
-        if (!createRequestResult.value.isLoading() && isCreationMode) {
+        if (!createRequestResult.value.isLoading() && isEditable) {
             if (deliveryType in this.deliveryTypes.value) {
                 removeDeliveryType(deliveryType)
             } else {

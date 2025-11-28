@@ -6,11 +6,12 @@ import logic.enums.ItemCategory
 
 @Serializable
 sealed interface DetailsConfig {
+
     @Serializable
     data class ItemDetailsConfig(
+        val creatorId: String,
         val id: String,
         val images: List<String>,
-        val creatorId: String,
         val title: String,
         val description: String,
         val location: String,
@@ -21,7 +22,13 @@ sealed interface DetailsConfig {
 
     @Serializable
     data class RequestDetailsConfig(
-        val id: String
+        val creatorId: String,
+        val id: String,
+        val text: String,
+        val category: ItemCategory?,
+        val location: String?,
+        val deliveryTypes: List<DeliveryType>,
+        val organizationName: String?
     ) : DetailsConfig
 
 }

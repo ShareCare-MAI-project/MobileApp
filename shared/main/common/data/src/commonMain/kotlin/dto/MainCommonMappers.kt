@@ -1,6 +1,7 @@
 package dto
 
 import entity.ItemResponse
+import entity.RequestResponse
 
 fun ItemResponseDTO.toDomain() = ItemResponse(
     title = title,
@@ -11,5 +12,16 @@ fun ItemResponseDTO.toDomain() = ItemResponse(
     id = id,
     ownerId = ownerId,
     recipientId = recipientId,
-    images = images
+    images = images,
+    telegram = telegram
+)
+
+fun RequestResponseDTO.toDomain() = RequestResponse(
+    text = text,
+    location = location,
+    category = category,
+    deliveryTypes = deliveryTypes,
+    id = id,
+    userId = userId,
+    organizationName = organizationName
 )

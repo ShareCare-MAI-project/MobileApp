@@ -73,12 +73,13 @@ fun BoxScope.ItemDetailsSheetContent(
             }
         },
         scrollState = itemDetailsAnimator.scrollState
-    ) {
+    ) { topPadding ->
         Column(
             modifier = Modifier.padding(horizontal = Paddings.listHorizontalPadding)
                 .verticalScroll(itemDetailsAnimator.scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            SpacerV(topPadding)
             QuickInfoSection(title = component.title, location = component.location)
             SpacerV(Paddings.semiMedium)
 

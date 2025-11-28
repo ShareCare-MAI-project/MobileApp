@@ -9,8 +9,10 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -29,6 +31,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
 import dev.chrisbanes.haze.ExperimentalHazeApi
 import dev.chrisbanes.haze.HazeInputScale
 import dev.chrisbanes.haze.HazeProgressive
@@ -56,7 +59,7 @@ fun CustomBottomSheet(
     hazeState: HazeState,
     modifier: Modifier,
     onDrag: (Float) -> Unit,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.(Dp) -> Unit
 ) {
     val offset = sheetState.requireOffset()
 
@@ -92,44 +95,44 @@ fun CustomBottomSheet(
     LaunchedEffect(offset) {
         onDrag(offset)
     }
-
-    Column(
-        modifier = modifier
-            .height(height)
-            .fillMaxWidth()
-            .offset {
-                IntOffset(y = offset.toInt(), x = 0)
-            }
-            .pointerInput(Unit) {} // Prohibit Background scrolling
-            .clip(shapes.extraExtraLarge)
-            // HAZE
-            .hazeEffect(
-                state = hazeState,
-                style = HazeMaterials.thick(colorScheme.background)
-            ) {
-                progressive = HazeProgressive.verticalGradient(
-                    endY = progressiveEndY,  // remove fade line, when change inputScale
-                    startIntensity = startIntensity,
-                    endIntensity = endIntensity,
-                    preferPerformance = false
-                )
-                inputScale = HazeInputScale.Fixed(adaptiveInputScale)
-            },
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-
-        AnimatedVisibility(!isScrolled) {
-            SpacerV(Paddings.semiSmall)
-            DragHandle(
-                startIntensity = startIntensity,
-                sheetState = sheetState,
-                dragInteractionSource = dragInteractionSource,
-                pagerState = pagerState,
-                isStable = offset == 0f && !dragPressed && !dragDragged,
-            )
+    Box(modifier
+        .height(height)
+        .fillMaxWidth()
+        .offset {
+            IntOffset(y = offset.toInt(), x = 0)
+        }) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+                .pointerInput(Unit) {} // Prohibit Background scrolling
+                .clip(shapes.extraExtraLarge)
+                // HAZE
+                .hazeEffect(
+                    state = hazeState,
+                    style = HazeMaterials.thick(colorScheme.background)
+                ) {
+                    progressive = HazeProgressive.verticalGradient(
+                        endY = progressiveEndY,  // remove fade line, when change inputScale
+                        startIntensity = startIntensity,
+                        endIntensity = endIntensity,
+                        preferPerformance = false
+                    )
+                    inputScale = HazeInputScale.Fixed(adaptiveInputScale)
+                },
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            content(Paddings.semiSmall + 10.dp + Paddings.semiMedium)
         }
-        content()
-
+        Column {
+            AnimatedVisibility(!isScrolled) {
+                SpacerV(Paddings.semiSmall)
+                DragHandle(
+                    startIntensity = startIntensity,
+                    sheetState = sheetState,
+                    dragInteractionSource = dragInteractionSource,
+                    pagerState = pagerState,
+                    isStable = offset == 0f && !dragPressed && !dragDragged,
+                )
+            }
+        }
     }
 }

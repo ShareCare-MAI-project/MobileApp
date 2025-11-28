@@ -10,7 +10,13 @@ import network.NetworkState
 interface RequestDetailsComponent: DetailsComponent {
     val onBackClick: () -> Unit
 
-    val isCreationMode: Boolean
+    val isEditable: Boolean
+    val isCreating: Boolean
+
+
+    val initialText: String
+    val initialCategory: ItemCategory?
+    val initialDeliveryTypes: List<DeliveryType>
 
     val requestText: TextFieldState
     val category: StateFlow<ItemCategory?>
@@ -21,6 +27,6 @@ interface RequestDetailsComponent: DetailsComponent {
     fun updateDeliveryType(deliveryType: DeliveryType)
     fun updateCategory(category: ItemCategory)
 
-    fun createRequest()
+    fun createOrEditRequest()
 
 }
