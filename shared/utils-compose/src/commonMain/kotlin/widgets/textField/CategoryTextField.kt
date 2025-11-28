@@ -24,6 +24,7 @@ import view.consts.Paddings
 @Composable
 fun CategoryTextField(
     itemCategory: ItemCategory?,
+    expandable: Boolean = false,
     modifier: Modifier = Modifier.padding(horizontal = Paddings.listHorizontalPadding),
     onClick: (ItemCategory) -> Unit
 ) {
@@ -38,7 +39,7 @@ fun CategoryTextField(
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = {
-                expanded = it
+                expanded = it && expandable
             },
             modifier = modifier
         ) {

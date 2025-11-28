@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import utils.SpacerH
 import utils.SpacerV
 import view.consts.Paddings
-import widgets.SectionTitle
+import widgets.sections.SectionTitle
 import widgets.expressiveList.ExpressiveListItem
 import widgets.expressiveList.cardButton.CardButtonDefaults
 import widgets.expressiveList.cardButton.ToggleCardButton

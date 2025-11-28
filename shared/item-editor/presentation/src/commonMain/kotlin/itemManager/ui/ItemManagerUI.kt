@@ -25,7 +25,6 @@ import dev.chrisbanes.haze.rememberHazeState
 import foundation.scrollables.VerticalScrollableBox
 import itemManager.components.ItemManagerComponent
 import itemManager.ui.sections.AIHelpSection
-import itemManager.ui.sections.CreateButtonSection
 import itemManager.ui.sections.DefaultInformationSection
 import itemManager.ui.sections.DeliveryTypesSection
 import itemManager.ui.sections.ItemImagesSection
@@ -33,6 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import utils.SpacerV
 import utils.fastBackground
 import view.consts.Paddings
+import widgets.sections.CreateButtonSection
 
 @OptIn(
     ExperimentalFoundationApi::class
@@ -121,7 +121,8 @@ internal fun ItemManagerUI(
                             && images.isNotEmpty()
                             && itemCategory != null
                             && pickedDeliveryTypes.isNotEmpty(),
-                    isLoading = createItemResult.isLoading()
+                    isLoading = createItemResult.isLoading(),
+                    text = "Выложить предмет"
                 ) {
                     component.createItem()
                 }

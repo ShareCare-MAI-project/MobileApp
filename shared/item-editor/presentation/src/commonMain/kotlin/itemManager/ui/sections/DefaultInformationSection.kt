@@ -10,7 +10,7 @@ import androidx.compose.ui.text.input.ImeAction
 import logic.enums.ItemCategory
 import utils.SpacerV
 import view.consts.Paddings
-import widgets.SectionTitle
+import widgets.sections.SectionTitle
 import widgets.textField.CategoryTextField
 import widgets.textField.SurfaceTextField
 import widgets.textField.SurfaceTextFieldDefaults

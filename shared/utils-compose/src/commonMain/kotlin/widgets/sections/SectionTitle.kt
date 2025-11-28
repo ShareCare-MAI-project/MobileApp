@@ -1,4 +1,4 @@
-package widgets
+package widgets.sections
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

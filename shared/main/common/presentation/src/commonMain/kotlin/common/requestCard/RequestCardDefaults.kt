@@ -6,5 +6,5 @@ import androidx.compose.runtime.Composable
 
 object RequestCardDefaults {
     val cardShape: CornerBasedShape
-        @Composable get() = shapes.large
+        @Composable get() = shapes.extraLarge
 }

@@ -5,7 +5,7 @@ import logic.enums.DeliveryType
 import utils.SpacerV
 import view.consts.Paddings
 import widgets.DeliveryTypesPicker
-import widgets.SectionTitle
+import widgets.sections.SectionTitle
 
 
 @Composable

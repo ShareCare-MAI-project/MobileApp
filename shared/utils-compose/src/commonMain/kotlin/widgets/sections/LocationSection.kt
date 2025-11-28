@@ -1,4 +1,4 @@
-package widgets
+package widgets.sections
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

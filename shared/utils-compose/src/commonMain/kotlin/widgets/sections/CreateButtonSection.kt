@@ -1,4 +1,4 @@
-package itemManager.ui.sections
+package widgets.sections
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
@@ -21,13 +21,15 @@ import utils.SpacerV
 import view.consts.Paddings
 
 @Composable
-internal fun CreateButtonSection(
+fun CreateButtonSection(
     enabled: Boolean,
     isLoading: Boolean,
+    text: String,
+    modifier: Modifier = Modifier.fillMaxWidth().padding(horizontal = Paddings.listHorizontalPadding),
     onClick: () -> Unit
 ) {
     Column(
-        Modifier.fillMaxWidth().padding(horizontal = Paddings.listHorizontalPadding),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(
@@ -37,7 +39,7 @@ internal fun CreateButtonSection(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 NetworkButtonIconAnimation(Icons.Rounded.FileUpload, isLoading)
                 SpacerH(Paddings.small)
-                Text("Выложить предмет")
+                Text(text)
             }
         }
         SpacerV(Paddings.small)

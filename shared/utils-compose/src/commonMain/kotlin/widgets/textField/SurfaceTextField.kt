@@ -72,7 +72,7 @@ fun SurfaceTextField(
     modifier: Modifier = Modifier,
     paddings: PaddingValues = PaddingValues.Zero,
     textFieldModifier: Modifier = SurfaceTextFieldDefaults.textFieldModifier,
-    shape: Shape = RoundedCornerShape(35),
+    shape: Shape = RoundedCornerShape(20.dp),
     singleLine: Boolean = false,
     textStyle: TextStyle = LocalTextStyle.current,
     placeholderText: String? = null,

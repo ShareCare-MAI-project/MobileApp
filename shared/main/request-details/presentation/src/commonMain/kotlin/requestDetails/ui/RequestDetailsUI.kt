@@ -2,28 +2,24 @@ package requestDetails.ui
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.window.Dialog
 import common.requestCard.RequestCardDefaults
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import requestDetails.components.RequestDetailsComponent
+import requestDetails.ui.sections.DeliveryTypesSection
+import requestDetails.ui.sections.TextFieldsSection
 import utils.SpacerV
 import view.consts.Paddings
-import widgets.DeliveryTypesPicker
-import widgets.textField.CategoryTextField
-import widgets.textField.SurfaceTextField
+import widgets.sections.CreateButtonSection
 
 @OptIn(
     ExperimentalHazeMaterialsApi::class,
@@ -33,6 +29,12 @@ import widgets.textField.SurfaceTextField
 fun SharedTransitionScope.RequestDetailsUI(
     component: RequestDetailsComponent
 ) {
+
+    val category by component.category.collectAsState()
+    val deliveryTypes by component.deliveryTypes.collectAsState()
+
+    val createRequestResult by component.createRequestResult.collectAsState()
+
     Dialog(
         onDismissRequest = component.onBackClick
     ) {
@@ -41,28 +43,29 @@ fun SharedTransitionScope.RequestDetailsUI(
                 Modifier
                     .padding(top = Paddings.semiMedium, bottom = Paddings.medium)
             ) {
-                SurfaceTextField(
-                    state = TextFieldState("Нужны штаны на зиму, рост 167"),
-                    placeholderText = "Заявка",
-                    paddings = PaddingValues(horizontal = Paddings.medium)
-                )
-                SpacerV(Paddings.small)
-                CategoryTextField(null, modifier = Modifier.padding(horizontal = Paddings.medium)) {
+                TextFieldsSection(
+                    requestTextState = component.requestText,
+                    category = category,
+                    isCreationMode = component.isCreationMode,
 
-                }
+                    ) { component.updateCategory(it) }
                 SpacerV(Paddings.semiMedium)
-                Text(
-                    "Способы доставки",
-                    modifier = Modifier.padding(start = Paddings.medium),
-                    fontWeight = FontWeight.Medium
-                )
-                SpacerV(Paddings.semiSmall)
-                DeliveryTypesPicker(
-                    listOf(), modifier = Modifier.horizontalScroll(
-                        rememberScrollState()
-                    ),
-                    initSpacer = Paddings.semiSmall
-                ) {}
+
+                DeliveryTypesSection(
+                    deliveryTypes = deliveryTypes
+                ) { component.updateDeliveryType(it) }
+
+
+                if (component.isCreationMode) {
+                    SpacerV(Paddings.medium)
+                    CreateButtonSection(
+                        enabled = component.requestText.text.isNotBlank() && category != null && deliveryTypes.isNotEmpty(),
+                        isLoading = createRequestResult.isLoading(),
+                        text = "Создать заявку"
+                    ) {
+
+                    }
+                }
             }
         }
     }

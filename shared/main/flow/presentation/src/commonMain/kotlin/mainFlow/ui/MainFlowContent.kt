@@ -33,6 +33,8 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.arkivanov.decompose.router.slot.activate
+import common.detailsInterfaces.DetailsConfig
 import common.grid.ContentType
 import common.grid.LocalCurrentContentType
 import common.grid.LocalSpacePaddings
@@ -105,7 +107,9 @@ fun SharedTransitionScope.MainFlowContent(
                 navigateTo = { cfg -> component.navigateTo(cfg) },
                 onFABButtonClick = { isFindHelp ->
                     if (isFindHelp) {
-
+                        component.detailsNav.activate(DetailsConfig.RequestDetailsConfig(
+                            id = "Create"
+                        ))
                     } else {
                         component.output(Output.NavigateToItemEditor)
                     }

@@ -10,7 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import utils.SpacerV
 import view.consts.Paddings
-import widgets.LocationSection
+import widgets.sections.LocationSection
 
 @Composable
 fun QuickInfoSection(

@@ -8,7 +8,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import common.ImagesRow
 import utils.SpacerV
 import view.consts.Paddings
-import widgets.SectionTitle
+import widgets.sections.SectionTitle
 
 
 @Composable

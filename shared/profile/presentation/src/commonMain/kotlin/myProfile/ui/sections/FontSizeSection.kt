@@ -15,7 +15,7 @@ import utils.SpacerV
 import utils.getCoolPrimary
 import view.consts.Paddings
 import view.theme.colors.CustomColors
-import widgets.SectionTitle
+import widgets.sections.SectionTitle
 
 @Composable
 internal fun FontSizeSection() {
