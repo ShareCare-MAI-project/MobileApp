@@ -4,6 +4,7 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -37,28 +38,30 @@ fun SharedTransitionScope.RequestDetailsUI(
     ) {
         Surface(Modifier.fillMaxWidth(), shape = RequestCardDefaults.cardShape) {
             Column(
-                Modifier.padding(horizontal = Paddings.medium)
+                Modifier
                     .padding(top = Paddings.semiMedium, bottom = Paddings.medium)
             ) {
                 SurfaceTextField(
                     state = TextFieldState("Нужны штаны на зиму, рост 167"),
-                    placeholderText = "Заявка"
+                    placeholderText = "Заявка",
+                    paddings = PaddingValues(horizontal = Paddings.medium)
                 )
                 SpacerV(Paddings.small)
-                CategoryTextField(null, modifier = Modifier) {
+                CategoryTextField(null, modifier = Modifier.padding(horizontal = Paddings.medium)) {
 
                 }
-                SpacerV(Paddings.medium)
+                SpacerV(Paddings.semiMedium)
                 Text(
                     "Способы доставки",
-                    modifier = Modifier.padding(start = Paddings.semiSmall),
+                    modifier = Modifier.padding(start = Paddings.medium),
                     fontWeight = FontWeight.Medium
                 )
                 SpacerV(Paddings.semiSmall)
                 DeliveryTypesPicker(
                     listOf(), modifier = Modifier.horizontalScroll(
                         rememberScrollState()
-                    )
+                    ),
+                    initSpacer = Paddings.semiSmall
                 ) {}
             }
         }

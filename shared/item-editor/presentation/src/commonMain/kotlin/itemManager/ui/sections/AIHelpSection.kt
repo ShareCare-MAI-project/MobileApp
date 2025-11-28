@@ -63,7 +63,7 @@ fun AIHelpSection(
                     style = typography.bodySmall,
                     color = colorScheme.onBackground.copy(alpha = .7f),
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(horizontal = Paddings.horizontalListPadding)
+                    modifier = Modifier.padding(horizontal = Paddings.listHorizontalPadding)
                 )
             }
         }

@@ -51,7 +51,7 @@ internal fun DefaultInformationSection(
 
 @Composable
 private fun DefaultInformationTextField(
-    paddingValues: PaddingValues = PaddingValues(horizontal = Paddings.horizontalListPadding),
+    paddingValues: PaddingValues = PaddingValues(horizontal = Paddings.listHorizontalPadding),
     placeholderText: String,
     imeAction: ImeAction,
     state: TextFieldState,

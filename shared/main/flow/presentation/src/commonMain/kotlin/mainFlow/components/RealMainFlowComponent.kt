@@ -25,14 +25,18 @@ import mainFlow.components.MainFlowComponent.Child.FindHelpChild
 import mainFlow.components.MainFlowComponent.Child.ShareCareChild
 import mainFlow.components.MainFlowComponent.Config
 import mainFlow.components.MainFlowComponent.Output
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import requestDetails.components.RealRequestDetailsComponent
 import shareCare.components.RealShareCareComponent
+import usecases.AuthUseCases
 
 class RealMainFlowComponent(
     componentContext: ComponentContext,
     override val output: (Output) -> Unit
-) : MainFlowComponent, ComponentContext by componentContext {
+) : MainFlowComponent, KoinComponent, ComponentContext by componentContext {
 
+    private val authUseCases: AuthUseCases = get()
 
     override val loadingComponent: LoadingComponent =
         RealLoadingComponent(
@@ -62,16 +66,30 @@ class RealMainFlowComponent(
             serializer = DetailsConfig.serializer(),
             handleBackButton = true,
             childFactory = { cfg, ctx ->
+                val currentId = authUseCases.fetchUserId().toString()
                 when (cfg) {
                     is ItemDetailsConfig ->
                         RealItemDetailsComponent(
                             ctx,
                             id = cfg.id,
-                            images = cfg.images
+                            images = cfg.images,
+                            currentId = currentId,
+                            creatorId = cfg.creatorId,
+                            title = cfg.title,
+                            description = cfg.description,
+                            location = cfg.location,
+                            category = cfg.category,
+                            deliveryTypes = cfg.deliveryTypes,
+                            recipientId = cfg.recipientId
                         )
 
                     is DetailsConfig.RequestDetailsConfig ->
-                        RealRequestDetailsComponent(ctx, id = cfg.id) {
+                        RealRequestDetailsComponent(
+                            ctx,
+                            id = cfg.id,
+                            currentId = currentId,
+                            creatorId = "TODO"
+                        ) {
                             detailsNav.dismiss()
                         }
                 }

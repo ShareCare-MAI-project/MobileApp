@@ -2,6 +2,7 @@ package common.itemDetailsTransition
 
 import androidx.compose.animation.core.SeekableTransitionState
 import androidx.compose.animation.core.rememberTransition
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.pager.PagerState
@@ -56,7 +57,8 @@ fun rememberItemDetailsAnimator(
             coroutineScope = coroutineScope,
             imageHeight = imageHeight,
             onBackClicked = { onBackClicked(detailedItemId) },
-            pagerState = PagerState { imagesCount }
+            pagerState = PagerState { imagesCount },
+            scrollState = ScrollState(0)
         )
         manager.animateOpen()
         manager

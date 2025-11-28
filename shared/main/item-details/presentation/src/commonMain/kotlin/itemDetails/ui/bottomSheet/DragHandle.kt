@@ -44,7 +44,7 @@ fun DragHandle(
     sheetState: AnchoredDraggableState<SheetValue>,
     dragInteractionSource: MutableInteractionSource,
     isStable: Boolean,
-    pagerState: PagerState
+    pagerState: PagerState,
 ) {
 
     val transitionState = remember { MutableTransitionState(false) }

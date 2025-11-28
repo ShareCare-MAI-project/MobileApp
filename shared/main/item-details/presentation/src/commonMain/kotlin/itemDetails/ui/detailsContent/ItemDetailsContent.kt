@@ -67,7 +67,7 @@ fun SharedTransitionScope.ItemDetailsContent(
                         imagePath = imagePath,
                         modifier = Modifier
                             .align(Alignment.TopCenter)
-                            .padding(horizontal = Paddings.horizontalListPadding)
+                            .padding(horizontal = Paddings.listHorizontalPadding)
                             .height(itemDetailsAnimator.imageHeight)
                             .fillMaxWidth()
                             .hazeSource(hazeState, zIndex = 0f),
@@ -92,7 +92,7 @@ fun SharedTransitionScope.ItemDetailsContent(
                     itemDetailsAnimator.isStableDetailed,
                 modifier = Modifier
                     .renderInSharedTransitionScopeOverlay()
-                    .padding(horizontal = Paddings.horizontalListPadding) // соответствуем image
+                    .padding(horizontal = Paddings.listHorizontalPadding) // соответствуем image
                     .padding(Paddings.semiSmall),
                 hazeState = hazeState
             ) {

@@ -40,7 +40,8 @@ fun SharedTransitionScope.ItemDetailsUI(
         component = component,
         sheet = {
             ItemDetailsSheetContent(
-                sharedTransitionScope = this@ItemDetailsUI
+                sharedTransitionScope = this@ItemDetailsUI,
+                component = component
             )
         }
     )

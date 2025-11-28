@@ -27,7 +27,7 @@ internal fun CreateButtonSection(
     onClick: () -> Unit
 ) {
     Column(
-        Modifier.fillMaxWidth().padding(horizontal = Paddings.horizontalListPadding),
+        Modifier.fillMaxWidth().padding(horizontal = Paddings.listHorizontalPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(

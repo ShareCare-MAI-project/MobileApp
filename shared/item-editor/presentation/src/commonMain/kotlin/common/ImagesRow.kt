@@ -62,7 +62,7 @@ internal fun ImagesRow(
             } else {
                 if (images.size < 5) {
                     Box(
-                        Modifier.padding(start = Paddings.horizontalListPadding, end = Paddings.small).width(photoWidth).aspectRatio(aspectRatio).clip(shapes.large)
+                        Modifier.padding(start = Paddings.listHorizontalPadding, end = Paddings.small).width(photoWidth).aspectRatio(aspectRatio).clip(shapes.large)
                             .fastBackground(colorScheme.surfaceContainer).clickable {
                                 addButton()
                             }, contentAlignment = Alignment.Center

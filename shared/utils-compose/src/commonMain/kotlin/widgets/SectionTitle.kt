@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.Dp
 import view.consts.Paddings
 
 @Composable
-fun SectionTitle(text: String, horizontalPadding: Dp =  Paddings.horizontalListPadding) {
+fun SectionTitle(text: String, horizontalPadding: Dp =  Paddings.listHorizontalPadding) {
     Text(
         text,
         fontWeight = FontWeight.Medium,

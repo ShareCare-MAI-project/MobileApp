@@ -3,6 +3,7 @@ package common.itemDetailsTransition
 import androidx.compose.animation.core.SeekableTransitionState
 import androidx.compose.animation.core.Transition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.pager.PagerState
@@ -27,7 +28,8 @@ class ItemDetailsAnimator(
     val sheetHeightPx: Float,
     val onBackClicked: () -> Unit,
     val coroutineScope: CoroutineScope,
-    val pagerState: PagerState
+    val pagerState: PagerState,
+    val scrollState: ScrollState
 ) {
     var isInitialized = false
         private set

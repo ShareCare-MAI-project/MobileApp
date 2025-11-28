@@ -1,7 +1,9 @@
 package itemDetails.ui.bottomSheet
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
@@ -41,12 +43,14 @@ import utils.SpacerV
 import view.consts.Paddings
 
 
-@OptIn(ExperimentalHazeMaterialsApi::class, ExperimentalHazeApi::class,
+@OptIn(
+    ExperimentalHazeMaterialsApi::class, ExperimentalHazeApi::class,
     ExperimentalMaterial3ExpressiveApi::class
 )
 @Composable
 fun CustomBottomSheet(
     sheetState: AnchoredDraggableState<SheetValue>,
+    scrollState: ScrollState,
     height: Dp,
     pagerState: PagerState,
     hazeState: HazeState,
@@ -65,10 +69,12 @@ fun CustomBottomSheet(
     val dragDragged = dragInteractionSource.collectIsDraggedAsState().value
 
 
+    val isScrolled = scrollState.canScrollBackward
+
     val endIntensity = if (isDarkTheme) .8f else .7f
     val hazeAnimationSpec = remember { tween<Float>(700) }
     val startIntensity by animateFloatAsState(
-        if (dragPressed) endIntensity - .45f
+        if (dragPressed || isScrolled) endIntensity - .45f
         else if (offset != 0f || dragDragged) endIntensity
         else .0f,
         animationSpec = hazeAnimationSpec
@@ -111,14 +117,19 @@ fun CustomBottomSheet(
             },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        SpacerV(Paddings.semiSmall)
-        DragHandle(
-            startIntensity = startIntensity,
-            sheetState = sheetState,
-            dragInteractionSource = dragInteractionSource,
-            pagerState = pagerState,
-            isStable = offset == 0f && !dragPressed && !dragDragged
-        )
+
+
+        AnimatedVisibility(!isScrolled) {
+            SpacerV(Paddings.semiSmall)
+            DragHandle(
+                startIntensity = startIntensity,
+                sheetState = sheetState,
+                dragInteractionSource = dragInteractionSource,
+                pagerState = pagerState,
+                isStable = offset == 0f && !dragPressed && !dragDragged,
+            )
+        }
         content()
+
     }
 }

@@ -40,7 +40,7 @@ fun SharedTransitionScope.DetailsImagePager(
                 ItemImage(
                     imagePath = images[index],
                     modifier = Modifier
-                        .padding(horizontal = Paddings.horizontalListPadding)
+                        .padding(horizontal = Paddings.listHorizontalPadding)
                         .fillMaxSize(),
                     id = null,
                     detailedItemId = null,

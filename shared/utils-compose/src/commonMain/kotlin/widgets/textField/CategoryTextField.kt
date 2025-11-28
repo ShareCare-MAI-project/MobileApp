@@ -24,7 +24,7 @@ import view.consts.Paddings
 @Composable
 fun CategoryTextField(
     itemCategory: ItemCategory?,
-    modifier: Modifier = Modifier.padding(horizontal = Paddings.horizontalListPadding),
+    modifier: Modifier = Modifier.padding(horizontal = Paddings.listHorizontalPadding),
     onClick: (ItemCategory) -> Unit
 ) {
     val state = TextFieldState(itemCategory?.title ?: "")

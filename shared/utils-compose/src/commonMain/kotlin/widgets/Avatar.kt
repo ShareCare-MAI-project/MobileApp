@@ -1,4 +1,4 @@
-package myProfile.ui.sections
+package widgets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -15,22 +15,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import view.consts.Paddings
 
 @Composable
-internal fun Avatar() {
-    val maxWidth = 200.dp
+fun Avatar(
+    modifier: Modifier = Modifier
+        .sizeIn(maxWidth = 200.dp),
+    iconPadding: Dp = Paddings.big
+) {
 
     Box(
-        Modifier
-            .sizeIn(maxWidth = maxWidth).aspectRatio(1f).clip(CircleShape)
+        modifier.aspectRatio(1f).clip(CircleShape)
             .background(colorScheme.tertiaryContainer.copy(alpha = .4f)),
         contentAlignment = Alignment.Center
     ) {
         Icon(
             Icons.Rounded.Person,
-            modifier = Modifier.padding(Paddings.big)
+            modifier = Modifier.padding(iconPadding)
                 .matchParentSize().alpha(.8f),
             contentDescription = null
         )

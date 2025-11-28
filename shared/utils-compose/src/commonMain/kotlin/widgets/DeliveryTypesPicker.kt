@@ -21,7 +21,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import logic.enums.DeliveryType
+import utils.SpacerH
 import utils.title
 import view.consts.Paddings
 
@@ -29,7 +32,9 @@ import view.consts.Paddings
 fun DeliveryTypesPicker(
     pickedDeliveryTypes: List<DeliveryType>,
     allDeliveryTypes: List<DeliveryType> = remember { DeliveryType.entries.toList() },
-    modifier: Modifier = Modifier.fillMaxWidth().padding(horizontal = Paddings.horizontalListPadding),
+    modifier: Modifier = Modifier.fillMaxWidth().padding(horizontal = Paddings.listHorizontalPadding),
+    isTransparent: Boolean = false,
+    initSpacer: Dp = 0.dp,
     onClick: (DeliveryType) -> Unit
 ) {
 
@@ -38,6 +43,7 @@ fun DeliveryTypesPicker(
         horizontalArrangement = Arrangement.spacedBy(Paddings.small, alignment = Alignment.Start),
         verticalArrangement = Arrangement.spacedBy(Paddings.semiSmall, alignment = Alignment.Top)
     ) {
+        SpacerH(initSpacer)
         for (item in allDeliveryTypes) {
             AnimatedContent(
                 item in pickedDeliveryTypes,
@@ -48,12 +54,15 @@ fun DeliveryTypesPicker(
             ) { selected ->
                 DeliveryTypeItem(
                     selected = selected,
-                    name = item.title
+                    name = item.title,
+                    isTransparent = isTransparent
                 ) {
                     onClick(item)
                 }
             }
         }
+
+        SpacerH(initSpacer)
     }
 }
 
@@ -61,6 +70,7 @@ fun DeliveryTypesPicker(
 private fun DeliveryTypeItem(
     selected: Boolean,
     name: String,
+    isTransparent: Boolean,
     onClick: () -> Unit,
 ) {
     FilterChip(
@@ -79,7 +89,8 @@ private fun DeliveryTypeItem(
         },
         colors = FilterChipDefaults.elevatedFilterChipColors(
             selectedContainerColor = colorScheme.primaryContainer,
-            selectedLabelColor = colorScheme.onPrimaryContainer
+            selectedLabelColor = colorScheme.onPrimaryContainer,
+            containerColor = colorScheme.surfaceContainerLow.copy(alpha = if (isTransparent) .7f else 1f)
         ),
         shape = MaterialTheme.shapes.large
     )

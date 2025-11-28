@@ -41,7 +41,14 @@ fun LazyGridScope.DefaultItemsContent(
                 onCardClicked(
                     DetailsConfig.ItemDetailsConfig(
                         id = item.id,
-                        images = item.images
+                        images = item.images,
+                        creatorId = item.ownerId,
+                        title = item.title,
+                        description = item.description,
+                        location = item.location,
+                        category = item.category,
+                        deliveryTypes = item.deliveryTypes,
+                        recipientId = item.recipientId
                     )
                 )
             }

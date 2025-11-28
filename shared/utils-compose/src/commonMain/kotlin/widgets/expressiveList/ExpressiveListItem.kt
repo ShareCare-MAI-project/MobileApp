@@ -9,5 +9,6 @@ data class ExpressiveListItem(
     val text: String,
     val containerColor: Color? = null,
     val contentColor: Color? = null,
+    val blendy: Float = .05f,
     val onClick: () -> Unit// only for `generated`
 )

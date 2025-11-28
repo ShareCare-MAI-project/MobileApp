@@ -95,7 +95,7 @@ fun MainLazyGrid(
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(Sizes.columnWidth),
                 state = lazyGridState,
-                contentPadding = PaddingValues(horizontal = Paddings.horizontalListPadding),
+                contentPadding = PaddingValues(horizontal = Paddings.listHorizontalPadding),
                 verticalArrangement = Arrangement.spacedBy(Paddings.small),
                 horizontalArrangement = Arrangement.spacedBy(Paddings.small),
                 modifier = Modifier.fillMaxSize().fastBackground(colorScheme.background)
