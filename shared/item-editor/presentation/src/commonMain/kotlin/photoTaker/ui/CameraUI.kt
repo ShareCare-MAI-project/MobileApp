@@ -90,7 +90,7 @@ internal fun CameraUI(
             cameraCallback = cameraCallback
         )
 
-        Box(Modifier.padding(top = topPadding + Paddings.small, start = Paddings.horizontalListPadding)) {
+        Box(Modifier.padding(top = topPadding + Paddings.small, start = Paddings.listHorizontalPadding)) {
             BackGlassButton(modifier = Modifier, hazeState = hazeState) {
                 component.goBack()
             }

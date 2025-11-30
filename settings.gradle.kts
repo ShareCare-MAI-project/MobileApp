@@ -41,9 +41,8 @@ listOf(
 
 val mainPath = "$sharedPath:main"
 include("$mainPath:flow:presentation")
-include("$mainPath:common:presentation")
 listOf(
-    "share-care", "find-help", "item-details"
+    "share-care", "find-help", "item-details", "request-details", "common"
 ).forEach { module ->
     val subModules = listOf("data", "domain", "presentation")
     subModules.forEach { subModule ->

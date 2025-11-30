@@ -9,7 +9,6 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.logging.SIMPLE
-import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.URLProtocol
@@ -17,19 +16,12 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import network.NetworkConfig
 
-
-// sry
-// TokenProvider cуществует, чтобы пробрасывать токен в core модуль
-// Поэтому я не могу использовать FetchTokenUseCase, т.к. это приведёт к CircularDependency
-interface TokenProvider {
-    fun getToken(): String?
-}
 
 @OptIn(ExperimentalSerializationApi::class)
 internal fun createHttpClient(
-    enableLogging: Boolean,
-    tokenProvider: TokenProvider
+    enableLogging: Boolean
 ): HttpClient {
     return HttpClient(CIO) {
 
@@ -60,17 +52,13 @@ internal fun createHttpClient(
 
         defaultRequest {
             header("Content-Type", "application/json; charset=UTF-8")
-            tokenProvider.getToken()?.let { token ->
-                bearerAuth(token)
-            }
 
             contentType(ContentType.Application.Json)
             url {
-                host = "10.0.2.2" // `localhost` but from android studio emulator
-//                host = "10.230.221.145" // `localhost` but from device and wifi hotspot
+                host = NetworkConfig.host
                 protocol = URLProtocol.HTTP
             }
-            port = 8080
+            port = NetworkConfig.port
         }
     }
 }

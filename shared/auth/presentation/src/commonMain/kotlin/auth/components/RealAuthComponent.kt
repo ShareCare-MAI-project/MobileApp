@@ -1,5 +1,7 @@
 package auth.components
 
+import alertsManager.AlertState
+import alertsManager.AlertsManager
 import androidx.compose.foundation.text.input.TextFieldState
 import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
@@ -46,7 +48,10 @@ class RealAuthComponent(
                     requestCodeResult.value = it
                 }
 
-                requestCodeResult.value.handle {
+                requestCodeResult.value.handle(
+                    onError = { AlertsManager.push(AlertState.SnackBar(it.prettyPrint)) }
+                ) {
+
                     currentProgressState.value = AuthProgressState.OTPCode
                 }
             }.invokeOnCompletion {
@@ -63,6 +68,9 @@ class RealAuthComponent(
                     otp = OTPCode.text.toString()
                 ).collect {
                     verifyCodeResult.value = it
+                }
+                verifyCodeResult.value.onError {
+                    AlertsManager.push(AlertState.SnackBar(it.prettyPrint))
                 }
 
                 withContext(Dispatchers.Main) {

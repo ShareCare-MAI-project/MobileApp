@@ -6,6 +6,6 @@ import org.koin.dsl.module
 internal val ktorModule: (enableLogging: Boolean) -> Module =
     { enableLogging ->
         module {
-            single { createHttpClient(enableLogging, get()) }
+            single { createHttpClient(enableLogging) }
         }
     }

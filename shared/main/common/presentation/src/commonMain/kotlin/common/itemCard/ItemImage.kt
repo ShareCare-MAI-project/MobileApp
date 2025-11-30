@@ -6,24 +6,27 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import common.detailsTransition.LocalTransitionHazeState
+import common.itemDetailsTransition.LocalTransitionHazeState
 import dev.chrisbanes.haze.hazeSource
 import foundation.AsyncImage
+import network.getImageLink
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.ItemImage(
-    path: String,
+    imagePath: String,
     modifier: Modifier,
     id: String?,
     animatedContentScope: AnimatedContentScope?,
     detailedItemId: String?
 ) {
+
+    val imageLink = getImageLink(imagePath)
     val isAnimating = id != null && detailedItemId == id
     val hazeState = if (isAnimating) LocalTransitionHazeState.current else null
 
     AsyncImage(
-        path = path,
+        link = imageLink,
         modifier = modifier
             .then(
                 if (animatedContentScope != null && id != null)

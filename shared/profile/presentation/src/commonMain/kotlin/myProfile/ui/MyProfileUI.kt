@@ -18,7 +18,6 @@ import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 import foundation.scrollables.VerticalScrollableBox
 import myProfile.components.MyProfileComponent
-import myProfile.ui.sections.Avatar
 import myProfile.ui.sections.FontSizeSection
 import myProfile.ui.sections.ListSection
 import myProfile.ui.sections.NameSection
@@ -27,6 +26,7 @@ import myProfile.ui.sections.UsuallyISection
 import myProfile.ui.sections.VerificationSection
 import utils.SpacerV
 import view.consts.Paddings
+import widgets.Avatar
 import widgets.glass.BackGlassButton
 
 @Composable
@@ -47,7 +47,7 @@ fun MyProfileUI(
             Box(
                 Modifier.padding(
                     top = topPadding + Paddings.small,
-                    start = Paddings.horizontalListPadding
+                    start = Paddings.listHorizontalPadding
                 )
             ) {
                 BackGlassButton(hazeState = hazeState) {
@@ -63,7 +63,7 @@ fun MyProfileUI(
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth()
-                    .padding(horizontal = Paddings.horizontalListPadding),
+                    .padding(horizontal = Paddings.listHorizontalPadding),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 SpacerV(padding.calculateTopPadding() - topPadding)

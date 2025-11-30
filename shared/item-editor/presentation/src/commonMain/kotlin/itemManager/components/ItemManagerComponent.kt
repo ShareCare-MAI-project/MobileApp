@@ -1,10 +1,15 @@
 package itemManager.components
 
 import androidx.compose.foundation.text.input.TextFieldState
+import logic.enums.DeliveryType
+import logic.enums.ItemCategory
 import kotlinx.coroutines.flow.StateFlow
+import network.NetworkState
 import photoTaker.components.PhotoTakerComponent
 
 interface ItemManagerComponent {
+
+    val createItemResult: StateFlow<NetworkState<Unit>>
 
     val title: TextFieldState
     val description: TextFieldState
@@ -15,6 +20,7 @@ interface ItemManagerComponent {
     fun updateDeliveryType(deliveryType: DeliveryType)
     fun updateItemCategory(itemCategory: ItemCategory)
 
+    fun createItem()
 
 
     val photoTakerComponent: PhotoTakerComponent

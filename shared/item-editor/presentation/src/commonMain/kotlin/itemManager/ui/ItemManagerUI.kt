@@ -20,13 +20,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 import foundation.scrollables.VerticalScrollableBox
 import itemManager.components.ItemManagerComponent
 import itemManager.ui.sections.AIHelpSection
-import itemManager.ui.sections.CreateButtonSection
 import itemManager.ui.sections.DefaultInformationSection
 import itemManager.ui.sections.DeliveryTypesSection
 import itemManager.ui.sections.ItemImagesSection
@@ -34,6 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import utils.SpacerV
 import utils.fastBackground
 import view.consts.Paddings
+import widgets.sections.CreateButtonSection
 
 @OptIn(
     ExperimentalFoundationApi::class
@@ -42,7 +41,7 @@ import view.consts.Paddings
 internal fun ItemManagerUI(
     component: ItemManagerComponent
 ) {
-    val density = LocalDensity.current
+    val createItemResult by component.createItemResult.collectAsState()
 
     val windowInsets = WindowInsets.safeContent.exclude(WindowInsets.ime)
     val safeContentPaddings = windowInsets.asPaddingValues()
@@ -84,8 +83,16 @@ internal fun ItemManagerUI(
                 SpacerV(scaffoldMaxTopPadding - topPadding + Paddings.medium)
                 ItemImagesSection(
                     images = images,
-                    onAddButtonClick = { component.openPhotoTakerComponent() },
-                    onDeleteClick = { component.photoTakerComponent.deletePhoto(it) }
+                    onAddButtonClick = {
+                        if (!createItemResult.isLoading()) {
+                            component.openPhotoTakerComponent()
+                        }
+                    },
+                    onDeleteClick = {
+                        if (!createItemResult.isLoading()) {
+                            component.photoTakerComponent.deletePhoto(it)
+                        }
+                    }
                 )
 
                 SpacerV(Paddings.medium)
@@ -98,7 +105,8 @@ internal fun ItemManagerUI(
                 DefaultInformationSection(
                     titleState = title,
                     descState = description,
-                    itemCategory = itemCategory
+                    itemCategory = itemCategory,
+                    readOnly = createItemResult.isLoading()
                 ) {
                     component.updateItemCategory(it)
                 }
@@ -112,8 +120,12 @@ internal fun ItemManagerUI(
                             && description.text.isNotBlank()
                             && images.isNotEmpty()
                             && itemCategory != null
-                            && pickedDeliveryTypes.isNotEmpty()
-                )
+                            && pickedDeliveryTypes.isNotEmpty(),
+                    isLoading = createItemResult.isLoading(),
+                    text = "Выложить предмет"
+                ) {
+                    component.createItem()
+                }
 
             }
 

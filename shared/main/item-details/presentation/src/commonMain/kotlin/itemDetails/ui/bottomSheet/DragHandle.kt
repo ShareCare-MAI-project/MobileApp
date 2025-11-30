@@ -14,6 +14,7 @@ import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -43,7 +44,7 @@ fun DragHandle(
     sheetState: AnchoredDraggableState<SheetValue>,
     dragInteractionSource: MutableInteractionSource,
     isStable: Boolean,
-    pagerState: PagerState
+    pagerState: PagerState,
 ) {
 
     val transitionState = remember { MutableTransitionState(false) }
@@ -74,20 +75,21 @@ fun DragHandle(
 
         ) {
         transition.Crossfade { isPager ->
-            Box(modifier = Modifier.height(10.dp), contentAlignment = Alignment.Center) {
+            Box(Modifier.height(10.dp).fillMaxWidth(), contentAlignment = Alignment.Center) {
                 if (isPager) {
                     PagerDragHandle(pagerState)
                 } else {
                     EmptyDragHandle(startIntensity)
                 }
             }
+
         }
     }
 }
 
 @Composable
 private fun PagerDragHandle(
-    pagerState: PagerState,
+    pagerState: PagerState
 ) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.height(10.dp)) {
         for (page in 0 until pagerState.pageCount) {
@@ -101,7 +103,7 @@ private fun PagerDragHandle(
 
 @Composable
 private fun PagerPoint(
-    isActive: Boolean,
+    isActive: Boolean
 ) {
     val size by animateDpAsState(if (isActive) 10.dp else 5.dp)
     val color by animateColorAsState(

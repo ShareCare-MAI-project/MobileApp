@@ -11,7 +11,11 @@ fun initKoin(
         modules(
             coreModule(enableLogging),
             authModule,
-            userModule
+            userModule,
+            itemEditorModule,
+            requestDetailsModule,
+            shareCareModule,
+            findHelpModule,
         )
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.unit.Dp
 import utils.getCoolPrimary
 import view.consts.Paddings
+import view.theme.colors.CustomColors
 import widgets.expressiveList.ExpressiveListItem
 
 @Composable
@@ -40,7 +41,7 @@ fun ToggleCardButton(
 
     val contentColor by animateColorAsState(
         if (checked) lerp(
-            if (isDark) colorScheme.inversePrimary else colorScheme.primary,
+            CustomColors.lightPrimary,
             Color.Black,
             fraction = .3f
         )

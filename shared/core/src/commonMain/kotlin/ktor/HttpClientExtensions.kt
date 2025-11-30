@@ -3,6 +3,7 @@ package ktor
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -21,12 +22,15 @@ import network.NetworkState
 
 inline fun <reified T> HttpClient.defaultPost(
     path: String,
+    tokenProvider: TokenProvider,
     body: Any? = null,
     crossinline block: HttpRequestBuilder.() -> Unit = {}
 ): Flow<NetworkState<T>> = defaultRequest(
     response = {
+        val token = tokenProvider.getToken()
         post {
             url {
+                token?.let { bearerAuth(token) }
                 contentType(ContentType.Application.Json)
                 path(path)
                 body?.let { setBody(it) }
@@ -38,11 +42,14 @@ inline fun <reified T> HttpClient.defaultPost(
 
 inline fun <reified T> HttpClient.defaultGet(
     path: String,
+    tokenProvider: TokenProvider,
     crossinline block: HttpRequestBuilder.() -> Unit = {}
 ): Flow<NetworkState<T>> = defaultRequest(
     response = {
+        val token = tokenProvider.getToken()
         get {
             url {
+                token?.let { bearerAuth(token) }
                 contentType(ContentType.Application.Json)
                 path(path)
                 block()
@@ -50,7 +57,6 @@ inline fun <reified T> HttpClient.defaultGet(
         }
     }
 )
-
 
 
 inline fun <reified T> HttpClient.defaultRequest(
@@ -72,7 +78,8 @@ inline fun <reified T> HttpClient.defaultRequest(
                     NetworkState.Error(
                         Throwable("${response.status}: ${response.bodyAsText()}"),
                         // is there another way?
-                        prettyPrint = response.bodyAsText().removePrefix("{\"detail\":\"").removeSuffix("\"}"),
+                        prettyPrint = response.bodyAsText().removePrefix("{\"detail\":\"")
+                            .removeSuffix("\"}"),
                         code = response.status.value
                     )
                 )

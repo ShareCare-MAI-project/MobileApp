@@ -1,3 +1,7 @@
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+
 // Couldn't use `libs` here =/
 plugins {
     kotlin("multiplatform")
@@ -9,6 +13,15 @@ kotlin {
     androidTarget()
 //    iosArm64()
     iosSimulatorArm64()
+
+    applyDefaultHierarchyTemplate {
+        common {
+            group("skia") {
+                withIosSimulatorArm64()
+//                withIosArm64()
+            }
+        }
+    }
 
     jvmToolchain(Config.Java.intVersion)
 }

@@ -48,7 +48,7 @@ fun LoadingUI(
             Text(
                 text = component.helloText,
                 modifier = Modifier.align(Alignment.Center)
-                    .padding(horizontal = Paddings.horizontalListPadding),
+                    .padding(horizontal = Paddings.listHorizontalPadding),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 style = textStyle,
@@ -71,7 +71,7 @@ fun LoadingUI(
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
                                 "Не удалось загрузить данные о пользователе",
-                                modifier = Modifier.padding(horizontal = Paddings.horizontalListPadding),
+                                modifier = Modifier.padding(horizontal = Paddings.listHorizontalPadding),
                                 textAlign = TextAlign.Center
                             )
                             SpacerV(Paddings.small)

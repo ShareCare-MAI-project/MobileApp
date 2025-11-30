@@ -1,3 +1,7 @@
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+
 plugins {
     id(libs.plugins.android.application.get().pluginId)
     id(libs.plugins.kotlin.get().pluginId)
@@ -10,7 +14,7 @@ version = Config.Application.versionName
 
 kotlin {
     androidTarget()
-    
+
     listOf(
 //        iosArm64(),
         iosSimulatorArm64()
@@ -20,7 +24,7 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
         commonMain.dependencies {
             implementation(project(Modules.root))

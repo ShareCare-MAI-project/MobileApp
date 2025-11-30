@@ -31,7 +31,7 @@ internal fun TopBar(
 ) {
     Row(
         Modifier.fillMaxWidth().padding(top = topPadding + Paddings.small)
-            .padding(horizontal = Paddings.horizontalListPadding),
+            .padding(horizontal = Paddings.listHorizontalPadding),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

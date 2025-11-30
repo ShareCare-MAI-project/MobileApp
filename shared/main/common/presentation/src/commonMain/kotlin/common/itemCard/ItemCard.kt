@@ -26,10 +26,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import architecture.launchIO
-import common.detailsTransition.DetailsAnimator
-import common.detailsTransition.SharedAnimation
+import common.itemDetailsTransition.ItemDetailsAnimator
+import common.itemDetailsTransition.SharedAnimation
 import itemDetails.ui.bottomSheet.isExpanded
-import resources.RImages
 import utils.SpacerV
 import view.consts.Paddings
 
@@ -40,13 +39,17 @@ fun SharedTransitionScope.ItemCard(
     modifier: Modifier = Modifier,
     title: String,
     id: String,
-    detailsAnimator: DetailsAnimator,
+    imagePath: String,
+    location: String,
+    itemDetailsAnimator: ItemDetailsAnimator,
     onClicked: () -> Unit
 ) {
     val cardShape = RoundedCornerShape(ItemCardDefaults.cardShapeDp)
 
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
+
+
     Card(
         modifier = modifier
             .clip(cardShape)
@@ -65,27 +68,27 @@ fun SharedTransitionScope.ItemCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            if (detailsAnimator.detailedItemId != id) {
+            if (itemDetailsAnimator.detailedItemId != id) {
                 ItemImage(
-                    path = RImages.LOGO,
+                    imagePath = imagePath,
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(1.1f),
                     id = id,
-                    detailedItemId = detailsAnimator.detailedItemId,
+                    detailedItemId = itemDetailsAnimator.detailedItemId,
                     animatedContentScope = null
                 )
             } else {
-                detailsAnimator.SharedAnimation(
+                itemDetailsAnimator.SharedAnimation(
                     modifier = Modifier.fillMaxWidth().aspectRatio(1.1f)
                 ) { sheetValue ->
                     if (!sheetValue.isExpanded()) {
                         ItemImage(
-                            path = RImages.LOGO,
+                            imagePath = imagePath,
                             modifier = Modifier
                                 .fillMaxSize(),
                             id = id,
-                            detailedItemId = detailsAnimator.detailedItemId,
+                            detailedItemId = itemDetailsAnimator.detailedItemId,
                             animatedContentScope = this
                         )
                     }
@@ -104,7 +107,7 @@ fun SharedTransitionScope.ItemCard(
             )
 
             Text(
-                "Москва, метро Славянский бульвар",
+                location,
                 maxLines = 1,
                 style = typography.bodySmall,
                 overflow = TextOverflow.Ellipsis,
