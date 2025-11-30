@@ -57,8 +57,10 @@ class RealFindHelpComponent(
     )
 
     override fun onQueryChange(query: String) {
-        searchData.value = searchData.value.copy(query = query)
-        onSearch(resetItems = true)
+        if (query != searchData.value.query) {
+            searchData.value = searchData.value.copy(query = query)
+            onSearch(resetItems = true)
+        }
     }
 
     override fun onCategoryChange(category: ItemCategory?) {

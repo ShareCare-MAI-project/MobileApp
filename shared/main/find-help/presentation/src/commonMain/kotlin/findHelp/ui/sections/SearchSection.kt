@@ -53,7 +53,7 @@ internal fun LazyGridScope.SearchSection(
 
             DefaultItemsContent(
                 items = items,
-                contentType = ContentType.ReadyToHelp,
+                contentType = ContentType.Catalog,
                 sharedTransitionScope = sharedTransitionScope,
                 itemDetailsAnimator = itemDetailsAnimator,
                 onCardClicked = onClick,
