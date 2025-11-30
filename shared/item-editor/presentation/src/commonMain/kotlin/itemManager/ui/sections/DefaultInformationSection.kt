@@ -43,7 +43,7 @@ internal fun DefaultInformationSection(
     )
     SpacerV(Paddings.small)
 
-    CategoryTextField(itemCategory) {
+    CategoryTextField(itemCategory, expandable = !readOnly) {
         onItemCategoryClick(it)
     }
 

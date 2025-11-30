@@ -38,4 +38,10 @@ class RealShareCareComponent(
             items.value = items.value.onCoroutineDeath()
         }
     }
+
+    override val query: MutableStateFlow<String> = MutableStateFlow("")
+
+    override fun onSearch(query: String) {
+        this.query.value = query
+    }
 }

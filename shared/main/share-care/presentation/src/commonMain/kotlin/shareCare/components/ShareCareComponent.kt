@@ -13,4 +13,6 @@ interface ShareCareComponent {
 
     val openDetails: (cfg: DetailsConfig) -> Unit
 
+    val query: StateFlow<String>
+    fun onSearch(query: String)
 }

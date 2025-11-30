@@ -16,6 +16,9 @@ import shareCare.components.ShareCareComponent
 
 interface MainFlowComponent : DefaultStack<Config, Child> {
 
+
+
+
     val loadingComponent: LoadingComponent
 
     val detailsNav: SlotNavigation<DetailsConfig>
