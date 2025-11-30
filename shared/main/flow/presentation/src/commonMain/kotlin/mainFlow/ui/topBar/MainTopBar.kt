@@ -85,7 +85,7 @@ internal fun MainTopBar(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     TopTitle(
-                        modifier = Modifier.widthIn(max = width - 2 * (maxHeight + paddingBetweenIcons.value) - Paddings.medium),
+                        modifier = Modifier.widthIn(max = width - 2 * (maxHeight + paddingBetweenIcons.value) - Paddings.listHorizontalPadding),
                         isTitle = isTitle,
                         hazeState = hazeState,
                         contentType = currentContentType
@@ -93,7 +93,7 @@ internal fun MainTopBar(
                     if (isTitle) {
                         SpacerH(paddingBetweenIcons.value)
                     } else {
-                        SpacerH(Paddings.medium)
+                        SpacerH(Paddings.listHorizontalPadding)
                     }
                     SearchBar(
                         modifier = Modifier.then(if (isTitle) Modifier.widthIn(maxHeight) else Modifier),
@@ -126,7 +126,7 @@ internal fun MainTopBar(
                 else component.output(MainFlowComponent.Output.NavigateToProfile)
             }
 
-            SpacerH(Paddings.medium)
+            SpacerH(Paddings.listHorizontalPadding)
         }
     )
 }

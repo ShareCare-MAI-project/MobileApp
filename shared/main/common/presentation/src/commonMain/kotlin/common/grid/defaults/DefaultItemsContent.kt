@@ -3,11 +3,9 @@ package common.grid.defaults
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.LazyGridScope
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.ui.Modifier
 import common.detailsInterfaces.DetailsConfig
 import common.grid.ContentType
-import common.grid.TransitionColumnHeader
 import common.itemCard.ItemCard
 import common.itemDetailsTransition.ItemDetailsAnimator
 import entity.ItemResponse
@@ -21,13 +19,11 @@ fun LazyGridScope.DefaultItemsContent(
     onCardClicked: (DetailsConfig.ItemDetailsConfig) -> Unit
 ) {
 
-    TransitionColumnHeader(
-        contentType = contentType
-    )
-    items(
+    DefaultGridContent(
         items = items,
         key = { it.id },
-        contentType = { contentType }) { item ->
+        contentType = contentType,
+    ) { item ->
         val imagePath = item.images.firstOrNull() ?: ""
         with(sharedTransitionScope) {
             ItemCard(

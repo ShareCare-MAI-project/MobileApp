@@ -33,7 +33,7 @@ internal fun TopTitle(
 ) {
     Row(modifier) {
         TitleAnimateVisibility(isTitle, isSlide = false) {
-            SpacerH(Paddings.medium)
+            SpacerH(Paddings.listHorizontalPadding)
         }
 
         GlassCard(

@@ -70,7 +70,7 @@ fun LazyGridScope.TransitionColumnHeader(
         TransitionHeader(
             isVisible = currentContentType != contentType,
             contentType = contentType,
-            modifier = Modifier.animateItem().padding(start = Paddings.listHorizontalPadding)
+            modifier = Modifier.animateItem().padding(horizontal = Paddings.semiSmall)
         )
     }
 }
