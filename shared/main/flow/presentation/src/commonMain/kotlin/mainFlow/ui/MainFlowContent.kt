@@ -134,15 +134,14 @@ fun SharedTransitionScope.MainFlowContent(
             // can't inherit interface cuz of different modules and packages 0_o
             val onSearch: (query: String) -> Unit = { query ->
                 when (currentChild) {
-                    is Child.FindHelpChild -> currentChild.findHelpComponent.onSearch(query)
-                    is Child.ShareCareChild -> currentChild.shareCareComponent.onSearch(query)
+                    is Child.FindHelpChild -> currentChild.findHelpComponent.onQueryChange(query)
+                    is Child.ShareCareChild -> currentChild.shareCareComponent.onQueryChange(query)
                 }
             }
 
-            val currentQuery: String by
-            when (currentChild) {
-                is Child.FindHelpChild -> currentChild.findHelpComponent.query
-                is Child.ShareCareChild -> currentChild.shareCareComponent.query
+            val currentSearchData by when (currentChild) {
+                is Child.FindHelpChild -> currentChild.findHelpComponent.searchData
+                is Child.ShareCareChild -> currentChild.shareCareComponent.searchData
             }.collectAsState()
 
             MainTopBar(
@@ -152,11 +151,11 @@ fun SharedTransitionScope.MainFlowContent(
                 hazeState = hazeState,
                 currentContentType = currentContentType,
                 component = component,
-                searchBarQuery = currentQuery,
+                searchBarQuery = currentSearchData.query,
                 onSearchBarChange = { query ->
                     coroutineScope.launch {
                         onSearch(query)
-                        if (query != currentQuery) {
+                        if (query != currentSearchData.query) {
                             if (query.isEmpty()) {
                                 currentLazyGridState.scrollToItem(0)
                             } else {

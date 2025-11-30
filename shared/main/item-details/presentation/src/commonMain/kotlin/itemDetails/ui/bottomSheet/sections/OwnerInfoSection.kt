@@ -1,7 +1,6 @@
 package itemDetails.ui.bottomSheet.sections
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -28,11 +27,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import utils.SpacerH
 import utils.SpacerV
 import view.consts.Paddings
 import widgets.Avatar
+import widgets.SimpleChip
 
 @Composable
 fun OwnerInfoSection(
@@ -82,17 +81,7 @@ fun OwnerInfoSection(
                 SpacerH(Paddings.small)
 
                 if (isVerified) {
-                    Text(
-                        organizationName ?: "Подтверждён",
-                        style = typography.labelLarge,
-                        modifier = Modifier.border(
-                            width = 1.dp,
-                            color = colorScheme.onBackground.copy(alpha = .5f),
-                            shape = shapes.small
-                        ).padding(horizontal = Paddings.small),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    SimpleChip(organizationName ?: "Подтверждён")
                 }
             }
             SpacerV(Paddings.semiSmall)

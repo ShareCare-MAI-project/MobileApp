@@ -1,4 +1,4 @@
-package common.grid.search
+package common.search
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
@@ -13,8 +13,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import common.grid.search.sections.CategoryPicker
-import common.grid.search.sections.PreviewSection
+import common.search.sections.CategoryPicker
+import common.search.sections.PreviewSection
 import logic.enums.DeliveryType
 import logic.enums.ItemCategory
 import utils.SpacerV
@@ -26,7 +26,9 @@ import widgets.sections.SmallSectionTitle
 fun Filters(
     location: String = "Москва, Сокол",
     deliveryTypes: List<DeliveryType>,
-    category: ItemCategory?
+    category: ItemCategory?,
+    onDeliveryTypeClick: (DeliveryType?) -> Unit,
+    onCategoryClick: (ItemCategory?) -> Unit,
 ) {
 
     var isExpanded by remember { mutableStateOf(false) }
@@ -47,16 +49,18 @@ fun Filters(
                 DeliveryTypesPicker(
                     modifier = Modifier.fillMaxWidth(),
                     pickedDeliveryTypes = deliveryTypes,
-                    onOtherClick = {}
-                ) {}
+                    onOtherClick = { onDeliveryTypeClick(null) },
+                    onClick = onDeliveryTypeClick
+                )
 
                 SpacerV(Paddings.semiSmall)
                 SmallSectionTitle(text = "Категория")
                 CategoryPicker(
                     modifier = Modifier.fillMaxWidth(),
                     pickedCategory = category,
-                    onOtherClick = {}
-                ) {}
+                    onOtherClick = { onCategoryClick(null) },
+                    onClick = onCategoryClick
+                )
                 SpacerV(Paddings.small)
                 HorizontalDivider(
                     modifier = Modifier.fillMaxWidth(.6f).align(Alignment.CenterHorizontally),

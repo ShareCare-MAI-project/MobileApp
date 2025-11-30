@@ -17,7 +17,6 @@ import common.grid.MainLazyGrid
 import common.itemDetailsTransition.LocalItemDetailsAnimator
 import shareCare.components.ShareCareComponent
 import shareCare.ui.sections.ItemsSection
-import utils.GridEndHandler
 
 @Composable
 fun SharedTransitionScope.ShareCareUI(
@@ -28,40 +27,11 @@ fun SharedTransitionScope.ShareCareUI(
     val items by component.items.collectAsState()
 
     val itemDetailsAnimator = LocalItemDetailsAnimator.current
-    val searchQuery by component.query.collectAsState()
-    val isSearchActive = searchQuery.isNotEmpty()
+    val searchData by component.searchData.collectAsState()
+    val isSearchActive = searchData.query.isNotEmpty()
 
     var dummies by remember { mutableStateOf(listOf<Int>()) }
-    GridEndHandler(
-        gridState = lazyGridState
-    ) {
 
-        if (dummies.size < 50) {
-            dummies += listOf(
-                dummies.lastIndex + 1,
-                dummies.lastIndex + 2,
-                dummies.lastIndex + 3,
-                dummies.lastIndex + 4,
-                dummies.lastIndex + 5,
-                dummies.lastIndex + 6,
-                dummies.lastIndex + 7,
-                dummies.lastIndex + 8,
-                dummies.lastIndex + 9,
-                dummies.lastIndex + 10,
-                dummies.lastIndex + 11,
-                dummies.lastIndex + 12,
-                dummies.lastIndex + 13,
-                dummies.lastIndex + 14,
-                dummies.lastIndex + 15,
-                dummies.lastIndex + 16,
-                dummies.lastIndex + 17,
-                dummies.lastIndex + 18,
-                dummies.lastIndex + 19,
-                dummies.lastIndex + 20,
-                dummies.lastIndex + 21,
-            )
-        }
-    }
 
     MainLazyGrid(
         lazyGridState = lazyGridState,

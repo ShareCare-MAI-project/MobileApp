@@ -3,6 +3,7 @@ package common.grid.defaults
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.LazyGridScope
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import common.detailsInterfaces.DetailsConfig
 import common.grid.ContentType
@@ -16,6 +17,8 @@ fun LazyGridScope.DefaultItemsContent(
     contentType: ContentType,
     sharedTransitionScope: SharedTransitionScope,
     itemDetailsAnimator: ItemDetailsAnimator,
+    myId: String?,
+    filters: @Composable (() -> Unit)? = null,
     onCardClicked: (DetailsConfig.ItemDetailsConfig) -> Unit
 ) {
 
@@ -23,6 +26,7 @@ fun LazyGridScope.DefaultItemsContent(
         items = items,
         key = { it.id },
         contentType = contentType,
+        filters = filters
     ) { item ->
         val imagePath = item.images.firstOrNull() ?: ""
         with(sharedTransitionScope) {
@@ -34,7 +38,8 @@ fun LazyGridScope.DefaultItemsContent(
                 id = item.id,
                 imagePath = imagePath,
                 location = item.location,
-                itemDetailsAnimator = itemDetailsAnimator
+                itemDetailsAnimator = itemDetailsAnimator,
+                isMyCard = myId == item.ownerId
             ) {
                 onCardClicked(
                     DetailsConfig.ItemDetailsConfig(

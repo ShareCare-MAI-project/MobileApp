@@ -1,6 +1,10 @@
 package repositories
 
+import dto.toDTO
+import dto.toDomain
 import entities.FindHelpBasic
+import entity.ItemResponse
+import entity.SearchRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
@@ -21,5 +25,17 @@ class FindHelpRepositoryImpl(
             )
         }
     }.flowOn(Dispatchers.IO)
+
+    override fun search(searchRequest: SearchRequest): Flow<NetworkState<List<ItemResponse>>> =
+        flow {
+            remoteDataSource.fetchSearch(searchRequest.toDTO()).collect { itemsResponse ->
+                emit(
+                    itemsResponse.defaultWhen { response ->
+                        NetworkState.Success(response.data.map { it.toDomain() })
+                    }
+                )
+            }
+        }.flowOn(Dispatchers.IO)
+
 
 }

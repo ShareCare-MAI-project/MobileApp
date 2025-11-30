@@ -36,7 +36,11 @@ fun Chip(
     isTransparent: Boolean = false,
     onClick: () -> Unit,
 ) {
-
+    val containerColor = lerp(
+        colorScheme.primaryContainer,
+        colorScheme.background,
+        .3f
+    )
     AnimatedContent(
         selected,
         transitionSpec = {
@@ -58,11 +62,7 @@ fun Chip(
                 )
             },
             colors = FilterChipDefaults.elevatedFilterChipColors(
-                selectedContainerColor = lerp(
-                    colorScheme.primaryContainer,
-                    colorScheme.background,
-                    .2f
-                ),
+                selectedContainerColor = containerColor,
                 selectedLabelColor = colorScheme.onPrimaryContainer,
                 containerColor = colorScheme.surfaceContainerLow.copy(alpha = if (isTransparent) .7f else 1f)
             ),

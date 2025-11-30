@@ -1,4 +1,4 @@
-package common.grid.search.sections
+package common.search.sections
 
 import alertsManager.AlertState
 import alertsManager.AlertsManager
@@ -74,7 +74,7 @@ internal fun PreviewSection(
                     ) {
                         onFilterButtonClick()
                     }
-                    if (countOfActiveFilters > 0) {
+                    if (countOfActiveFilters > 0 && !isExpanded) {
                         Badge(
                             modifier = Modifier
                                 .align(Alignment.TopEnd)

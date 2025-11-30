@@ -1,4 +1,4 @@
-package common.grid.search.sections
+package common.search.sections
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.FlowRow
