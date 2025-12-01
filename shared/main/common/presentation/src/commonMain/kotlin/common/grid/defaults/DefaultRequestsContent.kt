@@ -3,11 +3,10 @@ package common.grid.defaults
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.LazyGridScope
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import common.detailsInterfaces.DetailsConfig
 import common.grid.ContentType
-import common.grid.TransitionColumnHeader
 import common.requestCard.RequestCard
 import entity.RequestResponse
 
@@ -16,16 +15,15 @@ fun LazyGridScope.DefaultRequestsContent(
     requests: List<RequestResponse>,
     contentType: ContentType,
     sharedTransitionScope: SharedTransitionScope,
+    filters: @Composable (() -> Unit)? = null,
     onCardClicked: (DetailsConfig.RequestDetailsConfig) -> Unit
 ) {
-
-    TransitionColumnHeader(
-        contentType = contentType
-    )
-    items(
+    DefaultGridContent(
         items = requests,
         key = { it.id },
-        contentType = { contentType }) { request ->
+        contentType = contentType,
+        filters = filters
+    ) { request ->
         with(sharedTransitionScope) {
             RequestCard(
                 modifier = Modifier

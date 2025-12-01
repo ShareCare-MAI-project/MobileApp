@@ -21,9 +21,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,12 +47,13 @@ import findHelp.ui.FindHelpUI
 import foundation.scrollables.BottomScrollEdgeFade
 import foundation.scrollables.ScrollEdgeFade
 import foundation.scrollables.ScrollEdgeShadowHeight
+import kotlinx.coroutines.launch
 import mainFlow.components.MainFlowComponent
 import mainFlow.components.MainFlowComponent.Child
 import mainFlow.components.MainFlowComponent.Output
 import mainFlow.ui.bottomBar.MainBottomBar
 import mainFlow.ui.topBar.MainTopBar
-import ui.ShareCareUI
+import shareCare.ui.ShareCareUI
 import view.consts.Paddings
 
 @OptIn(
@@ -90,6 +93,7 @@ fun SharedTransitionScope.MainFlowContent(
         if (currentChild is Child.FindHelpChild) lazyGridStateFindHelp else lazyGridStateShareCare
 
     val hazeState = rememberHazeState()
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         bottomBar = {
@@ -127,13 +131,39 @@ fun SharedTransitionScope.MainFlowContent(
         },
         topBar = {
 
+            // can't inherit interface cuz of different modules and packages 0_o
+            val onSearch: (query: String) -> Unit = { query ->
+                when (currentChild) {
+                    is Child.FindHelpChild -> currentChild.findHelpComponent.onQueryChange(query)
+                    is Child.ShareCareChild -> currentChild.shareCareComponent.onQueryChange(query)
+                }
+            }
+
+            val currentSearchData by when (currentChild) {
+                is Child.FindHelpChild -> currentChild.findHelpComponent.searchData
+                is Child.ShareCareChild -> currentChild.shareCareComponent.searchData
+            }.collectAsState()
+
             MainTopBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = topPadding),
                 hazeState = hazeState,
                 currentContentType = currentContentType,
-                component = component
+                component = component,
+                searchBarQuery = currentSearchData.query,
+                onSearchBarChange = { query ->
+                    coroutineScope.launch {
+                        onSearch(query)
+                        if (query != currentSearchData.query) {
+                            if (query.isEmpty()) {
+                                currentLazyGridState.scrollToItem(0)
+                            } else {
+                                currentLazyGridState.animateScrollToItem(0)
+                            }
+                        }
+                    }
+                }
             )
 
         },

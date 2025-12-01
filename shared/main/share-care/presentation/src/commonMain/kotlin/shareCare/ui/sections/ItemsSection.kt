@@ -39,7 +39,7 @@ internal fun LazyGridScope.ItemsSection(
             }
         }
 
-        NetworkState.Loading -> {
+        is NetworkState.Loading -> {
             item(key = "itemsLoading") {
                 Text(text = "Loading", modifier = Modifier.animateItem())
             }
@@ -55,7 +55,8 @@ internal fun LazyGridScope.ItemsSection(
                     contentType = ContentType.Responses,
                     sharedTransitionScope = sharedTransitionScope,
                     itemDetailsAnimator = itemDetailsAnimator,
-                    onCardClicked = onClick
+                    onCardClicked = onClick,
+                    myId = null
                 )
             }
             if (myPublishedItems.isNotEmpty()) {
@@ -64,7 +65,8 @@ internal fun LazyGridScope.ItemsSection(
                     contentType = ContentType.MyItems,
                     sharedTransitionScope = sharedTransitionScope,
                     itemDetailsAnimator = itemDetailsAnimator,
-                    onCardClicked = onClick
+                    onCardClicked = onClick,
+                    myId = null
                 )
             }
         }

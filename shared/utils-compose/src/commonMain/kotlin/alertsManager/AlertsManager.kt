@@ -18,8 +18,6 @@ object AlertsManager {
         alert: AlertState,
         duration: Long = 3000L
     ) {
-        println("PUSHED:")
-
         job?.cancel()
 
         _alertState.value = alert

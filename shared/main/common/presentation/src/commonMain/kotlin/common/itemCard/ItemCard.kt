@@ -1,10 +1,13 @@
 package common.itemCard
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +16,7 @@ import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -30,7 +35,9 @@ import common.itemDetailsTransition.ItemDetailsAnimator
 import common.itemDetailsTransition.SharedAnimation
 import itemDetails.ui.bottomSheet.isExpanded
 import utils.SpacerV
+import utils.fastBackground
 import view.consts.Paddings
+import widgets.SimpleChip
 
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -42,6 +49,7 @@ fun SharedTransitionScope.ItemCard(
     imagePath: String,
     location: String,
     itemDetailsAnimator: ItemDetailsAnimator,
+    isMyCard: Boolean,
     onClicked: () -> Unit
 ) {
     val cardShape = RoundedCornerShape(ItemCardDefaults.cardShapeDp)
@@ -68,29 +76,42 @@ fun SharedTransitionScope.ItemCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            if (itemDetailsAnimator.detailedItemId != id) {
-                ItemImage(
-                    imagePath = imagePath,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1.1f),
-                    id = id,
-                    detailedItemId = itemDetailsAnimator.detailedItemId,
-                    animatedContentScope = null
-                )
-            } else {
-                itemDetailsAnimator.SharedAnimation(
-                    modifier = Modifier.fillMaxWidth().aspectRatio(1.1f)
-                ) { sheetValue ->
-                    if (!sheetValue.isExpanded()) {
-                        ItemImage(
-                            imagePath = imagePath,
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            id = id,
-                            detailedItemId = itemDetailsAnimator.detailedItemId,
-                            animatedContentScope = this
-                        )
+            Box() {
+                if (itemDetailsAnimator.detailedItemId != id) {
+                    ItemImage(
+                        imagePath = imagePath,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(1.1f),
+                        id = id,
+                        detailedItemId = itemDetailsAnimator.detailedItemId,
+                        animatedContentScope = null
+                    )
+                } else {
+                    itemDetailsAnimator.SharedAnimation(
+                        modifier = Modifier.fillMaxWidth().aspectRatio(1.1f)
+                    ) { sheetValue ->
+                        if (!sheetValue.isExpanded()) {
+                            ItemImage(
+                                imagePath = imagePath,
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                                id = id,
+                                detailedItemId = itemDetailsAnimator.detailedItemId,
+                                animatedContentScope = this
+                            )
+                        }
+                    }
+                }
+                if (isMyCard) {
+                    Row {
+                        AnimatedVisibility(itemDetailsAnimator.detailedItemId != id) {
+                            SimpleChip(
+                                text = "Ваше",
+                                modifier = Modifier.padding(Paddings.ultraSmall).clip(shapes.small)
+                                    .fastBackground(Color.Black.copy(alpha = .7f))
+                            )
+                        }
                     }
                 }
             }

@@ -3,9 +3,11 @@ package shareCare.components
 import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
 import common.detailsInterfaces.DetailsConfig
+import common.search.SearchData
 import decompose.componentCoroutineScope
 import entities.ShareCareItems
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import network.NetworkState
 import network.NetworkState.AFK.onCoroutineDeath
 import org.koin.core.component.KoinComponent
@@ -37,5 +39,16 @@ class RealShareCareComponent(
         }.invokeOnCompletion {
             items.value = items.value.onCoroutineDeath()
         }
+    }
+
+    override val searchData: MutableStateFlow<SearchData> =
+        MutableStateFlow(SearchData())
+
+    override fun onQueryChange(query: String) {
+        searchData.value = searchData.value.copy(query = query)
+        onSearch()
+    }
+
+    override fun onSearch() {
     }
 }

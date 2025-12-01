@@ -35,8 +35,9 @@ fun LazyGridScope.ColumnHeader(
         key = key,
         span = { GridItemSpan(maxLineSpan) }
     ) {
+
         Column(
-            Modifier.animateItem().padding(horizontal = Paddings.listHorizontalPadding)) {
+            Modifier.animateItem().padding(horizontal = Paddings.semiSmall)) {
             Text(
                 text = text,
                 overflow = TextOverflow.Ellipsis,
@@ -70,7 +71,7 @@ fun LazyGridScope.TransitionColumnHeader(
         TransitionHeader(
             isVisible = currentContentType != contentType,
             contentType = contentType,
-            modifier = Modifier.animateItem().padding(start = Paddings.listHorizontalPadding)
+            modifier = Modifier.animateItem().padding(horizontal = Paddings.semiSmall)
         )
     }
 }

@@ -1,10 +1,18 @@
-package ui
+package shareCare.ui
 
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import common.grid.MainLazyGrid
 import common.itemDetailsTransition.LocalItemDetailsAnimator
 import shareCare.components.ShareCareComponent
@@ -19,17 +27,27 @@ fun SharedTransitionScope.ShareCareUI(
     val items by component.items.collectAsState()
 
     val itemDetailsAnimator = LocalItemDetailsAnimator.current
+    val searchData by component.searchData.collectAsState()
+    val isSearchActive = searchData.query.isNotEmpty()
+
+    var dummies by remember { mutableStateOf(listOf<Int>()) }
+
 
     MainLazyGrid(
         lazyGridState = lazyGridState,
     ) {
-        ItemsSection(
-            items,
-            sharedTransitionScope = this@ShareCareUI,
-            itemDetailsAnimator = itemDetailsAnimator,
-            onClick = component.openDetails,
-            refreshClick = component::fetchItems
-        )
+        if (!isSearchActive) {
+            ItemsSection(
+                items,
+                sharedTransitionScope = this@ShareCareUI,
+                itemDetailsAnimator = itemDetailsAnimator,
+                onClick = component.openDetails,
+                refreshClick = component::fetchItems
+            )
+        }
+        items(dummies, key = { it }) {
+            Text(text = "meowmeow$it", modifier = Modifier.height(100.dp))
+        }
 //
 //        TransitionColumnHeader(
 //            contentType = ContentType.MyItems
