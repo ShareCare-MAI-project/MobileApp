@@ -2,6 +2,7 @@ package common.grid.defaults
 
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.grid.LazyGridItemScope
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,7 +19,6 @@ fun LazyGridScope.DefaultItemsContent(
     sharedTransitionScope: SharedTransitionScope,
     itemDetailsAnimator: ItemDetailsAnimator,
     myId: String?,
-    filters: @Composable (() -> Unit)? = null,
     onCardClicked: (DetailsConfig.ItemDetailsConfig) -> Unit
 ) {
 
@@ -26,35 +26,55 @@ fun LazyGridScope.DefaultItemsContent(
         items = items,
         key = { it.id },
         contentType = contentType,
-        filters = filters
+        filters = null
     ) { item ->
-        val imagePath = item.images.firstOrNull() ?: ""
-        with(sharedTransitionScope) {
-            ItemCard(
-                modifier = Modifier
-                    .animateItem()
-                    .fillMaxSize(),
-                title = item.title,
-                id = item.id,
-                imagePath = imagePath,
-                location = item.location,
-                itemDetailsAnimator = itemDetailsAnimator,
-                isMyCard = myId == item.ownerId
-            ) {
-                onCardClicked(
-                    DetailsConfig.ItemDetailsConfig(
-                        id = item.id,
-                        images = item.images,
-                        creatorId = item.ownerId,
-                        title = item.title,
-                        description = item.description,
-                        location = item.location,
-                        category = item.category,
-                        deliveryTypes = item.deliveryTypes,
-                        recipientId = item.recipientId
-                    )
-                )
-            }
+        DefaultItemCard(
+            item = item,
+            itemDetailsAnimator = itemDetailsAnimator,
+            myId = myId,
+            sharedTransitionScope = sharedTransitionScope,
+            onCardClicked = onCardClicked
+        )
+    }
+}
+
+@Composable
+fun LazyGridItemScope.DefaultItemCard(
+    item: ItemResponse,
+    itemDetailsAnimator: ItemDetailsAnimator,
+    myId: String?,
+    sharedTransitionScope: SharedTransitionScope,
+    onCardClicked: (DetailsConfig.ItemDetailsConfig) -> Unit
+) {
+    val imagePath = item.images.firstOrNull() ?: ""
+    with(sharedTransitionScope) {
+        ItemCard(
+            modifier = Modifier
+                .animateItem()
+                .fillMaxSize(),
+            title = item.title,
+            id = item.id,
+            imagePath = imagePath,
+            location = item.location,
+            itemDetailsAnimator = itemDetailsAnimator,
+            isMyCard = myId == item.ownerId
+        ) {
+            onCardClicked(
+                item.toConfig()
+            )
         }
     }
 }
+
+
+fun ItemResponse.toConfig() = DetailsConfig.ItemDetailsConfig(
+    id = this.id,
+    images = this.images,
+    creatorId = this.ownerId,
+    title = this.title,
+    description = this.description,
+    location = this.location,
+    category = this.category,
+    deliveryTypes = this.deliveryTypes,
+    recipientId = this.recipientId
+)

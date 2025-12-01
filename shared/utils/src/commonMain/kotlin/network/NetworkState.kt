@@ -3,14 +3,50 @@ package network
 import kotlinx.coroutines.CancellationException
 
 sealed class NetworkState<out T> {
-    object AFK : NetworkState<Nothing>()
-    object Loading : NetworkState<Nothing>()
-    data class Success<T>(val data: T) : NetworkState<T>()
-    data class Error(val error: Throwable, val prettyPrint: String, val code: Int) :
-        NetworkState<Nothing>()
+    abstract val data: T?
+
+    data object AFK : NetworkState<Nothing>() {
+        override val data: Nothing? = null
+    }
+
+    data class Loading<out T>(override val data: T? = null) : NetworkState<T>()
+
+    data class Success<out T>(override val data: T) : NetworkState<T>()
+
+    data class Error<out T>(
+        val error: Throwable,
+        val prettyPrint: String,
+        val code: Int,
+        override val data: T? = null
+    ) : NetworkState<T>()
 
 
-    fun <R> NetworkState<R>.onCoroutineDeath(initialState: NetworkState<R> = Error(CancellationException(""), "coroutineDeath", 0)) =
+    fun <R> NetworkState<R>.saveState(
+        prevData: R?,
+        onError: (Error<R>) -> Error<R> = { error -> error },
+        onSuccess: (Success<R>) -> Success<R> = { it }
+    ): NetworkState<R> = when (this) {
+        AFK -> AFK
+        is Error<R> -> onError(
+            Error<R>(
+                error = error,
+                prettyPrint = prettyPrint,
+                code = code,
+                data = prevData
+            )
+        )
+
+        is Loading<R> -> Loading<R>(prevData)
+        is Success<R> -> onSuccess(this)
+    }
+
+    fun <R> NetworkState<R>.onCoroutineDeath(
+        initialState: NetworkState<R> = Error(
+            CancellationException(""),
+            "coroutineDeath",
+            0
+        )
+    ) =
         if (isLoading()) AFK else this
 
 
@@ -23,18 +59,24 @@ sealed class NetworkState<out T> {
     fun isErrored() =
         this is Error
 
-    inline fun <R> defaultWhen(onSuccess: (Success<out T>) -> NetworkState<R>) = when (this) {
+    inline fun <R> defaultWhen(onSuccess: (Success<T>) -> NetworkState<R>) = when (this) {
         AFK -> AFK
-        is Error -> this
-        Loading -> Loading
+        is Error -> NetworkState.Error<R>(
+            error = this.error,
+            prettyPrint = this.prettyPrint,
+            code = this.code,
+            data = null
+        )
+
+        is Loading -> Loading<R>(null)
         is Success -> onSuccess(this)
     }
 
-    fun onError(onError: (Error) -> Unit) {
+    fun onError(onError: (Error<*>) -> Unit) {
         if (this is Error) onError(this)
     }
 
-    fun handle(onError: (Error) -> Unit = {}, onSuccess: (Success<out T>) -> Unit = {}) {
+    fun handle(onError: (Error<*>) -> Unit = {}, onSuccess: (Success<T>) -> Unit = {}) {
         if (this is Success) {
             onSuccess(this)
         } else if (this is Error) {

@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 @Composable
 fun GridEndHandler(
     gridState: LazyGridState,
-    items: Any,
+    items: Any?,
     preFetchItems: Int,
     hasMoreItems: Boolean,
     isLoading: Boolean,

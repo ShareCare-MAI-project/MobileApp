@@ -4,16 +4,17 @@ import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
 import common.detailsInterfaces.DetailsConfig
 import common.search.SearchData
+import common.search.defaultOnSearch
 import decompose.componentCoroutineScope
 import entities.FindHelpBasic
 import entity.ItemResponse
-import entity.SearchRequest
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import logic.enums.DeliveryType
 import logic.enums.ItemCategory
 import network.NetworkState
 import network.NetworkState.AFK.onCoroutineDeath
+import network.NetworkState.AFK.saveState
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import usecases.AuthUseCases
@@ -32,11 +33,6 @@ class RealFindHelpComponent(
         MutableStateFlow(NetworkState.AFK)
 
 
-    override val items: MutableStateFlow<NetworkState<List<ItemResponse>>> =
-        MutableStateFlow(NetworkState.AFK)
-    override val searchHasMoreItems: MutableStateFlow<Boolean> =
-        MutableStateFlow(true)
-
     init {
         fetchBasic()
     }
@@ -44,7 +40,8 @@ class RealFindHelpComponent(
     override fun fetchBasic() {
         coroutineScope.launchIO {
             findHelpUseCases.fetchBasic().collect {
-                basic.value = it
+                val prevData = basic.value.data
+                basic.value = it.saveState(prevData)
             }
         }.invokeOnCompletion {
             basic.value = basic.value.onCoroutineDeath()
@@ -52,6 +49,10 @@ class RealFindHelpComponent(
     }
 
 
+    override val items: MutableStateFlow<NetworkState<List<ItemResponse>>> =
+        MutableStateFlow(NetworkState.AFK)
+    override val searchHasMoreItems: MutableStateFlow<Boolean> =
+        MutableStateFlow(true)
     override val searchData: MutableStateFlow<SearchData> = MutableStateFlow(
         SearchData(category = null, deliveryTypes = listOf(), query = "")
     )
@@ -74,40 +75,15 @@ class RealFindHelpComponent(
     }
 
     private var searchJob: Job? = null
-
     override fun onSearch(resetItems: Boolean) {
-        if (!items.value.isLoading() && searchJob?.isActive != true) {
-            if (resetItems) searchHasMoreItems.value = true
-
-            val data = searchData.value
-            val searchRequest = SearchRequest(
-                query = data.query,
-                category = data.category,
-                deliveryTypes = data.deliveryTypes,
-                offset = if (items.value is NetworkState.Success && !resetItems) (items.value as NetworkState.Success<List<ItemResponse>>).data.size else 0,
-                toLoad = 2
-            )
-            searchJob = coroutineScope.launchIO {
-                findHelpUseCases.search(searchRequest).collect { response ->
-                    if (items.value is NetworkState.Success) {
-                        response.handle { success ->
-                            if (resetItems) {
-                                items.value = success
-                            } else {
-                                items.value =
-                                    NetworkState.Success((items.value as NetworkState.Success<List<ItemResponse>>).data + success.data)
-                            }
-                        }
-                    } else {
-                        items.value = response
-                    }
-                    response.handle { success ->
-                        if (success.data.isEmpty()) searchHasMoreItems.value = false
-                    }
-                }
-            }.also {
-                it.invokeOnCompletion { items.value = items.value.onCoroutineDeath() }
-            }
-        }
+        searchJob = defaultOnSearch(
+            items = items,
+            searchHasMoreItems = searchHasMoreItems,
+            searchData = searchData.value,
+            coroutineScope = coroutineScope,
+            prevJob = searchJob,
+            toLoad = 2,
+            resetItems = resetItems
+        ) { findHelpUseCases.search(it) } ?: searchJob
     }
 }

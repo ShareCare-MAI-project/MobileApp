@@ -21,13 +21,10 @@ interface FindHelpComponent {
 
 
     val items: StateFlow<NetworkState<List<ItemResponse>>>
-
     val searchHasMoreItems: StateFlow<Boolean>
-
     val searchData: StateFlow<SearchData>
     fun onQueryChange(query: String)
     fun onCategoryChange(category: ItemCategory?)
     fun onDeliveryTypesChange(deliveryTypes: List<DeliveryType>)
-
     fun onSearch(resetItems: Boolean)
 }

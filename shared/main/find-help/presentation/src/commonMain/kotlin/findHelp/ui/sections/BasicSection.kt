@@ -4,7 +4,6 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import common.detailsInterfaces.DetailsConfig
 import common.grid.ColumnHeader
@@ -23,50 +22,42 @@ internal fun LazyGridScope.BasicSection(
     onClick: (DetailsConfig) -> Unit,
     refreshClick: () -> Unit
 ) {
-    when (basic) {
-        NetworkState.AFK -> {}
-        is NetworkState.Error -> {
-            ColumnHeader(
-                key = "basicError",
-                text = "Ошибка"
-            ) {
-                Text(
-                    basic.prettyPrint,
-                    textAlign = TextAlign.Center,
-                )
-                Button(onClick = refreshClick) {
-                    Text("Ещё раз")
-                }
-            }
+    val data = basic.data
+
+    if (data != null) {
+        val readyToHelp = data.readyToHelp
+        val myRequests = data.myRequests
+
+        if (readyToHelp.isNotEmpty()) {
+            DefaultItemsContent(
+                items = readyToHelp,
+                contentType = ContentType.ReadyToHelp,
+                sharedTransitionScope = sharedTransitionScope,
+                itemDetailsAnimator = itemDetailsAnimator,
+                onCardClicked = onClick,
+                myId = null
+            )
         }
-
-        NetworkState.Loading -> {
-            item(key = "basicLoading") {
-                Text(text = "Loading", modifier = Modifier.animateItem())
-            }
+        if (myRequests.isNotEmpty()) {
+            DefaultRequestsContent(
+                requests = myRequests,
+                contentType = ContentType.MyRequests,
+                sharedTransitionScope = sharedTransitionScope,
+                onCardClicked = onClick
+            )
         }
-
-        is NetworkState.Success<FindHelpBasic> -> {
-            val readyToHelp = basic.data.readyToHelp
-            val myRequests = basic.data.myRequests
-
-            if (readyToHelp.isNotEmpty()) {
-                DefaultItemsContent(
-                    items = readyToHelp,
-                    contentType = ContentType.ReadyToHelp,
-                    sharedTransitionScope = sharedTransitionScope,
-                    itemDetailsAnimator = itemDetailsAnimator,
-                    onCardClicked = onClick,
-                    myId = null
-                )
-            }
-            if (myRequests.isNotEmpty()) {
-                DefaultRequestsContent(
-                    requests = myRequests,
-                    contentType = ContentType.MyRequests,
-                    sharedTransitionScope = sharedTransitionScope,
-                    onCardClicked = onClick
-                )
+    }
+    if (basic is NetworkState.Error) {
+        ColumnHeader(
+            key = "basicError",
+            text = "Ошибка"
+        ) {
+            Text(
+                basic.prettyPrint,
+                textAlign = TextAlign.Center,
+            )
+            Button(onClick = refreshClick) {
+                Text("Ещё раз")
             }
         }
     }

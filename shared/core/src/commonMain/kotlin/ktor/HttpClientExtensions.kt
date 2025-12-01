@@ -62,7 +62,7 @@ inline fun <reified T> HttpClient.defaultGet(
 inline fun <reified T> HttpClient.defaultRequest(
     crossinline response: suspend () -> HttpResponse
 ): Flow<NetworkState<T>> = flow {
-    emit(NetworkState.Loading)
+    emit(NetworkState.Loading())
 
     try {
         val response = response()
@@ -80,7 +80,7 @@ inline fun <reified T> HttpClient.defaultRequest(
                         // is there another way?
                         prettyPrint = response.bodyAsText().removePrefix("{\"detail\":\"")
                             .removeSuffix("\"}"),
-                        code = response.status.value
+                        code = response.status.value,
                     )
                 )
             }

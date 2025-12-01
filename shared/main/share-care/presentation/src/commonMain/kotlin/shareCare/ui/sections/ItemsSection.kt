@@ -39,7 +39,7 @@ internal fun LazyGridScope.ItemsSection(
             }
         }
 
-        NetworkState.Loading -> {
+        is NetworkState.Loading -> {
             item(key = "itemsLoading") {
                 Text(text = "Loading", modifier = Modifier.animateItem())
             }

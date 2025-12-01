@@ -18,7 +18,12 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -72,15 +77,24 @@ fun MainLazyGrid(
 ) {
 
     val spacePaddings = LocalSpacePaddings.current
-    val isScrollable = (lazyGridState.canScrollForward || lazyGridState.canScrollBackward)
+
+    var isPullToRefreshInitiator by remember { mutableStateOf(false) }
+
+    LaunchedEffect(isRefreshing) {
+        // Завершили загрузку: pullToRefresh больше не инициатор рефреша
+        if (!isRefreshing) isPullToRefreshInitiator = false
+    }
 
     val pullToRefreshState = rememberPullToRefreshState()
     CompositionLocalProvider(
         LocalOverscrollFactory provides rememberCupertinoPullToRefreshOverscrollFactory()
     ) {
         PullToRefreshBox(
-            isRefreshing = isRefreshing,
-            onRefresh = onRefresh,
+            isRefreshing = isRefreshing && isPullToRefreshInitiator,
+            onRefresh = {
+                isPullToRefreshInitiator = true
+                onRefresh()
+            },
             state = pullToRefreshState,
             indicator = {
                 PullToRefreshDefaults.LoadingIndicator(
