@@ -37,7 +37,8 @@ fun LazyGridScope.ColumnHeader(
     ) {
 
         Column(
-            Modifier.animateItem().padding(horizontal = Paddings.semiSmall)) {
+            Modifier.animateItem().padding(horizontal = Paddings.semiSmall)
+        ) {
             Text(
                 text = text,
                 overflow = TextOverflow.Ellipsis,
@@ -69,7 +70,7 @@ fun LazyGridScope.TransitionColumnHeader(
     ) {
         val currentContentType = LocalCurrentContentType.current
         TransitionHeader(
-            isVisible = currentContentType != contentType,
+            isVisible = currentContentType != contentType || currentContentType == ContentType.Catalog || currentContentType == ContentType.PeopleSearch,
             contentType = contentType,
             modifier = Modifier.animateItem().padding(horizontal = Paddings.semiSmall)
         )

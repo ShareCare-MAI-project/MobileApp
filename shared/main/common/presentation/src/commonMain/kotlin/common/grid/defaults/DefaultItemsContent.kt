@@ -27,9 +27,10 @@ fun LazyGridScope.DefaultItemsContent(
         key = { it.id },
         contentType = contentType,
         filters = null
-    ) { item ->
+    ) { item, key ->
         DefaultItemCard(
             item = item,
+            key = key,
             itemDetailsAnimator = itemDetailsAnimator,
             myId = myId,
             sharedTransitionScope = sharedTransitionScope,
@@ -41,11 +42,13 @@ fun LazyGridScope.DefaultItemsContent(
 @Composable
 fun LazyGridItemScope.DefaultItemCard(
     item: ItemResponse,
+    key: String,
     itemDetailsAnimator: ItemDetailsAnimator,
     myId: String?,
     sharedTransitionScope: SharedTransitionScope,
     onCardClicked: (DetailsConfig.ItemDetailsConfig) -> Unit
 ) {
+
     val imagePath = item.images.firstOrNull() ?: ""
     with(sharedTransitionScope) {
         ItemCard(
@@ -54,20 +57,21 @@ fun LazyGridItemScope.DefaultItemCard(
                 .fillMaxSize(),
             title = item.title,
             id = item.id,
+            key = key,
             imagePath = imagePath,
             location = item.location,
             itemDetailsAnimator = itemDetailsAnimator,
             isMyCard = myId == item.ownerId
         ) {
             onCardClicked(
-                item.toConfig()
+                item.toConfig(key)
             )
         }
     }
 }
 
 
-fun ItemResponse.toConfig() = DetailsConfig.ItemDetailsConfig(
+fun ItemResponse.toConfig(key: String) = DetailsConfig.ItemDetailsConfig(
     id = this.id,
     images = this.images,
     creatorId = this.ownerId,
@@ -76,5 +80,7 @@ fun ItemResponse.toConfig() = DetailsConfig.ItemDetailsConfig(
     location = this.location,
     category = this.category,
     deliveryTypes = this.deliveryTypes,
-    recipientId = this.recipientId
+    recipientId = this.recipientId,
+    telegram = this.telegram,
+    key = key
 )

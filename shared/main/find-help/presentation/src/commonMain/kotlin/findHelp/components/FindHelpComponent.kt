@@ -20,6 +20,8 @@ interface FindHelpComponent {
     val openDetails: (cfg: DetailsConfig) -> Unit
 
 
+    fun takeItem(itemId: String, telegram: String)
+
     val items: StateFlow<NetworkState<List<ItemResponse>>>
     val searchHasMoreItems: StateFlow<Boolean>
     val searchData: StateFlow<SearchData>

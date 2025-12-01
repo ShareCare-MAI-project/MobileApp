@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +27,6 @@ import itemDetails.ui.bottomSheet.sections.DetailedInfoSection
 import itemDetails.ui.bottomSheet.sections.HugeButtonsSection
 import itemDetails.ui.bottomSheet.sections.OwnerInfoSection
 import itemDetails.ui.bottomSheet.sections.QuickInfoSection
-import itemDetails.ui.bottomSheet.sections.TakeItemSection
 import utils.SpacerV
 import view.consts.Paddings
 
@@ -47,12 +48,13 @@ fun BoxScope.ItemDetailsSheetContent(
 
     val gapHeightPx = remember { with(density) { ItemDetailsDefaults.gapHeight.toPx() } }
 
+    val recipientId by component.recipientId.collectAsState()
 
-    val isOwner = component.currentId == component.creatorId
-    val isRecipient = component.currentId == component.recipientId
+    val isOwner = component.isOwner
+    val isRecipient = component.currentId == recipientId
 
 
-    val buttons = rememberButtons(isOwner = isOwner, recipientId = component.recipientId)
+    val buttons = rememberButtons(isOwner = isOwner, recipientId = recipientId, component = component)
 
 
 
@@ -95,11 +97,6 @@ fun BoxScope.ItemDetailsSheetContent(
                 onProfileClick = {},
                 onReportClick = { AlertsManager.push(AlertState.SnackBar("MVP")) },
                 isOwner = isOwner
-            )
-
-            TakeItemSection(
-                isOwner = isOwner,
-                isRecipient = isRecipient
             )
 
 

@@ -23,7 +23,8 @@ fun SharedTransitionScope.DetailsImagePager(
     images: List<String>,
     isStableDetailed: Boolean,
     modifier: Modifier,
-    state: PagerState
+    state: PagerState,
+    itemKey: String?
 ) {
     Crossfade(
         isStableDetailed,
@@ -42,8 +43,8 @@ fun SharedTransitionScope.DetailsImagePager(
                     modifier = Modifier
                         .padding(horizontal = Paddings.listHorizontalPadding)
                         .fillMaxSize(),
-                    id = null,
-                    detailedItemId = null,
+                    key = itemKey,
+                    detailedItemKey = null,
                     animatedContentScope = null
                 )
             }

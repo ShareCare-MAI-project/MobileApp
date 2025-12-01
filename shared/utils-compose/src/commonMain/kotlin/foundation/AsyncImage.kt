@@ -8,6 +8,7 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
+import coil3.request.crossfade
 
 
 @Composable
@@ -31,12 +32,16 @@ fun AsyncImage(
     link: String,
     modifier: Modifier = Modifier,
     contentDescription: String?,
+    key: String? = null,
     contentScale: ContentScale = ContentScale.Crop
 ) {
     val model = ImageRequest.Builder(LocalPlatformContext.current)
         .memoryCachePolicy(CachePolicy.ENABLED)
         .networkCachePolicy(CachePolicy.ENABLED)
-        .diskCachePolicy(CachePolicy.DISABLED) // TODO
+        .diskCachePolicy(CachePolicy.ENABLED) // TODO
+        .placeholderMemoryCacheKey(key) //  same key as shared element key
+        .memoryCacheKey(key)
+        .crossfade(true)
         .data(
             link
         ).build()

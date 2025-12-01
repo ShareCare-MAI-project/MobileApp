@@ -19,6 +19,7 @@ import itemDetails.ui.bottomSheet.getCustomSheetState
 @Composable
 fun rememberItemDetailsAnimator(
     detailedItemId: String?,
+    detailedItemKey: String?,
     imagesCount: Int,
     onBackClicked: (String?) -> Unit
 ): ItemDetailsAnimator {
@@ -48,7 +49,7 @@ fun rememberItemDetailsAnimator(
 
     return remember(detailedItemId) {
         val manager = ItemDetailsAnimator(
-            detailedItemId = detailedItemId,
+            detailedItemKey = detailedItemKey,
             transition = transition,
             seekableTransitionState = seekableTransitionState,
             sheetState = getCustomSheetState(heightPx = sheetHeightPx),

@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import common.grid.ContentType
 import common.grid.MainLazyGrid
 import common.grid.defaults.DefaultItemCard
 import common.itemDetailsTransition.LocalItemDetailsAnimator
@@ -29,7 +30,6 @@ fun SharedTransitionScope.FindHelpUI(
     val searchData by component.searchData.collectAsState()
     val searchHasMoreItems by component.searchHasMoreItems.collectAsState()
 
-
     MainLazyGrid(
         lazyGridState = lazyGridState,
         isRefreshing = searchItems.isLoading() || basic.isLoading(),
@@ -38,26 +38,29 @@ fun SharedTransitionScope.FindHelpUI(
             component.fetchBasic()
         }
     ) {
-        BasicSection(
-            basic = basic,
-            sharedTransitionScope = this@FindHelpUI,
-            itemDetailsAnimator = itemDetailsAnimator,
-            onClick = component.openDetails,
-            refreshClick = component::fetchBasic
-        )
+        if (searchData.query.isEmpty()) {
+            BasicSection(
+                basic = basic,
+                sharedTransitionScope = this@FindHelpUI,
+                itemDetailsAnimator = itemDetailsAnimator,
+                onClick = component.openDetails,
+                refreshClick = component::fetchBasic
+            )
+        }
 
         SearchSection(
             searchResponse = searchItems,
             searchData = searchData,
             onDeliveryTypesChange = component::onDeliveryTypesChange,
             onCategoryChange = component::onCategoryChange,
-
             refreshClick = { component.onSearch(resetItems = true) },
             hasMoreItems = searchHasMoreItems,
             key = { it.id },
-        ) { item ->
+            contentType = ContentType.Catalog
+        ) { item, key ->
             DefaultItemCard(
                 item = item,
+                key = key,
                 itemDetailsAnimator = itemDetailsAnimator,
                 myId = component.myId,
                 sharedTransitionScope = this@FindHelpUI,

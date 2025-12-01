@@ -23,7 +23,7 @@ fun LazyGridScope.DefaultRequestsContent(
         key = { it.id },
         contentType = contentType,
         filters = filters
-    ) { request ->
+    ) { request, key ->
         with(sharedTransitionScope) {
             RequestCard(
                 modifier = Modifier
@@ -42,7 +42,8 @@ fun LazyGridScope.DefaultRequestsContent(
                         location = request.location,
                         deliveryTypes = request.deliveryTypes,
                         organizationName = request.organizationName,
-                        creatorId = request.userId
+                        creatorId = request.userId,
+                        key = key
                     )
                 )
             }

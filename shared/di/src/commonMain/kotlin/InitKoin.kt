@@ -14,6 +14,7 @@ fun initKoin(
             userModule,
             itemEditorModule,
             requestDetailsModule,
+            itemDetailsModule,
             shareCareModule,
             findHelpModule,
         )

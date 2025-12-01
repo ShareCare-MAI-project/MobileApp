@@ -22,6 +22,7 @@ import usecases.RequestDetailsUseCases
 class RealRequestDetailsComponent(
     componentContext: ComponentContext,
     override val id: String,
+    override val key: String,
     override val creatorId: String,
     override val currentId: String,
 

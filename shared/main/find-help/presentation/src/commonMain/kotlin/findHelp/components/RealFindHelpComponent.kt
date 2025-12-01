@@ -15,6 +15,7 @@ import logic.enums.ItemCategory
 import network.NetworkState
 import network.NetworkState.AFK.onCoroutineDeath
 import network.NetworkState.AFK.saveState
+import network.NetworkState.AFK.updateItemInList
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import usecases.AuthUseCases
@@ -46,6 +47,13 @@ class RealFindHelpComponent(
         }.invokeOnCompletion {
             basic.value = basic.value.onCoroutineDeath()
         }
+    }
+
+    override fun takeItem(itemId: String, telegram: String) {
+        fetchBasic()
+        items.value = items.value.updateItemInList(
+            predicate = { it.id == itemId }
+        ) { it.copy(telegram = telegram, recipientId = myId) }
     }
 
 

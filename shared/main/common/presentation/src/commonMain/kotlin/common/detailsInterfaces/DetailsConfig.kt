@@ -11,6 +11,7 @@ sealed interface DetailsConfig {
     data class ItemDetailsConfig(
         val creatorId: String,
         val id: String,
+        val key: String,
         val images: List<String>,
         val title: String,
         val description: String,
@@ -18,6 +19,7 @@ sealed interface DetailsConfig {
         val category: ItemCategory,
         val deliveryTypes: List<DeliveryType>,
         val recipientId: String?,
+        val telegram: String?
     ) : DetailsConfig
 
     @Serializable
@@ -25,6 +27,7 @@ sealed interface DetailsConfig {
         val creatorId: String,
         val id: String,
         val text: String,
+        val key: String,
         val category: ItemCategory?,
         val location: String?,
         val deliveryTypes: List<DeliveryType>,

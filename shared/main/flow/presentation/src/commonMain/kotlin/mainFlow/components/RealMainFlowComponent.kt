@@ -12,6 +12,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.active
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.items
 import com.arkivanov.decompose.value.Value
 import common.detailsInterfaces.DetailsComponent
 import common.detailsInterfaces.DetailsConfig
@@ -72,6 +73,7 @@ class RealMainFlowComponent(
                         RealItemDetailsComponent(
                             ctx,
                             id = cfg.id,
+                            key = cfg.key,
                             images = cfg.images,
                             currentId = currentId,
                             creatorId = cfg.creatorId,
@@ -80,13 +82,18 @@ class RealMainFlowComponent(
                             location = cfg.location,
                             category = cfg.category,
                             deliveryTypes = cfg.deliveryTypes,
-                            recipientId = cfg.recipientId
+                            recipientId = cfg.recipientId,
+                            telegram = cfg.telegram,
+                            takeItemFromFindHelp = { telegram ->
+                                (stack.items.firstOrNull { it.configuration is Config.FindHelp }?.instance as? Child.FindHelpChild)?.findHelpComponent?.takeItem(cfg.id, telegram = telegram)
+                            },
                         )
 
                     is DetailsConfig.RequestDetailsConfig ->
                         RealRequestDetailsComponent(
                             ctx,
                             id = cfg.id,
+                            key = cfg.key,
                             currentId = currentId,
                             creatorId = cfg.creatorId,
                             initialText = cfg.text,

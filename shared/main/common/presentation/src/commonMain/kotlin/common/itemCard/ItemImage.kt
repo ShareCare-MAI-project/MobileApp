@@ -16,23 +16,25 @@ import network.getImageLink
 fun SharedTransitionScope.ItemImage(
     imagePath: String,
     modifier: Modifier,
-    id: String?,
+    key: String?,
     animatedContentScope: AnimatedContentScope?,
-    detailedItemId: String?
+    detailedItemKey: String?
 ) {
 
     val imageLink = getImageLink(imagePath)
-    val isAnimating = id != null && detailedItemId == id
+    val isAnimating = key != null && detailedItemKey == key
     val hazeState = if (isAnimating) LocalTransitionHazeState.current else null
+
+    val isSharedElement = animatedContentScope != null && key != null
 
     AsyncImage(
         link = imageLink,
         modifier = modifier
             .then(
-                if (animatedContentScope != null && id != null)
+                if (isSharedElement)
                     Modifier.sharedElement(
                         rememberSharedContentState(
-                            id
+                            key
                         ),
                         animatedVisibilityScope = animatedContentScope,
                         renderInOverlayDuringTransition = isAnimating
@@ -45,6 +47,7 @@ fun SharedTransitionScope.ItemImage(
                 if (hazeState != null) Modifier.hazeSource(hazeState)
                 else Modifier
             ),
-        contentDescription = null // TODO
+        contentDescription = null, // TODO
+        key = key
     )
 }

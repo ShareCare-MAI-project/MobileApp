@@ -7,6 +7,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.backhandler)
             implementation(project(Modules.Main.Common.presentation))
+            implementation(project(Modules.Main.ItemDetails.domain))
         }
     }
 }

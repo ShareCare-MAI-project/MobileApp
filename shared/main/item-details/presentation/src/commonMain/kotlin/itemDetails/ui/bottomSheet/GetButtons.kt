@@ -11,19 +11,21 @@ import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import itemDetails.components.ItemDetailsComponent
 import view.theme.colors.CustomColors
 import widgets.expressiveList.ExpressiveListItem
 
 @Composable
 fun rememberButtons(
     isOwner: Boolean,
-    recipientId: String?
+    recipientId: String?,
+    component: ItemDetailsComponent
 ): List<ExpressiveListItem> {
     val containerColor = colorScheme.surfaceContainerHighest.copy(alpha = .6f)
     val primaryColor = colorScheme.primary
     val errorColor = colorScheme.error
     val greenColor = if (isSystemInDarkTheme()) CustomColors.green else CustomColors.darkGreen
-    return remember {
+    return remember(recipientId) {
         buildList<ExpressiveListItem> {
             if (isOwner) {
                 if (recipientId == null) {
@@ -67,7 +69,7 @@ fun rememberButtons(
                         icon = Icons.AutoMirrored.Rounded.Send,
                         text = "Переписка",
                         containerColor = containerColor,
-                        contentColor = greenColor
+                        contentColor = primaryColor
                     ) {}
                 )
             } else if (!isOwner) {
@@ -78,7 +80,7 @@ fun rememberButtons(
                         containerColor = containerColor,
                         contentColor = greenColor,
                         blendy = .15f
-                    ) {}
+                    ) { component.takeItem() }
                 )
             }
         }
