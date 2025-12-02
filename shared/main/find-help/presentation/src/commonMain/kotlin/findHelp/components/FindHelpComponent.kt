@@ -21,6 +21,8 @@ interface FindHelpComponent {
 
 
     fun takeItem(itemId: String, telegram: String)
+    fun denyItem(itemId: String)
+
 
     val items: StateFlow<NetworkState<List<ItemResponse>>>
     val searchHasMoreItems: StateFlow<Boolean>

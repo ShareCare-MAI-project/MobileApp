@@ -1,5 +1,7 @@
 package itemDetails.ui.bottomSheet
 
+import alertsManager.AlertState
+import alertsManager.AlertsManager
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Send
@@ -54,7 +56,9 @@ fun rememberButtons(
                         text = if (isOwner) "Отклонить" else "Отменить",
                         containerColor = containerColor,
                         contentColor = errorColor
-                    ) {}
+                    ) {
+                        component.denyItem()
+                    }
                 )
                 add(
                     ExpressiveListItem(
@@ -70,7 +74,9 @@ fun rememberButtons(
                         text = "Переписка",
                         containerColor = containerColor,
                         contentColor = primaryColor
-                    ) {}
+                    ) {
+                        AlertsManager.push(AlertState.SnackBar(component.telegram.value ?: "Неизвестный телеграм"))
+                    }
                 )
             } else if (!isOwner) {
                 add(

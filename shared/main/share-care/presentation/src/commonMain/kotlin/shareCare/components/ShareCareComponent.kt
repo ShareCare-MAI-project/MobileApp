@@ -8,6 +8,10 @@ import network.NetworkState
 
 interface ShareCareComponent {
 
+
+    fun denyItem(itemId: String)
+
+
     val items: StateFlow<NetworkState<ShareCareItems>>
 
     fun fetchItems()

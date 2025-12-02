@@ -87,6 +87,12 @@ class RealMainFlowComponent(
                             takeItemFromFindHelp = { telegram ->
                                 (stack.items.firstOrNull { it.configuration is Config.FindHelp }?.instance as? Child.FindHelpChild)?.findHelpComponent?.takeItem(cfg.id, telegram = telegram)
                             },
+                            denyItemFromFlow = {
+                                when (val child = (stack.items.last()).instance) {
+                                    is FindHelpChild -> child.findHelpComponent.denyItem(cfg.id)
+                                    is ShareCareChild -> child.shareCareComponent.denyItem(cfg.id)
+                                }
+                            }
                         )
 
                     is DetailsConfig.RequestDetailsConfig ->

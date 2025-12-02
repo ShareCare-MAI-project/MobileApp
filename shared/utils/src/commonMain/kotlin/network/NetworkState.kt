@@ -115,6 +115,7 @@ sealed class NetworkState<out T> {
         predicate: (T) -> Boolean,
         transform: (T) -> T
     ): NetworkState<List<T>> {
+
         return when (this) {
             is Success -> {
                 val updatedList = data.map { item ->

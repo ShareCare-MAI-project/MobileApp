@@ -56,6 +56,17 @@ class RealFindHelpComponent(
         ) { it.copy(telegram = telegram, recipientId = myId) }
     }
 
+    override fun denyItem(itemId: String) {
+        fetchBasic()
+        if (itemId in (items.value.data ?: listOf()).map { it.id }) {
+            items.value = items.value.updateItemInList(
+                predicate = { it.id == itemId }
+            ) { it.copy(telegram = null, recipientId = null) }
+        } else {
+            onSearch(true)
+        }
+    }
+
 
     override val items: MutableStateFlow<NetworkState<List<ItemResponse>>> =
         MutableStateFlow(NetworkState.AFK)

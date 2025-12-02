@@ -83,7 +83,7 @@ fun TransitionHeader(
     isVisible: Boolean,
     modifier: Modifier = Modifier
 ) {
-    Column { // lol, but animation is better...
+    Column { // lol, but with column animation is better...
         AnimatedContent(
             if (isVisible) contentType.parseName() else "",
             transitionSpec = { (fadeIn()).togetherWith(fadeOut()) }
