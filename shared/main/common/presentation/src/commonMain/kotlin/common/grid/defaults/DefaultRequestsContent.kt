@@ -2,6 +2,7 @@ package common.grid.defaults
 
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.grid.LazyGridItemScope
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,29 +25,47 @@ fun LazyGridScope.DefaultRequestsContent(
         contentType = contentType,
         filters = filters
     ) { request, key ->
-        with(sharedTransitionScope) {
-            RequestCard(
-                modifier = Modifier
-                    .animateItem()
-                    .fillMaxSize(),
-                id = request.id,
-                text = request.text,
-                location = request.location,
-                organizationName = request.organizationName
-            ) {
-                onCardClicked(
-                    DetailsConfig.RequestDetailsConfig(
-                        id = request.id,
-                        text = request.text,
-                        category = request.category,
-                        location = request.location,
-                        deliveryTypes = request.deliveryTypes,
-                        organizationName = request.organizationName,
-                        creatorId = request.userId,
-                        key = key
-                    )
-                )
-            }
+        DefaultRequestCard(
+            request = request,
+            sharedTransitionScope = sharedTransitionScope,
+            key = key,
+            onCardClicked = onCardClicked
+        )
+    }
+}
+
+@Composable
+fun LazyGridItemScope.DefaultRequestCard(
+    request: RequestResponse,
+    sharedTransitionScope: SharedTransitionScope,
+    key: String,
+    onCardClicked: (DetailsConfig.RequestDetailsConfig) -> Unit
+) {
+    with(sharedTransitionScope) {
+        RequestCard(
+            modifier = Modifier
+                .animateItem()
+                .fillMaxSize(),
+            id = request.id,
+            text = request.text,
+            location = request.location,
+            organizationName = request.organizationName
+        ) {
+            onCardClicked(
+                request.toConfig(key)
+            )
         }
     }
 }
+
+
+fun RequestResponse.toConfig(key: String) = DetailsConfig.RequestDetailsConfig(
+    id = this.id,
+    text = this.text,
+    category = this.category,
+    location = this.location,
+    deliveryTypes = this.deliveryTypes,
+    organizationName = this.organizationName,
+    creatorId = this.userId,
+    key = key
+)
