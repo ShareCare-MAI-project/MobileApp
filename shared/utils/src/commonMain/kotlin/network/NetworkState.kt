@@ -84,5 +84,67 @@ sealed class NetworkState<out T> {
         }
     }
 
+    fun <T> NetworkState<List<T>>.removeItemFromList(
+        predicate: (T) -> Boolean
+    ): NetworkState<List<T>> {
+        return when (this) {
+            is Success -> {
+                val filteredList = data.filterNot(predicate)
+                Success(filteredList)
+            }
+
+            is Error -> {
+                data?.let { currentList ->
+                    val filteredList = currentList.filterNot(predicate)
+                    this.copy(data = filteredList)
+                } ?: this
+            }
+
+            is Loading -> {
+                data?.let { currentList ->
+                    val filteredList = currentList.filterNot(predicate)
+                    this.copy(data = filteredList)
+                } ?: this
+            }
+
+            AFK -> this
+        }
+    }
+
+    fun <T> NetworkState<List<T>>.updateItemInList(
+        predicate: (T) -> Boolean,
+        transform: (T) -> T
+    ): NetworkState<List<T>> {
+
+        return when (this) {
+            is Success -> {
+                val updatedList = data.map { item ->
+                    if (predicate(item)) transform(item) else item
+                }
+                Success(updatedList)
+            }
+
+            is Error -> {
+                data?.let { currentList ->
+                    val updatedList = currentList.map { item ->
+                        if (predicate(item)) transform(item) else item
+                    }
+                    this.copy(data = updatedList)
+                } ?: this
+            }
+
+            is Loading -> {
+                data?.let { currentList ->
+                    val updatedList = currentList.map { item ->
+                        if (predicate(item)) transform(item) else item
+                    }
+                    this.copy(data = updatedList)
+                } ?: this
+            }
+
+            AFK -> this
+        }
+    }
+
 
 }

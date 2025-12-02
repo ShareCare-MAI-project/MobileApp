@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 
 
 class ItemDetailsAnimator(
-    val detailedItemId: String?,
+    val detailedItemKey: String?,
     val transition: Transition<SheetValue>,
     val seekableTransitionState: SeekableTransitionState<SheetValue>,
     val sheetState: AnchoredDraggableState<SheetValue>,

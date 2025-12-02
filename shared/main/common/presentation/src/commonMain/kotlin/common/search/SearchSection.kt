@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import common.grid.ColumnHeader
 import common.grid.ContentType
 import common.grid.defaults.DefaultGridContent
+import common.grid.parseName
 import logic.enums.DeliveryType
 import logic.enums.ItemCategory
 import network.NetworkState
@@ -25,12 +26,13 @@ import view.consts.Paddings
 fun <T> LazyGridScope.SearchSection(
     searchResponse: NetworkState<List<T>>,
     searchData: SearchData,
+    contentType: ContentType,
     onDeliveryTypesChange: (List<DeliveryType>) -> Unit,
     onCategoryChange: (ItemCategory?) -> Unit,
     hasMoreItems: Boolean,
     refreshClick: () -> Unit,
-    key: (T) -> Any,
-    cardContent: @Composable LazyGridItemScope.(T) -> Unit,
+    key: (T) -> String,
+    cardContent: @Composable LazyGridItemScope.(T, String) -> Unit,
 ) {
 
     val items = searchResponse.data
@@ -39,7 +41,7 @@ fun <T> LazyGridScope.SearchSection(
         DefaultGridContent(
             items = items,
             key = key,
-            contentType = ContentType.Catalog,
+            contentType = contentType,
             filters = {
                 Filters(
                     deliveryTypes = searchData.deliveryTypes,
@@ -66,7 +68,7 @@ fun <T> LazyGridScope.SearchSection(
     } else if (searchResponse is NetworkState.Error) {
         ColumnHeader(
             key = "searchError",
-            text = "Каталог"
+            text = contentType.parseName()
         ) {
             Text(
                 "Не удалось загрузить объекты",

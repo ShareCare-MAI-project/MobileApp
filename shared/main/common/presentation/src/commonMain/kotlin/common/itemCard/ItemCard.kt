@@ -46,6 +46,7 @@ fun SharedTransitionScope.ItemCard(
     modifier: Modifier = Modifier,
     title: String,
     id: String,
+    key: String,
     imagePath: String,
     location: String,
     itemDetailsAnimator: ItemDetailsAnimator,
@@ -57,6 +58,8 @@ fun SharedTransitionScope.ItemCard(
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
 
+
+    val isAnimating = itemDetailsAnimator.detailedItemKey != key
 
     Card(
         modifier = modifier
@@ -77,14 +80,14 @@ fun SharedTransitionScope.ItemCard(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Box() {
-                if (itemDetailsAnimator.detailedItemId != id) {
+                if (isAnimating) {
                     ItemImage(
                         imagePath = imagePath,
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(1.1f),
-                        id = id,
-                        detailedItemId = itemDetailsAnimator.detailedItemId,
+                        key = key,
+                        detailedItemKey = itemDetailsAnimator.detailedItemKey,
                         animatedContentScope = null
                     )
                 } else {
@@ -96,8 +99,8 @@ fun SharedTransitionScope.ItemCard(
                                 imagePath = imagePath,
                                 modifier = Modifier
                                     .fillMaxSize(),
-                                id = id,
-                                detailedItemId = itemDetailsAnimator.detailedItemId,
+                                key = key,
+                                detailedItemKey = itemDetailsAnimator.detailedItemKey,
                                 animatedContentScope = this
                             )
                         }
@@ -105,7 +108,7 @@ fun SharedTransitionScope.ItemCard(
                 }
                 if (isMyCard) {
                     Row {
-                        AnimatedVisibility(itemDetailsAnimator.detailedItemId != id) {
+                        AnimatedVisibility(isAnimating) {
                             SimpleChip(
                                 text = "Ваше",
                                 modifier = Modifier.padding(Paddings.ultraSmall).clip(shapes.small)

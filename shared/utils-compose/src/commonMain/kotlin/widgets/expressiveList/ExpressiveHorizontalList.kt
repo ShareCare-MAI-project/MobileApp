@@ -58,20 +58,28 @@ fun ExpressiveHorizontalList(
     items: List<ExpressiveListItem>
 ) {
     Row(modifier = modifier) {
-        items.forEachIndexed { index, item ->
-            val shape = when (index) {
-                0 -> startShape
-                items.lastIndex -> endShape
-                else -> middleShape
+        if (items.size > 1) {
+            items.forEachIndexed { index, item ->
+                val shape = when (index) {
+                    0 -> startShape
+                    items.lastIndex -> endShape
+                    else -> middleShape
+                }
+                ExpressiveHorizontalListItem(
+                    item,
+                    shape = shape,
+                    modifier = itemModifier.weight(1f, true)
+                )
+                if (index != items.lastIndex) {
+                    SpacerH(Paddings.ultraSmall)
+                }
             }
+        } else if (items.size == 1) {
             ExpressiveHorizontalListItem(
-                item,
-                shape = shape,
+                items.first(),
+                shape = fullShape,
                 modifier = itemModifier.weight(1f, true)
             )
-            if (index != items.lastIndex) {
-                SpacerH(Paddings.ultraSmall)
-            }
         }
     }
 }

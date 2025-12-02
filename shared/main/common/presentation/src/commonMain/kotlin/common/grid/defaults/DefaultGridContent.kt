@@ -11,11 +11,14 @@ import common.grid.TransitionColumnHeader
 @Suppress("FunctionName")
 fun <T> LazyGridScope.DefaultGridContent(
     items: List<T>,
-    key: (T) -> Any,
+    key: (T) -> String,
     contentType: ContentType,
     filters: @Composable (() -> Unit)?,
-    cardContent: @Composable LazyGridItemScope.(T) -> Unit
+    cardContent: @Composable LazyGridItemScope.(T, String) -> Unit
 ) {
+
+    val keyGetter: (T) -> String = { item -> key(item) + contentType.key  }
+
     TransitionColumnHeader(
         contentType = contentType
     )
@@ -26,11 +29,12 @@ fun <T> LazyGridScope.DefaultGridContent(
         }
     }
 
+
     items(
         items = items,
-        key = key,
+        key = keyGetter,
         contentType = { contentType }
     ) { item ->
-        cardContent(item)
+        cardContent(item, keyGetter(item))
     }
 }

@@ -5,6 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get
+import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
@@ -34,6 +35,24 @@ inline fun <reified T> HttpClient.defaultPost(
                 contentType(ContentType.Application.Json)
                 path(path)
                 body?.let { setBody(it) }
+                block()
+            }
+        }
+    }
+)
+
+inline fun <reified T> HttpClient.defaultPatch(
+    path: String,
+    tokenProvider: TokenProvider,
+    crossinline block: HttpRequestBuilder.() -> Unit = {}
+): Flow<NetworkState<T>> = defaultRequest(
+    response = {
+        val token = tokenProvider.getToken()
+        patch {
+            url {
+                token?.let { bearerAuth(token) }
+                contentType(ContentType.Application.Json)
+                path(path)
                 block()
             }
         }

@@ -71,8 +71,8 @@ fun SharedTransitionScope.ItemDetailsContent(
                             .height(itemDetailsAnimator.imageHeight)
                             .fillMaxWidth()
                             .hazeSource(hazeState, zIndex = 0f),
-                        id = component.id,
-                        detailedItemId = component.id,
+                        key = component.key,
+                        detailedItemKey = component.key,
                         animatedContentScope = this@SharedAnimation
                     )
                 }
@@ -84,7 +84,8 @@ fun SharedTransitionScope.ItemDetailsContent(
                     .hazeSource(hazeState, zIndex = 1f),
                 isStableDetailed = itemDetailsAnimator.isStableDetailed,
                 state = itemDetailsAnimator.pagerState,
-                images = component.images
+                images = component.images,
+                itemKey = component.key
             )
 
             GlassDetailsBackButton(

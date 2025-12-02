@@ -7,7 +7,6 @@ import common.search.SearchData
 import decompose.componentCoroutineScope
 import entities.ShareCareItems
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import network.NetworkState
 import network.NetworkState.AFK.onCoroutineDeath
 import org.koin.core.component.KoinComponent
@@ -30,6 +29,12 @@ class RealShareCareComponent(
     init {
         fetchItems()
     }
+
+
+    override fun denyItem(itemId: String) {
+        fetchItems()
+    }
+
 
     override fun fetchItems() {
         coroutineScope.launchIO {

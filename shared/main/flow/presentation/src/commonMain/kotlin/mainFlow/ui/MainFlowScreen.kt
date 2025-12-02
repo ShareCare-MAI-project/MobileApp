@@ -27,6 +27,7 @@ fun SharedTransitionScope.MainFlowScreen(
 
     val itemDetailsAnimator = rememberItemDetailsAnimator(
         detailedItemId = details?.id,
+        detailedItemKey = details?.key,
         imagesCount = if (details is ItemDetailsComponent) details.images.size else 0
     ) {
         // иначе он был уже удалён

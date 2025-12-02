@@ -53,7 +53,7 @@ fun <T> defaultOnSearch(
                         response
                     },
                     onSuccess = { response ->
-                        val newData = response.data
+                        val newData = response.data.filterNot { it in (prevItems ?: listOf()) }
                         response.copy(
                             data = if (resetItems) {
                                 newData

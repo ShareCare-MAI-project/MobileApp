@@ -119,7 +119,8 @@ fun SharedTransitionScope.MainFlowContent(
                                 category = null,
                                 location = null,
                                 deliveryTypes = listOf(),
-                                organizationName = null
+                                organizationName = null,
+                                key = ""
                             )
                         )
                     } else {
