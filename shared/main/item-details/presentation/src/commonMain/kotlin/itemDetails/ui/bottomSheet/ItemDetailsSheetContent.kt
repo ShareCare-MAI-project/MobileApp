@@ -6,6 +6,7 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.padding
@@ -19,13 +20,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import common.CreatorInfoSection
 import common.itemDetailsTransition.LocalItemDetailsAnimator
 import common.itemDetailsTransition.LocalTransitionHazeState
 import itemDetails.components.ItemDetailsComponent
 import itemDetails.ui.ItemDetailsDefaults
 import itemDetails.ui.bottomSheet.sections.DetailedInfoSection
 import itemDetails.ui.bottomSheet.sections.HugeButtonsSection
-import itemDetails.ui.bottomSheet.sections.OwnerInfoSection
 import itemDetails.ui.bottomSheet.sections.QuickInfoSection
 import utils.SpacerV
 import view.consts.Paddings
@@ -93,10 +94,12 @@ fun BoxScope.ItemDetailsSheetContent(
             )
 
             SpacerV(Paddings.semiMedium)
-            OwnerInfoSection(
+            CreatorInfoSection(
                 onProfileClick = {},
                 onReportClick = { AlertsManager.push(AlertState.SnackBar("MVP")) },
-                isOwner = isOwner
+                isMe = isOwner,
+                isRecipient = !isOwner,
+                smallSectionTitlePadding = PaddingValues(start = Paddings.ultraSmall)
             )
 
 

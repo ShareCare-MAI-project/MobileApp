@@ -26,6 +26,8 @@ class RealRequestDetailsComponent(
     override val creatorId: String,
     override val currentId: String,
 
+    override val location: String = "Москва, Сокол",
+
     override val initialText: String,
     override val initialCategory: ItemCategory?,
     override val initialDeliveryTypes: List<DeliveryType>,

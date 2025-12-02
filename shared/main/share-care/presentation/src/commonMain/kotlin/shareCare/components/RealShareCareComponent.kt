@@ -48,10 +48,11 @@ class RealShareCareComponent(
         coroutineScope.launchIO {
             shareCareUseCases.fetchItems().collect {
                 val prevData = items.value.data
+
                 items.value = it.saveState(
                     prevData,
                     onError = { response ->
-                        if (prevData != null) {
+                        if (response.data != null) {
                             AlertsManager.push(
                                 AlertState.SnackBar("Не удалось обновить")
                             )

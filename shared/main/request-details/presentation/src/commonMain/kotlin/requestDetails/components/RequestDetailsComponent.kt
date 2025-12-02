@@ -13,6 +13,7 @@ interface RequestDetailsComponent: DetailsComponent {
     val isEditable: Boolean
     val isCreating: Boolean
 
+    val location: String
 
     val initialText: String
     val initialCategory: ItemCategory?

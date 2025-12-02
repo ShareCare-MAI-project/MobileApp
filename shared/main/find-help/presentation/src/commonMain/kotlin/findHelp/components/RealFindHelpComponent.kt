@@ -47,7 +47,7 @@ class RealFindHelpComponent(
                 basic.value = it.saveState(
                     prevData,
                     onError = { response ->
-                        if (prevData != null) {
+                        if (response.data != null) {
                             AlertsManager.push(
                                 AlertState.SnackBar("Не удалось обновить")
                             )
