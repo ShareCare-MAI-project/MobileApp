@@ -22,11 +22,13 @@ interface RequestDetailsComponent: DetailsComponent {
     val category: StateFlow<ItemCategory?>
     val deliveryTypes: StateFlow<List<DeliveryType>>
 
-    val createRequestResult: StateFlow<NetworkState<Unit>>
+    val createOrEditRequestResult: StateFlow<NetworkState<Unit>>
+    val deleteRequestResult: StateFlow<NetworkState<Unit>>
 
     fun updateDeliveryType(deliveryType: DeliveryType)
     fun updateCategory(category: ItemCategory)
 
     fun createOrEditRequest()
+    fun deleteRequest()
 
 }

@@ -85,7 +85,10 @@ class RealMainFlowComponent(
                             recipientId = cfg.recipientId,
                             telegram = cfg.telegram,
                             takeItemFromFindHelp = { telegram ->
-                                (stack.items.firstOrNull { it.configuration is Config.FindHelp }?.instance as? Child.FindHelpChild)?.findHelpComponent?.takeItem(cfg.id, telegram = telegram)
+                                (stack.items.firstOrNull { it.configuration is Config.FindHelp }?.instance as? Child.FindHelpChild)?.findHelpComponent?.takeItem(
+                                    cfg.id,
+                                    telegram = telegram
+                                )
                             },
                             denyItemFromFlow = {
                                 when (val child = (stack.items.last()).instance) {
@@ -104,10 +107,12 @@ class RealMainFlowComponent(
                             creatorId = cfg.creatorId,
                             initialText = cfg.text,
                             initialCategory = cfg.category,
-                            initialDeliveryTypes = cfg.deliveryTypes
-                        ) {
-                            detailsNav.dismiss()
-                        }
+                            initialDeliveryTypes = cfg.deliveryTypes,
+                            updateFindHelpFlow = {
+                                (stack.items.firstOrNull { it.configuration is Config.FindHelp }?.instance as? Child.FindHelpChild)?.findHelpComponent?.fetchBasic()
+                            },
+                            onBackClick = { detailsNav.dismiss() }
+                        )
                 }
             }
 

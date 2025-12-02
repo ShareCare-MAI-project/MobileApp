@@ -32,6 +32,8 @@ class RealRequestDetailsComponent(
 
 
     override val onBackClick: () -> Unit,
+
+    private val updateFindHelpFlow: () -> Unit
 ) : RequestDetailsComponent, KoinComponent, ComponentContext by componentContext {
 
     private val coroutineScope = componentCoroutineScope()
@@ -46,26 +48,42 @@ class RealRequestDetailsComponent(
     override val category: MutableStateFlow<ItemCategory?> = MutableStateFlow(initialCategory)
     override val deliveryTypes: MutableStateFlow<List<DeliveryType>> =
         MutableStateFlow(initialDeliveryTypes)
-    override val createRequestResult: MutableStateFlow<NetworkState<Unit>> =
+    override val createOrEditRequestResult: MutableStateFlow<NetworkState<Unit>> =
         MutableStateFlow(NetworkState.AFK)
+    override val deleteRequestResult: MutableStateFlow<NetworkState<Unit>> =
+         MutableStateFlow(NetworkState.AFK)
 
 
     // sorry for boilerplate =( (from ItemEditor)
     override fun updateCategory(category: ItemCategory) {
-        if (!createRequestResult.value.isLoading()) {
+        if (!createOrEditRequestResult.value.isLoading()) {
             this.category.value = category
+        }
+    }
+
+    override fun deleteRequest() {
+        require(isEditable)
+        if (!deleteRequestResult.value.isLoading()) {
+            coroutineScope.launchIO {
+                requestDetailsUseCases.deleteRequest(id).collect {
+                    deleteRequestResult.value = it
+                }
+                withContext(Dispatchers.Main) {
+                    deleteRequestResult.value.handle(
+                        onError = { AlertsManager.push(AlertState.SnackBar(it.prettyPrint)) }
+                    ) {
+                        onBackClick()
+                        updateFindHelpFlow()
+                    }
+                }
+
+            }.invokeOnCompletion { deleteRequestResult.value = deleteRequestResult.value.onCoroutineDeath() }
         }
     }
 
     override fun createOrEditRequest() {
         require(isEditable)
-        if (isCreating) {
-            createRequest()
-        }
-    }
-
-    private fun createRequest() {
-        if (!createRequestResult.value.isLoading()) {
+        if (!createOrEditRequestResult.value.isLoading()) {
             coroutineScope.launchIO {
                 val preparedRequest = Request(
                     text = requestText.text.toString(),
@@ -73,28 +91,32 @@ class RealRequestDetailsComponent(
                     deliveryTypes = deliveryTypes.value,
                     location = "Москва, метро Сокол" // TODO
                 )
-                requestDetailsUseCases.createRequest(preparedRequest).collect {
-                    createRequestResult.value = it
+                (if (isCreating) requestDetailsUseCases.createRequest(preparedRequest) else requestDetailsUseCases.editRequest(preparedRequest, id)).collect {
+                    createOrEditRequestResult.value = it
                 }
                 withContext(Dispatchers.Main) {
-                    createRequestResult.value.handle(
+                    createOrEditRequestResult.value.handle(
                         onError = { AlertsManager.push(AlertState.SnackBar(it.prettyPrint)) }
                     ) {
-                        AlertsManager.push(
-                            AlertState.SuccessDialog("Заявка создана")
-                        )
+                        if (isCreating) {
+                            AlertsManager.push(
+                                AlertState.SuccessDialog("Заявка создана")
+                            )
+                        }
+                        updateFindHelpFlow()
                         onBackClick()
                     }
                 }
 
             }.invokeOnCompletion {
-                createRequestResult.value = createRequestResult.value.onCoroutineDeath()
+                createOrEditRequestResult.value = createOrEditRequestResult.value.onCoroutineDeath()
             }
         }
     }
 
+
     override fun updateDeliveryType(deliveryType: DeliveryType) {
-        if (!createRequestResult.value.isLoading() && isEditable) {
+        if (!createOrEditRequestResult.value.isLoading() && isEditable) {
             if (deliveryType in this.deliveryTypes.value) {
                 removeDeliveryType(deliveryType)
             } else {

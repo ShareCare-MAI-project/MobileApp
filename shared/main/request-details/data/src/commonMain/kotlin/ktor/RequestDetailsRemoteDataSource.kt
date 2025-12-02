@@ -1,7 +1,9 @@
 package ktor
 
 import dto.RequestDTO
+import dto.RequestWithIdDTO
 import io.ktor.client.HttpClient
+import io.ktor.client.request.parameter
 import kotlinx.coroutines.flow.Flow
 import network.NetworkState
 
@@ -11,11 +13,18 @@ class RequestDetailsRemoteDataSource(
 ) {
 
     fun createRequest(request: RequestDTO): Flow<NetworkState<Unit>> =
-        hc.defaultPost(CREATE_REQUEST_PATH, tokenProvider, body = request)
+        hc.defaultPost(REQUESTS_PATH, tokenProvider, body = request)
+
+    fun editRequest(request: RequestWithIdDTO): Flow<NetworkState<Unit>> =
+        hc.defaultPatch(REQUESTS_PATH, tokenProvider, body = request)
+
+    fun deleteRequest(requestId: String): Flow<NetworkState<Unit>> =
+        hc.defaultDelete(REQUESTS_PATH, tokenProvider) {
+            parameter("request_id", requestId)
+        }
 
 
     private companion object {
-        const val PRE_PATH = "/requests"
-        const val CREATE_REQUEST_PATH = "$PRE_PATH/"
+        const val REQUESTS_PATH = "/requests/"
     }
 }

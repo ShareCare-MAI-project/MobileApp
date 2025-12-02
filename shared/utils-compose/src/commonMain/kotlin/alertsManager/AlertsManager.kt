@@ -16,7 +16,7 @@ object AlertsManager {
 
     fun push(
         alert: AlertState,
-        duration: Long = 3000L
+        duration: Long = if (alert is AlertState.SuccessDialog) 1000L else 3000L
     ) {
         job?.cancel()
 

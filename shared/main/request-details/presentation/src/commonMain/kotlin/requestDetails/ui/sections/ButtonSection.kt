@@ -13,7 +13,6 @@ import androidx.compose.material.icons.rounded.FileUpload
 import androidx.compose.material.icons.rounded.Verified
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
@@ -41,6 +40,8 @@ internal fun ColumnScope.ButtonSection(
     initialDeliveryTypes: List<DeliveryType>,
     initialCategory: ItemCategory?,
     isLoading: Boolean,
+    isDeleteLoading: Boolean,
+    onDeleteClick: () -> Unit,
     createOrEditRequest: () -> Unit,
     onAcceptClick: () -> Unit
 ) {
@@ -50,13 +51,16 @@ internal fun ColumnScope.ButtonSection(
         Row(Modifier.padding(horizontal = Paddings.medium)) {
             if (isEditing) {
                 Button(
-                    onClick = {},
+                    onClick = onDeleteClick,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorScheme.errorContainer,
                         contentColor = colorScheme.onErrorContainer
                     )
                 ) {
-                    Icon(Icons.Rounded.DeleteOutline, null)
+                    NetworkButtonIconAnimation(
+                        icon = Icons.Rounded.DeleteOutline,
+                        isLoading = isDeleteLoading
+                    )
                 }
                 SpacerH(Paddings.small)
             }

@@ -35,7 +35,8 @@ fun SharedTransitionScope.RequestDetailsUI(
     val category by component.category.collectAsState()
     val deliveryTypes by component.deliveryTypes.collectAsState()
 
-    val createRequestResult by component.createRequestResult.collectAsState()
+    val createRequestResult by component.createOrEditRequestResult.collectAsState()
+    val deleteRequestResult by component.deleteRequestResult.collectAsState()
 
     val isEditing = !component.isCreating
 
@@ -74,7 +75,9 @@ fun SharedTransitionScope.RequestDetailsUI(
                     initialCategory = component.initialCategory,
                     isLoading = createRequestResult.isLoading(),
                     createOrEditRequest = component::createOrEditRequest,
-                    onAcceptClick = {}
+                    onAcceptClick = {},
+                    onDeleteClick = component::deleteRequest,
+                    isDeleteLoading = deleteRequestResult.isLoading()
                 )
             }
         }
