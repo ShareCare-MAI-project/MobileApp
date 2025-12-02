@@ -8,3 +8,11 @@ fun Request.toDTO() = RequestDTO(
     category = this.category.name,
     deliveryTypes = this.deliveryTypes.map { it.name }
 )
+
+fun Request.toDTO(id: String) = RequestWithIdDTO(
+    id = id,
+    text = this.text,
+    location = this.location,
+    category = this.category.name,
+    deliveryTypes = this.deliveryTypes.map { it.name }
+)
