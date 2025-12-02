@@ -36,7 +36,6 @@ fun <T> LazyGridScope.SearchSection(
 ) {
 
     val items = searchResponse.data
-
     if (items != null) {
         DefaultGridContent(
             items = items,

@@ -1,20 +1,16 @@
 package shareCare.ui
 
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import common.grid.ContentType
 import common.grid.MainLazyGrid
+import common.grid.defaults.DefaultRequestCard
 import common.itemDetailsTransition.LocalItemDetailsAnimator
+import common.search.SearchGridEndHandler
+import common.search.SearchSection
 import shareCare.components.ShareCareComponent
 import shareCare.ui.sections.ItemsSection
 
@@ -27,16 +23,17 @@ fun SharedTransitionScope.ShareCareUI(
     val items by component.items.collectAsState()
 
     val itemDetailsAnimator = LocalItemDetailsAnimator.current
-    val searchData by component.searchData.collectAsState()
-    val isSearchActive = searchData.query.isNotEmpty()
 
-    var dummies by remember { mutableStateOf(listOf<Int>()) }
+    val searchRequests by component.requests.collectAsState()
+    val searchData by component.searchData.collectAsState()
+    val searchHasMoreRequests by component.searchHasMoreRequests.collectAsState()
+
 
 
     MainLazyGrid(
         lazyGridState = lazyGridState,
     ) {
-        if (!isSearchActive) {
+        if (searchData.query.isEmpty()) {
             ItemsSection(
                 items,
                 sharedTransitionScope = this@ShareCareUI,
@@ -45,20 +42,29 @@ fun SharedTransitionScope.ShareCareUI(
                 refreshClick = component::fetchItems
             )
         }
-        items(dummies, key = { it }) {
-            Text(text = "meowmeow$it", modifier = Modifier.height(100.dp))
+
+        SearchSection(
+            searchResponse = searchRequests,
+            searchData = searchData,
+            onDeliveryTypesChange = component::onDeliveryTypesChange,
+            onCategoryChange = component::onCategoryChange,
+            refreshClick = { component.onSearch(resetItems = true) },
+            hasMoreItems = searchHasMoreRequests,
+            key = { it.id },
+            contentType = ContentType.PeopleSearch
+        ) { request, key ->
+            DefaultRequestCard(
+                request = request,
+                sharedTransitionScope = this@ShareCareUI,
+                key = key,
+                onCardClicked = component.openDetails
+            )
         }
-//
-//        TransitionColumnHeader(
-//            contentType = ContentType.MyItems
-//        )
-//        items(50, key = { (it + 1) * 100 }, contentType = { ContentType.MyItems }) {
-//            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-//                (1..3).forEach { _ ->
-//                    Text("ShareCare")
-//                }
-//            }
-//        }
     }
 
+    SearchGridEndHandler(
+        lazyGridState = lazyGridState,
+        searchHasMoreItems = searchHasMoreRequests,
+        searchItems = searchRequests
+    ) { component.onSearch(resetItems = false) }
 }
