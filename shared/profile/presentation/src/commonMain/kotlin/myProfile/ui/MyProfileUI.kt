@@ -35,6 +35,8 @@ fun MyProfileUI(
 ) {
 
     val profileData by component.profileData.collectAsState()
+    val isHelper by component.isHelper.collectAsState()
+
 
     val windowInsets = WindowInsets.safeContent
     val safeContentPaddings = windowInsets.asPaddingValues()
@@ -80,9 +82,9 @@ fun MyProfileUI(
                 SpacerV(Paddings.medium)
 
                 UsuallyISection(
-                    isHelper = false
+                    isHelper = isHelper
                 ) { isHelper ->
-
+                    component.changeUsuallyI(isHelper)
                 }
                 SpacerV(Paddings.medium)
 

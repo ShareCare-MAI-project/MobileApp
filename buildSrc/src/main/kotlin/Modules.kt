@@ -80,4 +80,12 @@ object Modules {
         const val domain = "$modulePath:domain"
         const val presentation = "$modulePath:presentation"
     }
+
+    object Settings {
+        private const val modulePath = "$sharedPath:settings"
+
+        const val data = "$modulePath:data"
+        const val domain = "$modulePath:domain"
+        const val presentation = "$modulePath:presentation"
+    }
 }

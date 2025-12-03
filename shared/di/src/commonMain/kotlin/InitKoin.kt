@@ -17,6 +17,7 @@ fun initKoin(
             itemDetailsModule,
             shareCareModule,
             findHelpModule,
+            settingsModule
         )
     }
 }

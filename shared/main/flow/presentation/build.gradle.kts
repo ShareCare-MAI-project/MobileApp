@@ -14,6 +14,7 @@ kotlin {
             implementation(project(Modules.Main.RequestDetails.presentation))
 
             implementation(project(Modules.Auth.domain))
+            implementation(project(Modules.Settings.domain))
 
             implementation(libs.kotlinx.datetime)
         }
