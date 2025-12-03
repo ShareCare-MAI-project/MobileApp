@@ -6,6 +6,7 @@ import components.RootComponent.Child
 import components.RootComponent.Config
 import itemEditorFlow.components.ItemEditorFlowComponent
 import kotlinx.serialization.Serializable
+import logic.ItemManagerPreData
 import mainFlow.components.MainFlowComponent
 import profileFlow.components.ProfileFlowComponent
 import registration.components.RegistrationComponent
@@ -40,7 +41,9 @@ interface RootComponent : DefaultStack<Config, Child> {
         data object MainFlow : Config
 
         @Serializable
-        data object ItemEditor : Config
+        data class ItemEditor(
+            val itemManagerPreData: ItemManagerPreData
+        ) : Config
 
 
         @Serializable

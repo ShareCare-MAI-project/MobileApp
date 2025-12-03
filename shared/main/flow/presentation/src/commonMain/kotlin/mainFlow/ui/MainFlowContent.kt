@@ -124,7 +124,7 @@ fun SharedTransitionScope.MainFlowContent(
                             )
                         )
                     } else {
-                        component.output(Output.NavigateToItemEditor)
+                        component.output(Output.NavigateToItemEditor())
                     }
                 }
             )

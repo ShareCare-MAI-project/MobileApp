@@ -1,5 +1,7 @@
 package requestDetails.ui
 
+import alertsManager.AlertState
+import alertsManager.AlertsManager
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
@@ -11,9 +13,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
+import common.CreatorInfoSection
 import common.requestCard.RequestCardDefaults
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import requestDetails.components.RequestDetailsComponent
@@ -22,6 +26,7 @@ import requestDetails.ui.sections.DeliveryTypesSection
 import requestDetails.ui.sections.TextFieldsSection
 import utils.SpacerV
 import view.consts.Paddings
+import widgets.sections.LocationSection
 
 @OptIn(
     ExperimentalHazeMaterialsApi::class,
@@ -62,6 +67,9 @@ fun SharedTransitionScope.RequestDetailsUI(
                     isEditable = component.isEditable
                 ) { component.updateDeliveryType(it) }
 
+                SpacerV(Paddings.semiMedium)
+                LocationSection(modifier = Modifier.fillMaxWidth(), location = component.location)
+
 
                 SpacerV(Paddings.semiMedium)
                 ButtonSection(
@@ -75,10 +83,25 @@ fun SharedTransitionScope.RequestDetailsUI(
                     initialCategory = component.initialCategory,
                     isLoading = createRequestResult.isLoading(),
                     createOrEditRequest = component::createOrEditRequest,
-                    onAcceptClick = {},
+                    onAcceptClick = component.onAcceptClick,
                     onDeleteClick = component::deleteRequest,
                     isDeleteLoading = deleteRequestResult.isLoading()
                 )
+
+                if (!component.isEditable) {
+                    SpacerV(Paddings.semiMedium)
+                    Column(
+                        Modifier.fillMaxWidth().padding(horizontal = Paddings.medium),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        CreatorInfoSection(
+                            isMe = component.isEditable,
+                            onProfileClick = {},
+                            onReportClick = { AlertsManager.push(AlertState.SnackBar("MVP")) },
+                            isRecipient = true
+                        )
+                    }
+                }
             }
         }
     }

@@ -1,4 +1,4 @@
-package itemDetails.ui.bottomSheet.sections
+package common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -6,6 +6,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,34 +27,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import utils.SpacerH
 import utils.SpacerV
 import view.consts.Paddings
 import widgets.Avatar
 import widgets.SimpleChip
+import widgets.sections.SmallSectionTitle
 
 @Composable
-fun OwnerInfoSection(
+fun CreatorInfoSection(
     name: String = "Артём",
     given: Int = 10,
     taken: Int = 15,
     isVerified: Boolean = true,
     organizationName: String? = null,
-    isOwner: Boolean,
+    isMe: Boolean,
+    isRecipient: Boolean,
+    smallSectionTitlePadding: PaddingValues = PaddingValues(0.dp),
     onProfileClick: () -> Unit,
     onReportClick: () -> Unit
 ) {
-    if (isOwner) {
-        Text(
-            "Это Вы",
-            style = typography.bodyLarge,
-            fontWeight = FontWeight.Medium,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.fillMaxWidth().padding(start = Paddings.ultraSmall)
-        )
-    }
+    SmallSectionTitle(
+        text = if (isRecipient) "Получатель" else "Даритель",
+        modifier = Modifier.fillMaxWidth().padding(smallSectionTitlePadding)
+    )
     Row(
         Modifier.height(IntrinsicSize.Max).fillMaxWidth()
             .clip(shapes.extraLarge)
@@ -93,7 +91,7 @@ fun OwnerInfoSection(
             )
         }
     }
-    if (!isOwner) {
+    if (!isMe) {
         SpacerV(Paddings.small)
         TextButton(
             onClick = onReportClick,

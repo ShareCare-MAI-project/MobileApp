@@ -21,6 +21,7 @@ import findHelp.components.RealFindHelpComponent
 import itemDetails.components.RealItemDetailsComponent
 import loading.components.LoadingComponent
 import loading.components.RealLoadingComponent
+import logic.ItemManagerPreData
 import mainFlow.components.MainFlowComponent.Child
 import mainFlow.components.MainFlowComponent.Child.FindHelpChild
 import mainFlow.components.MainFlowComponent.Child.ShareCareChild
@@ -95,6 +96,35 @@ class RealMainFlowComponent(
                                     is FindHelpChild -> child.findHelpComponent.denyItem(cfg.id)
                                     is ShareCareChild -> child.shareCareComponent.denyItem(cfg.id)
                                 }
+                            },
+                            deleteItemFromFlow = { closeSheet ->
+                                val findHelpComponent = (stack.items.firstOrNull { it.configuration is Config.FindHelp }?.instance as? Child.FindHelpChild)?.findHelpComponent
+                                val shareCareComponent = (stack.items.firstOrNull { it.configuration is Config.ShareCare }?.instance as? Child.ShareCareChild)?.shareCareComponent
+
+                                findHelpComponent?.let {
+                                    val data = findHelpComponent.items.value.data
+                                    if (data != null && cfg.id in data.map { it.id }) {
+                                        findHelpComponent.onSearch(resetItems = true)
+                                    }
+                                }
+
+                                closeSheet {
+                                    // onCompletion
+                                    shareCareComponent?.fetchItems()
+                                }
+                            },
+                            onEditClick = {
+                                output(Output.NavigateToItemEditor(
+                                    itemManagerPreData = ItemManagerPreData(
+                                        title = cfg.title,
+                                        description = cfg.description,
+                                        deliveryTypes = cfg.deliveryTypes,
+                                        category = cfg.category,
+                                        location = cfg.location,
+                                        images = cfg.images,
+                                        itemId = cfg.id
+                                    )
+                                ))
                             }
                         )
 
@@ -111,7 +141,19 @@ class RealMainFlowComponent(
                             updateFindHelpFlow = {
                                 (stack.items.firstOrNull { it.configuration is Config.FindHelp }?.instance as? Child.FindHelpChild)?.findHelpComponent?.fetchBasic()
                             },
-                            onBackClick = { detailsNav.dismiss() }
+                            onBackClick = { detailsNav.dismiss() },
+                            onAcceptClick = {
+                                detailsNav.dismiss()
+                                output(Output.NavigateToItemEditor(
+                                    itemManagerPreData = ItemManagerPreData(
+                                        title = cfg.text,
+                                        category = cfg.category,
+                                        availableDeliveryTypes = cfg.deliveryTypes,
+                                        location = "Москва, м. Сокол",
+                                        requestId = cfg.id
+                                    )
+                                ))
+                            }
                         )
                 }
             }

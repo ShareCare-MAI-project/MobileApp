@@ -1,5 +1,7 @@
 package findHelp.components
 
+import alertsManager.AlertState
+import alertsManager.AlertsManager
 import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
 import common.detailsInterfaces.DetailsConfig
@@ -42,7 +44,16 @@ class RealFindHelpComponent(
         coroutineScope.launchIO {
             findHelpUseCases.fetchBasic().collect {
                 val prevData = basic.value.data
-                basic.value = it.saveState(prevData)
+                basic.value = it.saveState(
+                    prevData,
+                    onError = { response ->
+                        if (response.data != null) {
+                            AlertsManager.push(
+                                AlertState.SnackBar("Не удалось обновить")
+                            )
+                        }
+                        response
+                    })
             }
         }.invokeOnCompletion {
             basic.value = basic.value.onCoroutineDeath()
@@ -101,7 +112,7 @@ class RealFindHelpComponent(
             searchData = searchData.value,
             coroutineScope = coroutineScope,
             prevJob = searchJob,
-            toLoad = 2,
+            toLoad = 20,
             resetItems = resetItems
         ) { findHelpUseCases.search(it) } ?: searchJob
     }

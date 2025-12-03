@@ -10,9 +10,12 @@ import network.NetworkState
 interface RequestDetailsComponent: DetailsComponent {
     val onBackClick: () -> Unit
 
+    val onAcceptClick: () -> Unit
+
     val isEditable: Boolean
     val isCreating: Boolean
 
+    val location: String
 
     val initialText: String
     val initialCategory: ItemCategory?

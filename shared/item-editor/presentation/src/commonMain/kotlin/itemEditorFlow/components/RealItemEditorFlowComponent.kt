@@ -11,13 +11,16 @@ import itemEditorFlow.components.ItemEditorFlowComponent.Child
 import itemEditorFlow.components.ItemEditorFlowComponent.Child.PhotoTakerChild
 import itemEditorFlow.components.ItemEditorFlowComponent.Config
 import itemManager.components.RealItemManagerComponent
+import logic.ItemManagerPreData
 import photoTaker.components.PhotoTakerComponent
 import photoTaker.components.RealPhotoTakerComponent
 
 
 class RealItemEditorFlowComponent(
     private val componentContext: ComponentContext,
-    private val exitFromFlow: () -> Unit
+    private val exitFromFlow: () -> Unit,
+    private val itemManagerPreData: ItemManagerPreData,
+    private val fetchShareCareItems: () -> Unit
 ) : ItemEditorFlowComponent, ComponentContext by componentContext {
 
     override val nav = StackNavigation<Config>()
@@ -53,7 +56,9 @@ class RealItemEditorFlowComponent(
                 itemManagerComponent = RealItemManagerComponent(
                     childContext, photoTakerComponent = photoTakerComponent,
                     closeFlow = exitFromFlow,
-                    openPhotoTakerComponent = { nav.bringToFront(Config.PhotoTaker) }
+                    openPhotoTakerComponent = { nav.bringToFront(Config.PhotoTaker) },
+                    itemManagerPreData = itemManagerPreData,
+                    fetchShareCareItems = fetchShareCareItems
                 )
             )
         }

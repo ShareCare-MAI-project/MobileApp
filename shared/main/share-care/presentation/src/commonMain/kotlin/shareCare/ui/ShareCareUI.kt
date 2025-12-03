@@ -32,6 +32,11 @@ fun SharedTransitionScope.ShareCareUI(
 
     MainLazyGrid(
         lazyGridState = lazyGridState,
+        isRefreshing = searchRequests.isLoading() || items.isLoading(),
+        onRefresh = {
+            component.onSearch(resetItems = true)
+            component.fetchItems()
+        }
     ) {
         if (searchData.query.isEmpty()) {
             ItemsSection(

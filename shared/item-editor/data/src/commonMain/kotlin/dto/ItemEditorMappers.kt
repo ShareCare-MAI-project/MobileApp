@@ -8,5 +8,6 @@ fun Item.toDTO() = ItemDTO(
     location = this.location,
     category = this.category.name,
     deliveryTypes = this.deliveryTypes.map { it.name },
-    images = this.images
+    images = this.images,
+    requestId = this.requestId
 )

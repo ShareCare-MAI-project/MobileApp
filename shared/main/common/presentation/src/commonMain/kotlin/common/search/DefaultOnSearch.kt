@@ -43,7 +43,7 @@ fun <T> defaultOnSearch(
                 items.value = response.saveState(
                     prevData = prevItems,
                     onError = { response ->
-                        if (prevItems != null) {
+                        if (response.data != null) {
                             AlertsManager.push(
                                 AlertState.SnackBar("Не удалось загрузить новые объекты"),
                                 duration = errorDelay / 2
@@ -53,7 +53,7 @@ fun <T> defaultOnSearch(
                         response
                     },
                     onSuccess = { response ->
-                        val newData = response.data.filterNot { it in (prevItems ?: listOf()) }
+                        val newData = response.data
                         response.copy(
                             data = if (resetItems) {
                                 newData

@@ -9,6 +9,7 @@ import common.detailsInterfaces.DetailsConfig
 import findHelp.components.FindHelpComponent
 import kotlinx.serialization.Serializable
 import loading.components.LoadingComponent
+import logic.ItemManagerPreData
 import mainFlow.components.MainFlowComponent.Child
 import mainFlow.components.MainFlowComponent.Config
 import shareCare.components.ShareCareComponent
@@ -46,7 +47,9 @@ interface MainFlowComponent : DefaultStack<Config, Child> {
     val output: (Output) -> Unit
 
     sealed class Output {
-        data object NavigateToItemEditor : Output()
+        data class NavigateToItemEditor(
+            val itemManagerPreData: ItemManagerPreData = ItemManagerPreData()
+        ) : Output()
 
         data object NavigateToRegistration : Output()
         data object NavigateToAuth : Output()

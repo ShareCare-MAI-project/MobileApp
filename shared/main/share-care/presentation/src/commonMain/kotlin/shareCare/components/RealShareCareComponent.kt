@@ -1,5 +1,7 @@
 package shareCare.components
 
+import alertsManager.AlertState
+import alertsManager.AlertsManager
 import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
 import common.detailsInterfaces.DetailsConfig
@@ -14,6 +16,7 @@ import logic.enums.DeliveryType
 import logic.enums.ItemCategory
 import network.NetworkState
 import network.NetworkState.AFK.onCoroutineDeath
+import network.NetworkState.AFK.saveState
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import usecases.ShareCareUseCases
@@ -44,7 +47,18 @@ class RealShareCareComponent(
     override fun fetchItems() {
         coroutineScope.launchIO {
             shareCareUseCases.fetchItems().collect {
-                items.value = it
+                val prevData = items.value.data
+
+                items.value = it.saveState(
+                    prevData,
+                    onError = { response ->
+                        if (response.data != null) {
+                            AlertsManager.push(
+                                AlertState.SnackBar("Не удалось обновить")
+                            )
+                        }
+                        response
+                    })
             }
         }.invokeOnCompletion {
             items.value = items.value.onCoroutineDeath()
@@ -84,7 +98,7 @@ class RealShareCareComponent(
             searchData = searchData.value,
             coroutineScope = coroutineScope,
             prevJob = searchJob,
-            toLoad = 2,
+            toLoad = 20,
             resetItems = resetItems
         ) { shareCareUseCases.search(it) } ?: searchJob
     }

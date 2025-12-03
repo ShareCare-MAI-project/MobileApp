@@ -11,4 +11,5 @@ data class ItemDTO(
     val category: String,
     @SerialName("delivery_types") val deliveryTypes: List<String>,
     val images: List<ByteArray>,
+    @SerialName("request_id") val requestId: String?
 )

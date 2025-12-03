@@ -111,8 +111,12 @@ fun SharedTransitionScope.ItemCard(
                         AnimatedVisibility(isAnimating) {
                             SimpleChip(
                                 text = "Ваше",
-                                modifier = Modifier.padding(Paddings.ultraSmall).clip(shapes.small)
+                                modifier = Modifier.padding(Paddings.ultraSmall)
+                                    .clip(shapes.small)
                                     .fastBackground(Color.Black.copy(alpha = .7f))
+                                    .alpha(.7f),
+                                textColor = Color.White,
+                                borderColor = Color.White
                             )
                         }
                     }

@@ -8,7 +8,7 @@ import utils.GridEndHandler
 @Composable
 fun <T> SearchGridEndHandler(
     lazyGridState: LazyGridState,
-    preFetchItems: Int = 2,
+    preFetchItems: Int = 20,
     searchHasMoreItems: Boolean,
     searchItems: NetworkState<List<T>>,
     onSearch: () -> Unit

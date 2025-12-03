@@ -100,7 +100,7 @@ internal fun ColumnScope.ButtonSection(
             onClick = onAcceptClick,
             colors = ButtonDefaults.buttonColors(
                 containerColor = if (isDark) CustomColors.greenContainer else CustomColors.green,
-                contentColor = if (isDark) CustomColors.green else CustomColors.greenContainer
+                contentColor = if (isDark) CustomColors.darkGreen else CustomColors.greenContainer
             ),
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {

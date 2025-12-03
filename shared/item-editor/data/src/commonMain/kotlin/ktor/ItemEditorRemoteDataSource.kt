@@ -5,6 +5,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.forms.submitFormWithBinaryData
+import io.ktor.client.request.parameter
 import io.ktor.http.ContentType
 import io.ktor.http.Headers
 import io.ktor.http.contentType
@@ -21,7 +22,7 @@ class ItemEditorRemoteDataSource(
         hc.defaultRequest {
             val token = tokenProvider.getToken()
             hc.submitFormWithBinaryData(
-                url = CREATE_ITEM_PATH,
+                url = ITEMS_PATH,
                 formData = formData {
                     append("item_data", Json.encodeToString(item.copy(images = emptyList())))
 
@@ -46,10 +47,13 @@ class ItemEditorRemoteDataSource(
             }
         }
 
+    fun editItem(item: ItemDTO, itemId: String): Flow<NetworkState<Unit>> =
+        hc.defaultPatch(ITEMS_PATH, tokenProvider, body = item) {
+            parameter("item_id", itemId)
+        }
+
 
     private companion object {
-        const val PRE_PATH = "/items"
-
-        const val CREATE_ITEM_PATH = "$PRE_PATH/"
+        const val ITEMS_PATH = "/items/"
     }
 }
