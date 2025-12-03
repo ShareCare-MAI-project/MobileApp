@@ -24,7 +24,7 @@ import widgets.sections.SmallSectionTitle
 
 @Composable
 fun Filters(
-    location: String = "Москва, Сокол",
+    location: String = "Москва, м. Сокол",
     deliveryTypes: List<DeliveryType>,
     category: ItemCategory?,
     onDeliveryTypeClick: (DeliveryType?) -> Unit,

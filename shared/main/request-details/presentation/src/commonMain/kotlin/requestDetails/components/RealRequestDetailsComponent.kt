@@ -26,7 +26,7 @@ class RealRequestDetailsComponent(
     override val creatorId: String,
     override val currentId: String,
 
-    override val location: String = "Москва, Сокол",
+    override val location: String = "Москва, м. Сокол",
 
     override val initialText: String,
     override val initialCategory: ItemCategory?,
@@ -94,7 +94,7 @@ class RealRequestDetailsComponent(
                     text = requestText.text.toString(),
                     category = category.value!!,
                     deliveryTypes = deliveryTypes.value,
-                    location = "Москва, метро Сокол" // TODO
+                    location = "Москва, м. Сокол" // TODO
                 )
                 (if (isCreating) requestDetailsUseCases.createRequest(preparedRequest) else requestDetailsUseCases.editRequest(
                     preparedRequest,

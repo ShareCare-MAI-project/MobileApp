@@ -1,6 +1,10 @@
 package widgets.sections
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,6 +33,7 @@ fun CreateButtonSection(
     text: String,
     icon: ImageVector = Icons.Rounded.FileUpload,
     showAnimation: Boolean = true,
+    haveToText: String = "Небходимо заполнить все поля",
     modifier: Modifier = Modifier.fillMaxWidth().padding(horizontal = Paddings.listHorizontalPadding),
     onClick: () -> Unit
 ) {
@@ -48,12 +53,17 @@ fun CreateButtonSection(
         }
         SpacerV(Paddings.small)
         AnimatedVisibility(!enabled && showAnimation) {
-            Text(
-                "Небходимо заполнить все поля",
-                style = typography.bodyMedium,
-                color = colorScheme.onBackground.copy(alpha = .8f),
-                textAlign = TextAlign.Center
-            )
+            AnimatedContent(haveToText, transitionSpec = {
+                fadeIn().togetherWith(fadeOut())
+            }) { text ->
+                Text(
+                    text,
+                    style = typography.bodyMedium,
+                    color = colorScheme.onBackground.copy(alpha = .8f),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }

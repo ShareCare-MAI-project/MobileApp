@@ -21,6 +21,7 @@ import findHelp.components.RealFindHelpComponent
 import itemDetails.components.RealItemDetailsComponent
 import loading.components.LoadingComponent
 import loading.components.RealLoadingComponent
+import logic.ItemManagerPreData
 import mainFlow.components.MainFlowComponent.Child
 import mainFlow.components.MainFlowComponent.Child.FindHelpChild
 import mainFlow.components.MainFlowComponent.Child.ShareCareChild
@@ -111,6 +112,19 @@ class RealMainFlowComponent(
                                     // onCompletion
                                     shareCareComponent?.fetchItems()
                                 }
+                            },
+                            onEditClick = {
+                                output(Output.NavigateToItemEditor(
+                                    itemManagerPreData = ItemManagerPreData(
+                                        title = cfg.title,
+                                        description = cfg.description,
+                                        deliveryTypes = cfg.deliveryTypes,
+                                        category = cfg.category,
+                                        location = cfg.location,
+                                        images = cfg.images,
+                                        itemId = cfg.id
+                                    )
+                                ))
                             }
                         )
 
@@ -131,11 +145,13 @@ class RealMainFlowComponent(
                             onAcceptClick = {
                                 detailsNav.dismiss()
                                 output(Output.NavigateToItemEditor(
-                                    title = cfg.text,
-                                    category = cfg.category,
-                                    availableDeliveryTypes = cfg.deliveryTypes,
-                                    location = "Москва, Сокол",
-                                    requestId = cfg.id
+                                    itemManagerPreData = ItemManagerPreData(
+                                        title = cfg.text,
+                                        category = cfg.category,
+                                        availableDeliveryTypes = cfg.deliveryTypes,
+                                        location = "Москва, м. Сокол",
+                                        requestId = cfg.id
+                                    )
                                 ))
                             }
                         )

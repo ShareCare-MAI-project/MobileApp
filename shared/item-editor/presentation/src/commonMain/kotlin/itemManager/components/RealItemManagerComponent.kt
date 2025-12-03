@@ -5,13 +5,13 @@ import alertsManager.AlertsManager
 import androidx.compose.foundation.text.input.TextFieldState
 import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
-import common.ItemManagerPreData
 import decompose.componentCoroutineScope
 import entities.Item
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
+import logic.ItemManagerPreData
 import logic.enums.DeliveryType
 import logic.enums.ItemCategory
 import network.NetworkState
@@ -32,26 +32,27 @@ class RealItemManagerComponent(
     private val itemEditorUseCases: ItemEditorUseCases = get()
 
     private val coroutineScope = componentCoroutineScope()
-    override val createItemResult: MutableStateFlow<NetworkState<Unit>> =
+    override val isEditing: Boolean
+        get() = itemManagerPreData.description.isNotEmpty()
+    override val createOrEditItemResult: MutableStateFlow<NetworkState<Unit>> =
         MutableStateFlow(NetworkState.AFK)
     override val title = TextFieldState(initialText = itemManagerPreData.title)
-    override val description = TextFieldState()
+    override val description = TextFieldState(initialText = itemManagerPreData.description)
 
 
-    override val deliveryTypes = MutableStateFlow(listOf<DeliveryType>())
+    override val deliveryTypes = MutableStateFlow(itemManagerPreData.deliveryTypes)
 
-
-    override val itemCategory = MutableStateFlow<ItemCategory?>(itemManagerPreData.category)
+    override val itemCategory = MutableStateFlow(itemManagerPreData.category)
 
 
     override fun updateItemCategory(itemCategory: ItemCategory) {
-        if (!createItemResult.value.isLoading() && itemManagerPreData.category == null) {
+        if (!createOrEditItemResult.value.isLoading() && (itemManagerPreData.category == null || isEditing)) {
             this.itemCategory.value = itemCategory
         }
     }
 
     override fun updateDeliveryType(deliveryType: DeliveryType) {
-        if (!createItemResult.value.isLoading()) {
+        if (!createOrEditItemResult.value.isLoading()) {
             if (deliveryType in this.deliveryTypes.value) {
                 removeDeliveryType(deliveryType)
             } else {
@@ -61,8 +62,8 @@ class RealItemManagerComponent(
     }
 
 
-    override fun createItem() {
-        if (!createItemResult.value.isLoading()) {
+    override fun createOrEditItem() {
+        if (!createOrEditItemResult.value.isLoading()) {
             coroutineScope.launchIO {
                 val preparedItem: Item = Item(
                     images = photoTakerComponent.pickedPhotos.value.map { it.encodeToByteArray(50) },
@@ -70,25 +71,28 @@ class RealItemManagerComponent(
                     description = description.text.toString(),
                     category = itemCategory.value!!,
                     deliveryTypes = deliveryTypes.value,
-                    location = "Москва, метро Сокол", // TODO
+                    location = "Москва, м. Сокол", // TODO
                     requestId = itemManagerPreData.requestId
                 )
-                itemEditorUseCases.createItem(item = preparedItem).collect {
-                    createItemResult.value = it
+                (if (isEditing) itemEditorUseCases.updateItem(
+                    item = preparedItem,
+                    itemId = itemManagerPreData.itemId!!
+                ) else itemEditorUseCases.createItem(item = preparedItem)).collect {
+                    createOrEditItemResult.value = it
                 }
                 withContext(Dispatchers.Main) {
-                    createItemResult.value.handle(
+                    createOrEditItemResult.value.handle(
                         onError = { AlertsManager.push(AlertState.SnackBar(it.prettyPrint)) }
                     ) {
                         AlertsManager.push(
-                            AlertState.SuccessDialog("Предмет создан")
+                            AlertState.SuccessDialog(if (isEditing) "Предмет обновлён" else "Предмет создан")
                         )
                         closeFlow()
                     }
                 }
 
             }.invokeOnCompletion {
-                createItemResult.value = createItemResult.value.onCoroutineDeath()
+                createOrEditItemResult.value = createOrEditItemResult.value.onCoroutineDeath()
             }
         }
     }

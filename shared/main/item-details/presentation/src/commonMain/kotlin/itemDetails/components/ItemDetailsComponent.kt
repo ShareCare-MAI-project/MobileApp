@@ -9,6 +9,8 @@ import network.NetworkState
 
 interface ItemDetailsComponent: DetailsComponent {
 
+    val onEditClick: () -> Unit
+
     val title: String
     val description: String
     val location: String

@@ -6,8 +6,7 @@ import components.RootComponent.Child
 import components.RootComponent.Config
 import itemEditorFlow.components.ItemEditorFlowComponent
 import kotlinx.serialization.Serializable
-import logic.enums.DeliveryType
-import logic.enums.ItemCategory
+import logic.ItemManagerPreData
 import mainFlow.components.MainFlowComponent
 import profileFlow.components.ProfileFlowComponent
 import registration.components.RegistrationComponent
@@ -43,11 +42,7 @@ interface RootComponent : DefaultStack<Config, Child> {
 
         @Serializable
         data class ItemEditor(
-            val requestId: String?,
-            val title: String,
-            val category: ItemCategory?,
-            val availableDeliveryTypes: List<DeliveryType>,
-            val location: String
+            val itemManagerPreData: ItemManagerPreData
         ) : Config
 
 

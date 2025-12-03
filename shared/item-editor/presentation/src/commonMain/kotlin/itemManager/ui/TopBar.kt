@@ -27,6 +27,7 @@ internal fun TopBar(
     isVisible: Boolean,
     topPadding: Dp,
     hazeState: HazeState,
+    isEditing: Boolean,
     onBackClick: () -> Unit
 ) {
     Row(
@@ -44,7 +45,7 @@ internal fun TopBar(
             exit = fadeOut()
         ) {
             Text(
-                text = "Подарить вещь",
+                text = if (isEditing) "Редактировать" else "Подарить вещь",
                 fontWeight = FontWeight.SemiBold,
                 style = typography.headlineMedium,
                 maxLines = 1,

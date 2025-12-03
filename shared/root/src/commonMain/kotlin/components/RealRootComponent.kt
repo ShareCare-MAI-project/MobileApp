@@ -7,7 +7,6 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.value.Value
-import common.ItemManagerPreData
 import components.RootComponent.Child
 import components.RootComponent.Child.AuthChild
 import components.RootComponent.Child.HelloChild
@@ -62,13 +61,7 @@ class RealRootComponent(
                 RealItemEditorFlowComponent(
                     childContext,
                     exitFromFlow = { popOnce(ItemEditorChild::class) },
-                    itemManagerPreData = ItemManagerPreData(
-                        title = config.title,
-                        category = config.category,
-                        availableDeliveryTypes = config.availableDeliveryTypes,
-                        location = config.location,
-                        requestId = config.requestId
-                    )
+                    itemManagerPreData = config.itemManagerPreData
                 )
             )
 

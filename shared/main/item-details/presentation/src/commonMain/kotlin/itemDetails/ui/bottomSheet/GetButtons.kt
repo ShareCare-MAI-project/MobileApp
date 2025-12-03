@@ -48,7 +48,10 @@ fun rememberButtons(
                             text = "Редактировать",
                             containerColor = containerColor,
                             contentColor = primaryColor
-                        ) {}
+                        ) {
+                            closeSheet {}
+                            component.onEditClick()
+                        }
                     )
                 }
             }

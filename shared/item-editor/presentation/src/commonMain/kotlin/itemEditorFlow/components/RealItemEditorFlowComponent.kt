@@ -7,11 +7,11 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
-import common.ItemManagerPreData
 import itemEditorFlow.components.ItemEditorFlowComponent.Child
 import itemEditorFlow.components.ItemEditorFlowComponent.Child.PhotoTakerChild
 import itemEditorFlow.components.ItemEditorFlowComponent.Config
 import itemManager.components.RealItemManagerComponent
+import logic.ItemManagerPreData
 import photoTaker.components.PhotoTakerComponent
 import photoTaker.components.RealPhotoTakerComponent
 

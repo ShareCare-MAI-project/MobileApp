@@ -11,11 +11,8 @@ fun RootComponent.onMainOutput(
 ) {
     when (output) {
         is MainFlowComponent.Output.NavigateToItemEditor -> nav.bringToFront(Config.ItemEditor(
-            title = output.title,
-            category = output.category,
-            availableDeliveryTypes = output.availableDeliveryTypes,
-            location = output.location,
-            requestId = output.requestId
+            itemManagerPreData = output.itemManagerPreData
+
         ))
         MainFlowComponent.Output.NavigateToAuth -> nav.replaceAll(Config.Auth)
         MainFlowComponent.Output.NavigateToRegistration -> nav.replaceAll(Config.Registration)

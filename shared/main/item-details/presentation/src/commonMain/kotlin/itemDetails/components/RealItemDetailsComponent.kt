@@ -33,7 +33,8 @@ class RealItemDetailsComponent(
     telegram: String?,
     private val takeItemFromFindHelp: (String) -> Unit,
     private val denyItemFromFlow: () -> Unit,
-    private val deleteItemFromFlow: ((() -> Unit) -> Unit) -> Unit
+    private val deleteItemFromFlow: ((() -> Unit) -> Unit) -> Unit,
+    override val onEditClick: () -> Unit
 ) : ItemDetailsComponent, KoinComponent, ComponentContext by componentContext {
 
     private val coroutineScope = componentCoroutineScope()

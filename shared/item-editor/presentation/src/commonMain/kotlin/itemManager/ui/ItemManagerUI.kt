@@ -41,7 +41,7 @@ import widgets.sections.CreateButtonSection
 internal fun ItemManagerUI(
     component: ItemManagerComponent
 ) {
-    val createItemResult by component.createItemResult.collectAsState()
+    val createOrEditItemResult by component.createOrEditItemResult.collectAsState()
 
     val windowInsets = WindowInsets.safeContent.exclude(WindowInsets.ime)
     val safeContentPaddings = windowInsets.asPaddingValues()
@@ -65,8 +65,11 @@ internal fun ItemManagerUI(
         Modifier.fillMaxSize().imePadding(),
         topBar = {
             TopBar(
+                isEditing = component.isEditing,
                 isVisible = !scrollState.canScrollBackward,
-                topPadding = topPadding, hazeState, component.closeFlow
+                topPadding = topPadding,
+                hazeState = hazeState,
+                onBackClick = component.closeFlow,
             )
         }
     ) { scaffoldPaddings ->
@@ -82,51 +85,68 @@ internal fun ItemManagerUI(
         ) {
             Column(Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
                 SpacerV(scaffoldMaxTopPadding - topPadding + Paddings.medium)
-                ItemImagesSection(
-                    images = images,
-                    onAddButtonClick = {
-                        if (!createItemResult.isLoading()) {
-                            component.openPhotoTakerComponent()
+                if (!component.isEditing) {
+                    ItemImagesSection(
+                        images = images,
+                        onAddButtonClick = {
+                            if (!createOrEditItemResult.isLoading()) {
+                                component.openPhotoTakerComponent()
+                            }
+                        },
+                        onDeleteClick = {
+                            if (!createOrEditItemResult.isLoading()) {
+                                component.photoTakerComponent.deletePhoto(it)
+                            }
                         }
-                    },
-                    onDeleteClick = {
-                        if (!createItemResult.isLoading()) {
-                            component.photoTakerComponent.deletePhoto(it)
-                        }
+                    )
+
+                    SpacerV(Paddings.medium)
+
+                    AIHelpSection(images.isNotEmpty()) {
+                        // TODO
                     }
-                )
 
-                SpacerV(Paddings.medium)
-
-                AIHelpSection(images.isNotEmpty()) {
-                    // TODO
+                    SpacerV(Paddings.medium)
                 }
 
-                SpacerV(Paddings.medium)
                 DefaultInformationSection(
                     titleState = title,
                     descState = description,
                     itemCategory = itemCategory,
-                    preCategory = itemManagerPreData.category,
-                    readOnly = createItemResult.isLoading()
+                    preCategory = if (component.isEditing) null else itemManagerPreData.category,
+                    readOnly = createOrEditItemResult.isLoading()
                 ) {
                     component.updateItemCategory(it)
                 }
                 SpacerV(Paddings.medium)
-                DeliveryTypesSection(pickedDeliveryTypes, availableDeliveryTypes = itemManagerPreData.availableDeliveryTypes) { item ->
+                DeliveryTypesSection(
+                    pickedDeliveryTypes,
+                    availableDeliveryTypes = itemManagerPreData.availableDeliveryTypes
+                ) { item ->
                     component.updateDeliveryType(item)
                 }
                 SpacerV(Paddings.medium)
+
+                val allFieldsFilled = title.text.isNotBlank()
+                        && description.text.isNotBlank()
+                        && (images.isNotEmpty() || component.isEditing)
+                        && itemCategory != null
+                        && pickedDeliveryTypes.isNotEmpty()
+
+                val smthChanged = (
+                        title.text.toString() != itemManagerPreData.title ||
+                                description.text.toString() != itemManagerPreData.description ||
+                                itemCategory != itemManagerPreData.category ||
+                                pickedDeliveryTypes != itemManagerPreData.deliveryTypes
+                        )
+
                 CreateButtonSection(
-                    enabled = title.text.isNotBlank()
-                            && description.text.isNotBlank()
-                            && images.isNotEmpty()
-                            && itemCategory != null
-                            && pickedDeliveryTypes.isNotEmpty(),
-                    isLoading = createItemResult.isLoading(),
-                    text = "Выложить предмет"
+                    enabled = allFieldsFilled && smthChanged,
+                    isLoading = createOrEditItemResult.isLoading(),
+                    text = if (component.isEditing) "Обновить предмет" else "Выложить предмет",
+                    haveToText = if (!smthChanged) "Необходимо изменить хотя бы 1 поле" else "Небходимо заполнить все поля"
                 ) {
-                    component.createItem()
+                    component.createOrEditItem()
                 }
 
             }
