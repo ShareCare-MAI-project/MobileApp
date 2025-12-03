@@ -28,4 +28,7 @@ class ItemDetailsRepositoryImpl(
     override fun denyItem(itemId: String): Flow<NetworkState<Unit>> =
         remoteDataSource.denyItem(itemId)
 
+    override fun deleteItem(itemId: String): Flow<NetworkState<Unit>> =
+        remoteDataSource.deleteItem(itemId)
+
 }

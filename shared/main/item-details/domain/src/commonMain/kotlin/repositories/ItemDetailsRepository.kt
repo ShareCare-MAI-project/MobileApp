@@ -7,4 +7,6 @@ import network.NetworkState
 interface ItemDetailsRepository {
     fun takeItem(itemId: String): Flow<NetworkState<TakeItemResponse>>
     fun denyItem(itemId: String): Flow<NetworkState<Unit>>
+
+    fun deleteItem(itemId: String): Flow<NetworkState<Unit>>
 }

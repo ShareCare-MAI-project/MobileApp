@@ -95,6 +95,22 @@ class RealMainFlowComponent(
                                     is FindHelpChild -> child.findHelpComponent.denyItem(cfg.id)
                                     is ShareCareChild -> child.shareCareComponent.denyItem(cfg.id)
                                 }
+                            },
+                            deleteItemFromFlow = { closeSheet ->
+                                val findHelpComponent = (stack.items.firstOrNull { it.configuration is Config.FindHelp }?.instance as? Child.FindHelpChild)?.findHelpComponent
+                                val shareCareComponent = (stack.items.firstOrNull { it.configuration is Config.ShareCare }?.instance as? Child.ShareCareChild)?.shareCareComponent
+
+                                findHelpComponent?.let {
+                                    val data = findHelpComponent.items.value.data
+                                    if (data != null && cfg.id in data.map { it.id }) {
+                                        findHelpComponent.onSearch(resetItems = true)
+                                    }
+                                }
+
+                                closeSheet {
+                                    // onCompletion
+                                    shareCareComponent?.fetchItems()
+                                }
                             }
                         )
 

@@ -6,7 +6,9 @@ import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
 import decompose.componentCoroutineScope
 import entities.TakeItemResponse
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.withContext
 import logic.enums.DeliveryType
 import logic.enums.ItemCategory
 import network.NetworkState
@@ -31,6 +33,7 @@ class RealItemDetailsComponent(
     telegram: String?,
     private val takeItemFromFindHelp: (String) -> Unit,
     private val denyItemFromFlow: () -> Unit,
+    private val deleteItemFromFlow: ((() -> Unit) -> Unit) -> Unit
 ) : ItemDetailsComponent, KoinComponent, ComponentContext by componentContext {
 
     private val coroutineScope = componentCoroutineScope()
@@ -45,6 +48,8 @@ class RealItemDetailsComponent(
     override val takeItemResult: MutableStateFlow<NetworkState<TakeItemResponse>> =
         MutableStateFlow(NetworkState.AFK)
     override val denyItemResult: MutableStateFlow<NetworkState<Unit>> =
+        MutableStateFlow(NetworkState.AFK)
+    override val deleteItemResult: MutableStateFlow<NetworkState<Unit>> =
         MutableStateFlow(NetworkState.AFK)
 
     override fun takeItem() {
@@ -82,7 +87,30 @@ class RealItemDetailsComponent(
                     denyItemFromFlow()
                 }
             }
-                .invokeOnCompletion { denyItemResult.value = denyItemResult.value.onCoroutineDeath() }
+                .invokeOnCompletion {
+                    denyItemResult.value = denyItemResult.value.onCoroutineDeath()
+                }
         }
+    }
+
+    override fun deleteItem(closeSheet: (() -> Unit) -> Unit) {
+        if (!deleteItemResult.value.isLoading()) {
+            coroutineScope.launchIO {
+                itemDetailsUseCases.deleteItem(id).collect {
+                    deleteItemResult.value = it
+                }
+                withContext(Dispatchers.Main) {
+                    deleteItemResult.value.handle(
+                        onError = { AlertsManager.push(AlertState.SnackBar(it.prettyPrint)) }
+                    ) {
+                        deleteItemFromFlow(closeSheet)
+                    }
+                }
+
+            }.invokeOnCompletion {
+                deleteItemResult.value = deleteItemResult.value.onCoroutineDeath()
+            }
+        }
+
     }
 }

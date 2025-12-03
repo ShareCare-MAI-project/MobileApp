@@ -21,7 +21,8 @@ import widgets.expressiveList.ExpressiveListItem
 fun rememberButtons(
     isOwner: Boolean,
     recipientId: String?,
-    component: ItemDetailsComponent
+    component: ItemDetailsComponent,
+    closeSheet: (() -> Unit) -> Unit
 ): List<ExpressiveListItem> {
     val containerColor = colorScheme.surfaceContainerHighest.copy(alpha = .6f)
     val primaryColor = colorScheme.primary
@@ -37,7 +38,9 @@ fun rememberButtons(
                             text = "Удалить",
                             containerColor = containerColor,
                             contentColor = errorColor
-                        ) {}
+                        ) {
+                            component.deleteItem(closeSheet)
+                        }
                     )
                     add(
                         ExpressiveListItem(

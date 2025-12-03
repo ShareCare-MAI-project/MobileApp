@@ -55,7 +55,11 @@ fun BoxScope.ItemDetailsSheetContent(
     val isRecipient = component.currentId == recipientId
 
 
-    val buttons = rememberButtons(isOwner = isOwner, recipientId = recipientId, component = component)
+    val buttons = rememberButtons(isOwner = isOwner, recipientId = recipientId, component = component, closeSheet = { updateShareCare ->
+        itemDetailsAnimator.onBackSuccessful(
+            onCompletion = { updateShareCare() }
+        )
+    })
 
 
 
