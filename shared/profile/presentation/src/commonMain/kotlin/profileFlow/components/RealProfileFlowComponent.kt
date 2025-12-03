@@ -9,10 +9,12 @@ import myProfile.components.RealMyProfileComponent
 import org.koin.core.component.KoinComponent
 import profileFlow.components.ProfileFlowComponent.Child
 import profileFlow.components.ProfileFlowComponent.Config
+import profileFlow.components.ProfileFlowComponent.Output
 
 class RealProfileFlowComponent(
     componentContext: ComponentContext,
-    private val userId: String?
+    private val userId: String?,
+    val output: (Output) -> Unit
 ) : ProfileFlowComponent, KoinComponent, ComponentContext by componentContext {
 
 
@@ -34,7 +36,10 @@ class RealProfileFlowComponent(
     private fun child(config: Config, childContext: ComponentContext): Child {
         return when (config) {
             Config.MyProfile -> Child.MyProfileChild(
-                RealMyProfileComponent(childContext)
+                RealMyProfileComponent(
+                    childContext,
+                    goToAuth = { output(Output.NavigateToAuth) }
+                )
             )
         }
     }

@@ -93,9 +93,7 @@ fun MyProfileUI(
 
                 SpacerV(Paddings.medium)
 
-                QuitButtonSection {
-
-                }
+                QuitButtonSection(onClick = component::logout)
 
                 SpacerV(Paddings.endListPadding)
             }

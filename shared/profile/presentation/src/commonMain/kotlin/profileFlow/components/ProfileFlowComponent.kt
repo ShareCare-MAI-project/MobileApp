@@ -18,4 +18,9 @@ interface ProfileFlowComponent : DefaultStack<Config, Child>  {
         @Serializable
         data object MyProfile : Config
     }
+
+
+    sealed class Output {
+        data object NavigateToAuth : Output()
+    }
 }

@@ -34,6 +34,8 @@ class AuthRepositoryImpl(
     ): Flow<NetworkState<Unit>> =
         remoteDataSource.registerUser(name = name, telegram = telegram.removePrefix("@"))
 
+    override fun logout() = localDataSource.logout()
+
     override fun fetchToken(): String? = localDataSource.fetchToken()
     override fun fetchUserId(): String? = localDataSource.fetchUserId()
 }

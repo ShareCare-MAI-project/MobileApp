@@ -9,6 +9,7 @@ interface AuthRepository {
 
     fun register(name: String, telegram: String): Flow<NetworkState<Unit>>
 
+    fun logout()
 
     fun fetchToken(): String?
     fun fetchUserId(): String?

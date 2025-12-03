@@ -19,6 +19,7 @@ import components.RootComponent.Config
 import components.outputHandlers.onAuthOutput
 import components.outputHandlers.onHelloOutput
 import components.outputHandlers.onMainOutput
+import components.outputHandlers.onProfileFlowOutput
 import itemEditorFlow.components.RealItemEditorFlowComponent
 import mainFlow.components.MainFlowComponent
 import mainFlow.components.RealMainFlowComponent
@@ -102,7 +103,8 @@ class RealRootComponent(
             is Config.ProfileFlow -> ProfileFlowChild(
                 RealProfileFlowComponent(
                     childContext,
-                    userId = config.userId
+                    userId = config.userId,
+                    output = ::onProfileFlowOutput
                 )
             )
         }
