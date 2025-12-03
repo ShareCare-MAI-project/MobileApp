@@ -10,7 +10,13 @@ fun RootComponent.onMainOutput(
     output: MainFlowComponent.Output
 ) {
     when (output) {
-        MainFlowComponent.Output.NavigateToItemEditor -> nav.bringToFront(Config.ItemEditor)
+        is MainFlowComponent.Output.NavigateToItemEditor -> nav.bringToFront(Config.ItemEditor(
+            title = output.title,
+            category = output.category,
+            availableDeliveryTypes = output.availableDeliveryTypes,
+            location = output.location,
+            requestId = output.requestId
+        ))
         MainFlowComponent.Output.NavigateToAuth -> nav.replaceAll(Config.Auth)
         MainFlowComponent.Output.NavigateToRegistration -> nav.replaceAll(Config.Registration)
         MainFlowComponent.Output.NavigateToProfile -> nav.bringToFront(

@@ -9,9 +9,12 @@ import common.detailsInterfaces.DetailsConfig
 import findHelp.components.FindHelpComponent
 import kotlinx.serialization.Serializable
 import loading.components.LoadingComponent
+import logic.enums.DeliveryType
+import logic.enums.ItemCategory
 import mainFlow.components.MainFlowComponent.Child
 import mainFlow.components.MainFlowComponent.Config
 import shareCare.components.ShareCareComponent
+import widgets.DeliveryTypesPickerDefaults
 
 
 interface MainFlowComponent : DefaultStack<Config, Child> {
@@ -46,7 +49,13 @@ interface MainFlowComponent : DefaultStack<Config, Child> {
     val output: (Output) -> Unit
 
     sealed class Output {
-        data object NavigateToItemEditor : Output()
+        data class NavigateToItemEditor(
+            val requestId: String? = null,
+            val title: String = "",
+            val category: ItemCategory? = null,
+            val availableDeliveryTypes: List<DeliveryType> = DeliveryTypesPickerDefaults.allDeliveryTypes,
+            val location: String = "Москва, Сокол"
+        ) : Output()
 
         data object NavigateToRegistration : Output()
         data object NavigateToAuth : Output()

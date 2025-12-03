@@ -11,12 +11,13 @@ import widgets.sections.SectionTitle
 @Composable
 internal fun DeliveryTypesSection(
     pickedDeliveryTypes: List<DeliveryType>,
+    availableDeliveryTypes: List<DeliveryType>,
     onClick: (DeliveryType) -> Unit
 ) {
 
 
     SectionTitle("Способы доставки")
     SpacerV(Paddings.small)
-    DeliveryTypesPicker(pickedDeliveryTypes = pickedDeliveryTypes, onClick = onClick)
+    DeliveryTypesPicker(pickedDeliveryTypes = pickedDeliveryTypes, allDeliveryTypes = availableDeliveryTypes, onClick = onClick)
 }
 

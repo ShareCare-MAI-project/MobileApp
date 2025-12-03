@@ -59,6 +59,7 @@ internal fun ItemManagerUI(
     val itemCategory by component.itemCategory.collectAsState(Dispatchers.Main.immediate)
     val pickedDeliveryTypes by component.deliveryTypes.collectAsState(Dispatchers.Main.immediate)
 
+    val itemManagerPreData = component.itemManagerPreData
 
     Scaffold(
         Modifier.fillMaxSize().imePadding(),
@@ -106,12 +107,13 @@ internal fun ItemManagerUI(
                     titleState = title,
                     descState = description,
                     itemCategory = itemCategory,
+                    preCategory = itemManagerPreData.category,
                     readOnly = createItemResult.isLoading()
                 ) {
                     component.updateItemCategory(it)
                 }
                 SpacerV(Paddings.medium)
-                DeliveryTypesSection(pickedDeliveryTypes) { item ->
+                DeliveryTypesSection(pickedDeliveryTypes, availableDeliveryTypes = itemManagerPreData.availableDeliveryTypes) { item ->
                     component.updateDeliveryType(item)
                 }
                 SpacerV(Paddings.medium)

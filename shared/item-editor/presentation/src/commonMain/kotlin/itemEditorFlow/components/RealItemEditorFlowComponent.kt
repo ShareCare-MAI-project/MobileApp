@@ -7,6 +7,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
+import common.ItemManagerPreData
 import itemEditorFlow.components.ItemEditorFlowComponent.Child
 import itemEditorFlow.components.ItemEditorFlowComponent.Child.PhotoTakerChild
 import itemEditorFlow.components.ItemEditorFlowComponent.Config
@@ -17,7 +18,8 @@ import photoTaker.components.RealPhotoTakerComponent
 
 class RealItemEditorFlowComponent(
     private val componentContext: ComponentContext,
-    private val exitFromFlow: () -> Unit
+    private val exitFromFlow: () -> Unit,
+    private val itemManagerPreData: ItemManagerPreData
 ) : ItemEditorFlowComponent, ComponentContext by componentContext {
 
     override val nav = StackNavigation<Config>()
@@ -53,7 +55,8 @@ class RealItemEditorFlowComponent(
                 itemManagerComponent = RealItemManagerComponent(
                     childContext, photoTakerComponent = photoTakerComponent,
                     closeFlow = exitFromFlow,
-                    openPhotoTakerComponent = { nav.bringToFront(Config.PhotoTaker) }
+                    openPhotoTakerComponent = { nav.bringToFront(Config.PhotoTaker) },
+                    itemManagerPreData = itemManagerPreData
                 )
             )
         }

@@ -22,6 +22,7 @@ internal fun DefaultInformationSection(
     descState: TextFieldState,
     itemCategory: ItemCategory?,
     readOnly: Boolean,
+    preCategory: ItemCategory?,
     onItemCategoryClick: (ItemCategory) -> Unit
 ) {
     SectionTitle("Информация")
@@ -43,7 +44,7 @@ internal fun DefaultInformationSection(
     )
     SpacerV(Paddings.small)
 
-    CategoryTextField(itemCategory, expandable = !readOnly) {
+    CategoryTextField(preCategory ?: itemCategory, expandable = preCategory == null && !readOnly) {
         onItemCategoryClick(it)
     }
 

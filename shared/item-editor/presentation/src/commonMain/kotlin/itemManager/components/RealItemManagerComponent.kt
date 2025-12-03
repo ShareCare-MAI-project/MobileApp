@@ -5,14 +5,15 @@ import alertsManager.AlertsManager
 import androidx.compose.foundation.text.input.TextFieldState
 import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
+import common.ItemManagerPreData
 import decompose.componentCoroutineScope
 import entities.Item
-import logic.enums.DeliveryType
-import logic.enums.ItemCategory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
+import logic.enums.DeliveryType
+import logic.enums.ItemCategory
 import network.NetworkState
 import network.NetworkState.AFK.onCoroutineDeath
 import org.koin.core.component.KoinComponent
@@ -26,24 +27,25 @@ class RealItemManagerComponent(
     override val photoTakerComponent: PhotoTakerComponent,
     override val closeFlow: () -> Unit,
     override val openPhotoTakerComponent: () -> Unit,
+    override val itemManagerPreData: ItemManagerPreData
 ) : ItemManagerComponent, KoinComponent, ComponentContext by componentContext {
     private val itemEditorUseCases: ItemEditorUseCases = get()
 
     private val coroutineScope = componentCoroutineScope()
     override val createItemResult: MutableStateFlow<NetworkState<Unit>> =
         MutableStateFlow(NetworkState.AFK)
-    override val title = TextFieldState()
+    override val title = TextFieldState(initialText = itemManagerPreData.title)
     override val description = TextFieldState()
 
 
     override val deliveryTypes = MutableStateFlow(listOf<DeliveryType>())
 
 
-    override val itemCategory = MutableStateFlow<ItemCategory?>(null)
+    override val itemCategory = MutableStateFlow<ItemCategory?>(itemManagerPreData.category)
 
 
     override fun updateItemCategory(itemCategory: ItemCategory) {
-        if (!createItemResult.value.isLoading()) {
+        if (!createItemResult.value.isLoading() && itemManagerPreData.category == null) {
             this.itemCategory.value = itemCategory
         }
     }
@@ -68,7 +70,8 @@ class RealItemManagerComponent(
                     description = description.text.toString(),
                     category = itemCategory.value!!,
                     deliveryTypes = deliveryTypes.value,
-                    location = "Москва, метро Сокол" // TODO
+                    location = "Москва, метро Сокол", // TODO
+                    requestId = itemManagerPreData.requestId
                 )
                 itemEditorUseCases.createItem(item = preparedItem).collect {
                     createItemResult.value = it

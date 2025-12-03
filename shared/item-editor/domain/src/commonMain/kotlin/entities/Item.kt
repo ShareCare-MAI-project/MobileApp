@@ -9,5 +9,6 @@ data class Item(
     val description: String,
     val category: ItemCategory,
     val deliveryTypes: List<DeliveryType>,
-    val location: String
+    val location: String,
+    val requestId: String?
 )

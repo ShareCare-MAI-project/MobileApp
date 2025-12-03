@@ -111,7 +111,17 @@ class RealMainFlowComponent(
                             updateFindHelpFlow = {
                                 (stack.items.firstOrNull { it.configuration is Config.FindHelp }?.instance as? Child.FindHelpChild)?.findHelpComponent?.fetchBasic()
                             },
-                            onBackClick = { detailsNav.dismiss() }
+                            onBackClick = { detailsNav.dismiss() },
+                            onAcceptClick = {
+                                detailsNav.dismiss()
+                                output(Output.NavigateToItemEditor(
+                                    title = cfg.text,
+                                    category = cfg.category,
+                                    availableDeliveryTypes = cfg.deliveryTypes,
+                                    location = "Москва, Сокол",
+                                    requestId = cfg.id
+                                ))
+                            }
                         )
                 }
             }

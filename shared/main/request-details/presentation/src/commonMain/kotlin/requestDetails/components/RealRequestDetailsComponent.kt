@@ -34,8 +34,9 @@ class RealRequestDetailsComponent(
 
 
     override val onBackClick: () -> Unit,
+    override val onAcceptClick: () -> Unit,
 
-    private val updateFindHelpFlow: () -> Unit
+    private val updateFindHelpFlow: () -> Unit,
 ) : RequestDetailsComponent, KoinComponent, ComponentContext by componentContext {
 
     private val coroutineScope = componentCoroutineScope()
@@ -53,7 +54,7 @@ class RealRequestDetailsComponent(
     override val createOrEditRequestResult: MutableStateFlow<NetworkState<Unit>> =
         MutableStateFlow(NetworkState.AFK)
     override val deleteRequestResult: MutableStateFlow<NetworkState<Unit>> =
-         MutableStateFlow(NetworkState.AFK)
+        MutableStateFlow(NetworkState.AFK)
 
 
     // sorry for boilerplate =( (from ItemEditor)
@@ -79,7 +80,9 @@ class RealRequestDetailsComponent(
                     }
                 }
 
-            }.invokeOnCompletion { deleteRequestResult.value = deleteRequestResult.value.onCoroutineDeath() }
+            }.invokeOnCompletion {
+                deleteRequestResult.value = deleteRequestResult.value.onCoroutineDeath()
+            }
         }
     }
 
@@ -93,7 +96,10 @@ class RealRequestDetailsComponent(
                     deliveryTypes = deliveryTypes.value,
                     location = "Москва, метро Сокол" // TODO
                 )
-                (if (isCreating) requestDetailsUseCases.createRequest(preparedRequest) else requestDetailsUseCases.editRequest(preparedRequest, id)).collect {
+                (if (isCreating) requestDetailsUseCases.createRequest(preparedRequest) else requestDetailsUseCases.editRequest(
+                    preparedRequest,
+                    id
+                )).collect {
                     createOrEditRequestResult.value = it
                 }
                 withContext(Dispatchers.Main) {

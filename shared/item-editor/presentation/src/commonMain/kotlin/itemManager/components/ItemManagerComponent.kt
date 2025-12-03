@@ -1,13 +1,16 @@
 package itemManager.components
 
 import androidx.compose.foundation.text.input.TextFieldState
+import common.ItemManagerPreData
+import kotlinx.coroutines.flow.StateFlow
 import logic.enums.DeliveryType
 import logic.enums.ItemCategory
-import kotlinx.coroutines.flow.StateFlow
 import network.NetworkState
 import photoTaker.components.PhotoTakerComponent
 
 interface ItemManagerComponent {
+
+    val itemManagerPreData: ItemManagerPreData
 
     val createItemResult: StateFlow<NetworkState<Unit>>
 
