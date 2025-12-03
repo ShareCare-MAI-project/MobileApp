@@ -6,15 +6,20 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import logic.enums.ItemCategory
 import utils.SpacerV
+import utils.title
 import view.consts.Paddings
 import widgets.sections.LocationSection
 
 @Composable
 fun QuickInfoSection(
     title: String,
+    category: ItemCategory,
     location: String
 ) {
     Text(
@@ -25,7 +30,14 @@ fun QuickInfoSection(
             .padding(horizontal = Paddings.medium),
         fontWeight = FontWeight.Medium
     )
-    SpacerV(Paddings.small)
+    Text(
+        category.title,
+        style = typography.labelMedium,
+        fontWeight = FontWeight.Normal,
+        fontStyle = FontStyle.Italic,
+        modifier = Modifier.alpha(.7f)
+    )
     LocationSection(modifier = Modifier.fillMaxWidth(), location = location)
+
 
 }

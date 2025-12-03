@@ -90,7 +90,7 @@ fun BoxScope.ItemDetailsSheetContent(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             SpacerV(topPadding)
-            QuickInfoSection(title = component.title, location = component.location)
+            QuickInfoSection(title = component.title, location = component.location, category = component.category)
             SpacerV(Paddings.semiMedium)
 
             HugeButtonsSection(buttons)
