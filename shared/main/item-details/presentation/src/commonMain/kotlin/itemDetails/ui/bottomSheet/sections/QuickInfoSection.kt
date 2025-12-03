@@ -11,7 +11,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import logic.enums.ItemCategory
-import utils.SpacerV
 import utils.title
 import view.consts.Paddings
 import widgets.sections.LocationSection
