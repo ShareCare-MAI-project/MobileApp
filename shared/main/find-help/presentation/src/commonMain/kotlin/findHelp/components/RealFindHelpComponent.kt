@@ -112,7 +112,7 @@ class RealFindHelpComponent(
             searchData = searchData.value,
             coroutineScope = coroutineScope,
             prevJob = searchJob,
-            toLoad = 2,
+            toLoad = 20,
             resetItems = resetItems
         ) { findHelpUseCases.search(it) } ?: searchJob
     }

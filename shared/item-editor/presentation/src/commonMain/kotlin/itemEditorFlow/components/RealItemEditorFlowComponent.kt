@@ -19,7 +19,8 @@ import photoTaker.components.RealPhotoTakerComponent
 class RealItemEditorFlowComponent(
     private val componentContext: ComponentContext,
     private val exitFromFlow: () -> Unit,
-    private val itemManagerPreData: ItemManagerPreData
+    private val itemManagerPreData: ItemManagerPreData,
+    private val fetchShareCareItems: () -> Unit
 ) : ItemEditorFlowComponent, ComponentContext by componentContext {
 
     override val nav = StackNavigation<Config>()
@@ -56,7 +57,8 @@ class RealItemEditorFlowComponent(
                     childContext, photoTakerComponent = photoTakerComponent,
                     closeFlow = exitFromFlow,
                     openPhotoTakerComponent = { nav.bringToFront(Config.PhotoTaker) },
-                    itemManagerPreData = itemManagerPreData
+                    itemManagerPreData = itemManagerPreData,
+                    fetchShareCareItems = fetchShareCareItems
                 )
             )
         }

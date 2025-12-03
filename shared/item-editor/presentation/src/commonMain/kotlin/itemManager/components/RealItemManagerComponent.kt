@@ -27,7 +27,8 @@ class RealItemManagerComponent(
     override val photoTakerComponent: PhotoTakerComponent,
     override val closeFlow: () -> Unit,
     override val openPhotoTakerComponent: () -> Unit,
-    override val itemManagerPreData: ItemManagerPreData
+    override val itemManagerPreData: ItemManagerPreData,
+    private val fetchShareCareItems: () -> Unit
 ) : ItemManagerComponent, KoinComponent, ComponentContext by componentContext {
     private val itemEditorUseCases: ItemEditorUseCases = get()
 
@@ -87,6 +88,7 @@ class RealItemManagerComponent(
                         AlertsManager.push(
                             AlertState.SuccessDialog(if (isEditing) "Предмет обновлён" else "Предмет создан")
                         )
+                        fetchShareCareItems()
                         closeFlow()
                     }
                 }
