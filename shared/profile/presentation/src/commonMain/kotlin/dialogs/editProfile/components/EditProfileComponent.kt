@@ -1,4 +1,4 @@
-package editProfile.components
+package dialogs.editProfile.components
 
 import androidx.compose.foundation.text.input.TextFieldState
 import kotlinx.coroutines.flow.StateFlow

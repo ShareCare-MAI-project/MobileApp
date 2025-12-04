@@ -1,4 +1,4 @@
-package verification.ui
+package dialogs.verification.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,7 +24,7 @@ import animations.NetworkButtonIconAnimation
 import foundation.DefaultDialog
 import utils.SpacerH
 import utils.SpacerV
-import verification.components.VerificationComponent
+import dialogs.verification.components.VerificationComponent
 import view.consts.Paddings
 import widgets.textField.SurfaceTextField
 

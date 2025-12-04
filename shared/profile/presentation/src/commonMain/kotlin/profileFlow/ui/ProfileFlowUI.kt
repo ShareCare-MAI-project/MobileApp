@@ -13,6 +13,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import myProfile.ui.MyProfileUI
 import profileFlow.components.ProfileFlowComponent
+import transactions.ui.TransactionsUI
 
 @OptIn(ExperimentalDecomposeApi::class)
 @Composable
@@ -32,6 +33,7 @@ fun ProfileFlowUI(
 
             when (val child = it.instance) {
                 is ProfileFlowComponent.Child.MyProfileChild -> MyProfileUI(component = child.myProfileComponent)
+                is ProfileFlowComponent.Child.TransactionsChild -> TransactionsUI(component = child.transactionsComponent)
             }
         }
     }

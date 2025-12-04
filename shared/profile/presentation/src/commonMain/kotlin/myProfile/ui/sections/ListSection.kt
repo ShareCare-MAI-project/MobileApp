@@ -11,7 +11,8 @@ import widgets.expressiveList.ExpressiveVerticalList
 
 @Composable
 internal fun ListSection(
-    onProfileEditClick: () -> Unit
+    onProfileEditClick: () -> Unit,
+    onOperationsClick: () -> Unit,
 ) {
 
     val profileEdit = ExpressiveListItem(
@@ -22,7 +23,8 @@ internal fun ListSection(
     val operationsHistory = ExpressiveListItem(
         icon = Icons.Rounded.History,
         text = "История операций",
-    ) {}
+        onClick = onOperationsClick
+    )
 
 
     ExpressiveVerticalList(

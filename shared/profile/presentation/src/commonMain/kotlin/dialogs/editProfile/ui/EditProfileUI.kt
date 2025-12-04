@@ -1,4 +1,4 @@
-package editProfile.ui
+package dialogs.editProfile.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import animations.NetworkButtonIconAnimation
-import editProfile.components.EditProfileComponent
+import dialogs.editProfile.components.EditProfileComponent
 import foundation.DefaultDialog
 import utils.SpacerH
 import utils.SpacerV

@@ -18,7 +18,7 @@ fun RootComponent.onMainOutput(
         MainFlowComponent.Output.NavigateToRegistration -> nav.replaceAll(Config.Registration)
         MainFlowComponent.Output.NavigateToProfile -> nav.bringToFront(
             Config.ProfileFlow(
-                userId = null
+                userData = null
             )
         )
     }

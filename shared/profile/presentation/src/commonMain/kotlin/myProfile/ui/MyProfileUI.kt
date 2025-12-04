@@ -17,24 +17,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.router.slot.activate
+import common.ProfileHeader
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
-import editProfile.components.EditProfileComponent
-import editProfile.ui.EditProfileUI
+import dialogs.editProfile.components.EditProfileComponent
+import dialogs.editProfile.ui.EditProfileUI
+import dialogs.interfaces.DialogConfig
+import dialogs.verification.components.VerificationComponent
+import dialogs.verification.ui.VerificationUI
 import foundation.scrollables.VerticalScrollableBox
-import interfaces.DialogConfig
 import myProfile.components.MyProfileComponent
 import myProfile.ui.sections.FontSizeSection
 import myProfile.ui.sections.ListSection
-import myProfile.ui.sections.NameSection
 import myProfile.ui.sections.QuitButtonSection
 import myProfile.ui.sections.UsuallyISection
-import myProfile.ui.sections.VerificationSection
 import utils.SpacerV
-import verification.components.VerificationComponent
-import verification.ui.VerificationUI
 import view.consts.Paddings
-import widgets.Avatar
 import widgets.glass.BackGlassButton
 
 @Composable
@@ -82,15 +80,8 @@ fun MyProfileUI(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 SpacerV(padding.calculateTopPadding() - topPadding)
-                Avatar()
-
-                SpacerV(Paddings.medium)
-                NameSection(profileData.name)
-                SpacerV(Paddings.medium)
-
-                VerificationSection(
-                    isVerified = profileData.isVerified,
-                    organizationName = profileData.organizationName
+                ProfileHeader(
+                    profileData = profileData
                 ) { component.dialogsNav.activate(DialogConfig.Verification) }
                 SpacerV(Paddings.medium)
 
@@ -113,7 +104,7 @@ fun MyProfileUI(
                         component.dialogsNav.activate(
                             DialogConfig.EditProfile
                         )
-                    }
+                    }, onOperationsClick = component::openTransactions
                 )
 
                 SpacerV(Paddings.medium)

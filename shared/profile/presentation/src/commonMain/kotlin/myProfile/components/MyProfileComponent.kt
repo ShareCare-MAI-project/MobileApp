@@ -3,8 +3,8 @@ package myProfile.components
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.slot.SlotNavigation
 import com.arkivanov.decompose.value.Value
-import interfaces.DialogComponent
-import interfaces.DialogConfig
+import dialogs.interfaces.DialogComponent
+import dialogs.interfaces.DialogConfig
 import kotlinx.coroutines.flow.StateFlow
 
 
@@ -16,6 +16,7 @@ interface MyProfileComponent {
 
     val profileData: StateFlow<QuickProfileData>
 
+    fun openTransactions()
     val isHelper: StateFlow<Boolean>
 
     fun logout()

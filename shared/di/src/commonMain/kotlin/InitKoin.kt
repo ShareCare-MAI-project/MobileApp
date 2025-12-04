@@ -12,6 +12,7 @@ fun initKoin(
             coreModule(enableLogging),
             authModule,
             userModule,
+            profileModule,
             itemEditorModule,
             requestDetailsModule,
             itemDetailsModule,
