@@ -8,6 +8,11 @@ class AuthLocalDataSource(
     private val settings: Settings
 ) {
 
+    fun logout() {
+        settings[TOKEN_KEY] = null
+        settings[USER_ID_KEY] = null
+    }
+
     fun saveToken(token: String) {
         settings[TOKEN_KEY] = token
     }

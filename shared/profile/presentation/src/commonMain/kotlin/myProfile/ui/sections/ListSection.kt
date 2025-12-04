@@ -10,12 +10,15 @@ import widgets.expressiveList.ExpressiveListItem
 import widgets.expressiveList.ExpressiveVerticalList
 
 @Composable
-internal fun ListSection() {
+internal fun ListSection(
+    onProfileEditClick: () -> Unit
+) {
 
     val profileEdit = ExpressiveListItem(
         icon = Icons.Rounded.Settings,
-        text = "Редактировать профиль"
-    ) {}
+        text = "Редактировать профиль",
+        onClick = onProfileEditClick
+    )
     val operationsHistory = ExpressiveListItem(
         icon = Icons.Rounded.History,
         text = "История операций",

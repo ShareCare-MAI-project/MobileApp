@@ -36,5 +36,19 @@ class UserRepositoryImpl(
     override fun fetchIsVerified(): Boolean = localDataSource.fetchIsVerified()
 
     override fun fetchOrganizationName(): String? = localDataSource.fetchOrganizationName()
+    override fun changeVerification(
+        isVerified: Boolean,
+        organizationName: String?
+    ): Flow<NetworkState<Unit>> = flow {
+        remoteDataSource.changeVerificationInfo(isVerified, organizationName)
+            .collect { verificationResponse ->
+                emit(verificationResponse.defaultWhen {
+                    localDataSource.saveIsVerified(isVerified)
+                    localDataSource.saveOrganizationName(organizationName)
+                    NetworkState.Success(Unit)
+                }
+                )
+            }
+    }.flowOn(Dispatchers.IO)
 
 }

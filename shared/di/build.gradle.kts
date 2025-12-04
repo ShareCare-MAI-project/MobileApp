@@ -19,6 +19,8 @@ kotlin {
             implementation(project(Modules.Main.ShareCare.data))
             implementation(project(Modules.Main.FindHelp.data))
 
+            implementation(project(Modules.Settings.data))
+
 
 
 

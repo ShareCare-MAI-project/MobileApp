@@ -1,5 +1,6 @@
 package components
 
+import FontSizeManager
 import auth.components.RealAuthComponent
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
@@ -19,6 +20,7 @@ import components.RootComponent.Config
 import components.outputHandlers.onAuthOutput
 import components.outputHandlers.onHelloOutput
 import components.outputHandlers.onMainOutput
+import components.outputHandlers.onProfileFlowOutput
 import itemEditorFlow.components.RealItemEditorFlowComponent
 import mainFlow.components.MainFlowComponent
 import mainFlow.components.RealMainFlowComponent
@@ -27,11 +29,18 @@ import org.koin.core.component.get
 import profileFlow.components.RealProfileFlowComponent
 import registration.components.RealRegistrationComponent
 import usecases.AuthUseCases
+import usecases.SettingsUseCases
 import usecases.UserUseCases
 
 class RealRootComponent(
     componentContext: ComponentContext
 ) : RootComponent, KoinComponent, ComponentContext by componentContext {
+
+
+    init {
+        val settingsUseCases: SettingsUseCases = get()
+        FontSizeManager.setFontSize(settingsUseCases.fetchFontSize())
+    }
 
     override val nav = StackNavigation<Config>()
     private val _stack =
@@ -102,7 +111,8 @@ class RealRootComponent(
             is Config.ProfileFlow -> ProfileFlowChild(
                 RealProfileFlowComponent(
                     childContext,
-                    userId = config.userId
+                    userId = config.userId,
+                    output = ::onProfileFlowOutput
                 )
             )
         }

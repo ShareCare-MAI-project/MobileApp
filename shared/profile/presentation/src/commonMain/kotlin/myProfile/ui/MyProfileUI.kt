@@ -1,5 +1,6 @@
 package myProfile.ui
 
+import FontSizeManager
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -14,9 +15,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.arkivanov.decompose.router.slot.activate
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
+import editProfile.components.EditProfileComponent
+import editProfile.ui.EditProfileUI
 import foundation.scrollables.VerticalScrollableBox
+import interfaces.DialogConfig
 import myProfile.components.MyProfileComponent
 import myProfile.ui.sections.FontSizeSection
 import myProfile.ui.sections.ListSection
@@ -25,6 +31,8 @@ import myProfile.ui.sections.QuitButtonSection
 import myProfile.ui.sections.UsuallyISection
 import myProfile.ui.sections.VerificationSection
 import utils.SpacerV
+import verification.components.VerificationComponent
+import verification.ui.VerificationUI
 import view.consts.Paddings
 import widgets.Avatar
 import widgets.glass.BackGlassButton
@@ -34,7 +42,14 @@ fun MyProfileUI(
     component: MyProfileComponent
 ) {
 
+    val dialogsSlot by component.dialogsSlot.subscribeAsState()
+    val dialogs = dialogsSlot.child?.instance
+
+    val fontSize by FontSizeManager.fontSize.collectAsState()
+
     val profileData by component.profileData.collectAsState()
+    val isHelper by component.isHelper.collectAsState()
+
 
     val windowInsets = WindowInsets.safeContent
     val safeContentPaddings = windowInsets.asPaddingValues()
@@ -51,7 +66,7 @@ fun MyProfileUI(
                 )
             ) {
                 BackGlassButton(hazeState = hazeState) {
-
+                    component.goToMain()
                 }
             }
         }
@@ -76,30 +91,43 @@ fun MyProfileUI(
                 VerificationSection(
                     isVerified = profileData.isVerified,
                     organizationName = profileData.organizationName
-                ) {}
+                ) { component.dialogsNav.activate(DialogConfig.Verification) }
                 SpacerV(Paddings.medium)
 
                 UsuallyISection(
-                    isHelper = false
+                    isHelper = isHelper
                 ) { isHelper ->
-
+                    component.changeUsuallyI(isHelper)
                 }
                 SpacerV(Paddings.medium)
 
-                FontSizeSection()
+                FontSizeSection(
+                    value = fontSize,
+                    onChange = component::changeFontSize
+                )
+
                 SpacerV(Paddings.medium)
 
-                ListSection()
+                ListSection(
+                    onProfileEditClick = {
+                        component.dialogsNav.activate(
+                            DialogConfig.EditProfile
+                        )
+                    }
+                )
 
                 SpacerV(Paddings.medium)
 
-                QuitButtonSection {
-
-                }
+                QuitButtonSection(onClick = component::logout)
 
                 SpacerV(Paddings.endListPadding)
             }
         }
-
+    }
+    if (dialogs != null) {
+        when (dialogs) {
+            is EditProfileComponent -> EditProfileUI(dialogs)
+            is VerificationComponent -> VerificationUI(dialogs)
+        }
     }
 }

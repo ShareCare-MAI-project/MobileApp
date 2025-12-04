@@ -19,6 +19,9 @@ kotlin {
 
             implementation(project(Modules.ItemEditor.presentation))
             implementation(project(Modules.Profile.presentation))
+
+            implementation(project(Modules.Settings.domain))
+            implementation(project(Modules.Settings.presentation))
         }
     }
 }

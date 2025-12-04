@@ -38,6 +38,14 @@ class UserLocalDataSource(
         return settings[ORGANIZATION_KEY, ""].ifEmpty { null }
     }
 
+    fun saveIsVerified(isVerified: Boolean) {
+        settings[IS_VERIFIED_KEY] = isVerified
+    }
+
+    fun saveOrganizationName(organizationName: String?) {
+        settings[ORGANIZATION_KEY] = organizationName
+    }
+
     companion object {
         const val NAME_KEY = "nameKey"
         const val TELEGRAM_KEY = "telegramKey"

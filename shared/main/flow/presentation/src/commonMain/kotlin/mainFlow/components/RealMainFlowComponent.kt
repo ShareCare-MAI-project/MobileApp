@@ -17,6 +17,7 @@ import com.arkivanov.decompose.value.Value
 import common.detailsInterfaces.DetailsComponent
 import common.detailsInterfaces.DetailsConfig
 import common.detailsInterfaces.DetailsConfig.ItemDetailsConfig
+import enums.UsuallyI
 import findHelp.components.RealFindHelpComponent
 import itemDetails.components.RealItemDetailsComponent
 import loading.components.LoadingComponent
@@ -32,6 +33,7 @@ import org.koin.core.component.get
 import requestDetails.components.RealRequestDetailsComponent
 import shareCare.components.RealShareCareComponent
 import usecases.AuthUseCases
+import usecases.SettingsUseCases
 
 class RealMainFlowComponent(
     componentContext: ComponentContext,
@@ -39,6 +41,9 @@ class RealMainFlowComponent(
 ) : MainFlowComponent, KoinComponent, ComponentContext by componentContext {
 
     private val authUseCases: AuthUseCases = get()
+    private val settingsUseCases: SettingsUseCases = get()
+
+    private val usuallyI = settingsUseCases.fetchUsuallyI()
 
     override val loadingComponent: LoadingComponent =
         RealLoadingComponent(
@@ -98,8 +103,10 @@ class RealMainFlowComponent(
                                 }
                             },
                             deleteItemFromFlow = { closeSheet ->
-                                val findHelpComponent = (stack.items.firstOrNull { it.configuration is Config.FindHelp }?.instance as? Child.FindHelpChild)?.findHelpComponent
-                                val shareCareComponent = (stack.items.firstOrNull { it.configuration is Config.ShareCare }?.instance as? Child.ShareCareChild)?.shareCareComponent
+                                val findHelpComponent =
+                                    (stack.items.firstOrNull { it.configuration is Config.FindHelp }?.instance as? Child.FindHelpChild)?.findHelpComponent
+                                val shareCareComponent =
+                                    (stack.items.firstOrNull { it.configuration is Config.ShareCare }?.instance as? Child.ShareCareChild)?.shareCareComponent
 
                                 findHelpComponent?.let {
                                     val data = findHelpComponent.items.value.data
@@ -114,17 +121,19 @@ class RealMainFlowComponent(
                                 }
                             },
                             onEditClick = {
-                                output(Output.NavigateToItemEditor(
-                                    itemManagerPreData = ItemManagerPreData(
-                                        title = cfg.title,
-                                        description = cfg.description,
-                                        deliveryTypes = cfg.deliveryTypes,
-                                        category = cfg.category,
-                                        location = cfg.location,
-                                        images = cfg.images,
-                                        itemId = cfg.id
+                                output(
+                                    Output.NavigateToItemEditor(
+                                        itemManagerPreData = ItemManagerPreData(
+                                            title = cfg.title,
+                                            description = cfg.description,
+                                            deliveryTypes = cfg.deliveryTypes,
+                                            category = cfg.category,
+                                            location = cfg.location,
+                                            images = cfg.images,
+                                            itemId = cfg.id
+                                        )
                                     )
-                                ))
+                                )
                             }
                         )
 
@@ -144,15 +153,17 @@ class RealMainFlowComponent(
                             onBackClick = { detailsNav.dismiss() },
                             onAcceptClick = {
                                 detailsNav.dismiss()
-                                output(Output.NavigateToItemEditor(
-                                    itemManagerPreData = ItemManagerPreData(
-                                        title = cfg.text,
-                                        category = cfg.category,
-                                        availableDeliveryTypes = cfg.deliveryTypes,
-                                        location = "Москва, м. Сокол",
-                                        requestId = cfg.id
+                                output(
+                                    Output.NavigateToItemEditor(
+                                        itemManagerPreData = ItemManagerPreData(
+                                            title = cfg.text,
+                                            category = cfg.category,
+                                            availableDeliveryTypes = cfg.deliveryTypes,
+                                            location = "Москва, м. Сокол",
+                                            requestId = cfg.id
+                                        )
                                     )
-                                ))
+                                )
                             }
                         )
                 }
@@ -185,22 +196,24 @@ class RealMainFlowComponent(
 
     override fun onBackClicked() {
         val activeCfg = _stack.active.configuration
-        nav.bringToFront(
-            when (activeCfg) {
-                Config.FindHelp -> Config.ShareCare
-                Config.ShareCare -> Config.FindHelp
+
+        // TODO
+        when {
+            (usuallyI == UsuallyI.FindHelp && activeCfg is Config.FindHelp) -> {
+                nav.bringToFront(Config.ShareCare)
             }
-        )
+            (usuallyI == UsuallyI.ShareCare && activeCfg is Config.ShareCare) -> {
+                nav.bringToFront(Config.FindHelp)
+            }
+            else -> {
+                super.onBackClicked()
+            }
+        }
     }
-//        if (activeCfg != initialStack.first()) {
-//
-//        } else {
-//            super.onBackClicked() TODO exit app
-//        }
 
 
     private fun calculateInitialConfig(): Config {
-        return Config.FindHelp
+        return if (usuallyI == UsuallyI.FindHelp) Config.FindHelp else Config.ShareCare
     }
 
 
