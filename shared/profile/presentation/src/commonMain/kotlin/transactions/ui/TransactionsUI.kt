@@ -39,6 +39,7 @@ import network.NetworkState
 import transactions.components.TransactionsComponent
 import utils.SpacerV
 import view.consts.Paddings
+import view.theme.colors.CustomColors
 import widgets.glass.BackGlassButton
 import widgets.sections.SectionTitle
 
@@ -103,7 +104,9 @@ fun TransactionsUI(
                             Column {
                                 SpacerV(Paddings.small)
                                 Text(
-                                    "Передано: $donated", style = typography.labelMedium,
+                                    "Передано: $donated",
+                                    color = CustomColors.green,
+                                    style = typography.labelMedium,
                                     fontWeight = FontWeight.Normal,
                                     fontStyle = FontStyle.Italic,
                                     modifier = Modifier.alpha(.7f),

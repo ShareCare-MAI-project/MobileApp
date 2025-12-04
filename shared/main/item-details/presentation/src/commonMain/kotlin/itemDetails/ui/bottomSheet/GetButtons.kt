@@ -72,7 +72,7 @@ fun rememberButtons(
                         text = if (isOwner) "Отдал" else "Получил",
                         containerColor = containerColor,
                         contentColor = greenColor
-                    ) {}
+                    ) { component.acceptItem(closeSheet) }
                 )
                 add(
                     ExpressiveListItem(
@@ -81,7 +81,11 @@ fun rememberButtons(
                         containerColor = containerColor,
                         contentColor = primaryColor
                     ) {
-                        AlertsManager.push(AlertState.SnackBar(component.telegram.value ?: "Неизвестный телеграм"))
+                        AlertsManager.push(
+                            AlertState.SnackBar(
+                                component.telegram.value ?: "Неизвестный телеграм"
+                            )
+                        )
                     }
                 )
             } else if (!isOwner) {
