@@ -1,5 +1,6 @@
 package myProfile.components
 
+import FontSizeManager
 import com.arkivanov.decompose.ComponentContext
 import enums.UsuallyI
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,6 +40,11 @@ class RealMyProfileComponent(
         val usuallyI = if (isHelper) UsuallyI.ShareCare else UsuallyI.FindHelp
         settingsUseCases.changeUsuallyI(usuallyI)
         this.isHelper.value = isHelper
+    }
+
+    override fun changeFontSize(value: Float) {
+        settingsUseCases.changeFontSize(value)
+        FontSizeManager.setFontSize(value)
     }
 
 }

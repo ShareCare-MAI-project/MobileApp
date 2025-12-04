@@ -27,6 +27,11 @@ fun SharedTransitionScope.RootContent(
 ) {
 
     val stack by component.stack.subscribeAsState()
+
+
+
+
+
     Surface(
         Modifier.fillMaxSize()
     ) {

@@ -16,8 +16,16 @@ class SettingsLocalDataSource(
     fun fetchUsuallyI(): UsuallyI =
         UsuallyI.valueOf(settings[USUALLY_I_KEY, UsuallyI.FindHelp.name])
 
+    fun changeFontSize(value: Float) {
+        settings[FONT_SIZE_KEY] = value
+    }
+
+    fun fetchFontSize(): Float =
+        settings[FONT_SIZE_KEY, 1f]
+
 
     companion object {
         const val USUALLY_I_KEY = "usuallyIKey"
+        const val FONT_SIZE_KEY = "fontSizeKey"
     }
 }

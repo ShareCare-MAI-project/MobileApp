@@ -7,6 +7,7 @@ kotlin {
         commonMain.dependencies {
             implementation(project(Modules.Auth.domain))
             implementation(project(Modules.Settings.domain))
+            implementation(project(Modules.Settings.presentation))
         }
     }
 }

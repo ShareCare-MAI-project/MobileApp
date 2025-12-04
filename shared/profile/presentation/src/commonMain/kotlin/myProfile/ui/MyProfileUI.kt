@@ -1,5 +1,6 @@
 package myProfile.ui
 
+import FontSizeManager
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -33,6 +34,8 @@ import widgets.glass.BackGlassButton
 fun MyProfileUI(
     component: MyProfileComponent
 ) {
+
+    val fontSize by FontSizeManager.fontSize.collectAsState()
 
     val profileData by component.profileData.collectAsState()
     val isHelper by component.isHelper.collectAsState()
@@ -88,7 +91,11 @@ fun MyProfileUI(
                 }
                 SpacerV(Paddings.medium)
 
-                FontSizeSection()
+                FontSizeSection(
+                    value = fontSize,
+                    onChange = component::changeFontSize
+                )
+
                 SpacerV(Paddings.medium)
 
                 ListSection()

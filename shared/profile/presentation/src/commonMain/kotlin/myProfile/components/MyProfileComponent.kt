@@ -11,4 +11,6 @@ interface MyProfileComponent {
     fun logout()
 
     fun changeUsuallyI(isHelper: Boolean)
+
+    fun changeFontSize(value: Float)
 }

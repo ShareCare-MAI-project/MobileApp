@@ -5,10 +5,6 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import utils.SpacerV
@@ -18,7 +14,10 @@ import view.theme.colors.CustomColors
 import widgets.sections.SectionTitle
 
 @Composable
-internal fun FontSizeSection() {
+internal fun FontSizeSection(
+    value: Float,
+    onChange: (Float) -> Unit
+) {
     val activeColor = getCoolPrimary()
     val colors = SliderDefaults.colors(
         thumbColor = activeColor,
@@ -31,13 +30,10 @@ internal fun FontSizeSection() {
     SectionTitle("Размер шрифта", 0.dp)
     SpacerV(Paddings.small)
 
-    var value by remember { mutableStateOf(1f) }
     Slider(
         value = value,
-        onValueChange = {
-            value = it
-        },
-        valueRange = 0.75f..1.25f,
+        onValueChange = onChange,
+        valueRange = 0.75f..1.5f,
         steps = 9,
         colors = colors,
         track = { sliderState ->
