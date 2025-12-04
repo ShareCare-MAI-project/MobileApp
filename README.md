@@ -1,7 +1,7 @@
 # ShareCare
 Мобильное приложение для проекта по "Обучению служением"
 >[!NOTE]
->«Добродар» – платформа в формате **мобильного приложения**,​ предназначенная​ для поддержки социально уязвимых категорий граждан: малообеспеченных семей,​ одиноких пенсионеров, людей в трудной жизненной ситуации – >**на основе системы​ безвозмездного обмена с автоматизацией создания объявлений с помощью**
+>«Добродар» – платформа в формате **мобильного приложения**,​ предназначенная​ для поддержки социально уязвимых категорий граждан: малообеспеченных семей,​ одиноких пенсионеров, людей в трудной жизненной ситуации – **на основе системы​ безвозмездного обмена с автоматизацией создания объявлений с помощью**
 
 ### Поддерживаемые платформы:
 - iOS (18.2+)
@@ -28,8 +28,13 @@
 - [Decompose](https://github.com/arkivanov/Decompose): Библиотека для навигации и архитектуры компонентного подхода
 - [Ktor](https://ktor.io/): Запросы в сеть
 - [Koin](https://insert-koin.io/): Dependency Injection
-- [Multiplatform Settings](https://github.com/russhwolf/multiplatform-settings): Хранение пар ключ-значение (обёртка над SharedPreferences на Android и NSUserDefaults на iOS)
+- [Multiplatform Settings](https://github.com/russhwolf/multiplatform-settings): Хранение пар ключ-значение (обёртка над SharedPreferences и NSUserDefaults)
 - [Coil](https://github.com/coil-kt/coil): Асинхронная загрузка картинок
 - [Haze](https://chrisbanes.github.io/haze/latest/): Мультиплатформенный блюр :+1:
 - Kotlinx: Coroutines, Serialization, DateTime
+
+### Архитектура:
+>[!IMPORTANT]
+>В проекте представлена **MVVM** архитектура с DDD подходом (Domain-Data-Presentation)
+<img width="4483" height="1604" alt="arc" src="https://github.com/user-attachments/assets/fed30a9a-c903-4a98-bcfe-d91d5c17b7bd" />
 
