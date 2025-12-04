@@ -3,17 +3,21 @@ package profileFlow.components
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
+import myProfile.components.QuickProfileData
 import myProfile.components.RealMyProfileComponent
 import org.koin.core.component.KoinComponent
 import profileFlow.components.ProfileFlowComponent.Child
+import profileFlow.components.ProfileFlowComponent.Child.MyProfileChild
 import profileFlow.components.ProfileFlowComponent.Config
 import profileFlow.components.ProfileFlowComponent.Output
+import transactions.components.RealTransactionsComponent
 
 class RealProfileFlowComponent(
     componentContext: ComponentContext,
-    private val userId: String?,
+    private val userData: Pair<String, QuickProfileData>?,
     val output: (Output) -> Unit
 ) : ProfileFlowComponent, KoinComponent, ComponentContext by componentContext {
 
@@ -35,11 +39,25 @@ class RealProfileFlowComponent(
 
     private fun child(config: Config, childContext: ComponentContext): Child {
         return when (config) {
-            Config.MyProfile -> Child.MyProfileChild(
+            Config.MyProfile -> MyProfileChild(
                 RealMyProfileComponent(
                     childContext,
                     goToAuth = { output(Output.NavigateToAuth) },
-                    goToMain = { output(Output.Back) }
+                    goToMain = { output(Output.Back) },
+                    goToTransactions = { profileData, userId ->
+                        nav.bringToFront(
+                            Config.Transactions(profileData, userId)
+                        )
+                    }
+                )
+            )
+
+            is Config.Transactions -> Child.TransactionsChild(
+                RealTransactionsComponent(
+                    childContext,
+                    profileData = config.profileData,
+                    userId = config.userId,
+                    pop = { popOnce(Child.TransactionsChild::class) }
                 )
             )
         }
@@ -47,6 +65,9 @@ class RealProfileFlowComponent(
 
 
     private fun calculateInitialConfig(): Config {
-        return if (userId == null) Config.MyProfile else TODO()
+        return if (userData == null) Config.MyProfile else Config.Transactions(
+            profileData = userData.second,
+            userId = userData.first
+        )
     }
 }

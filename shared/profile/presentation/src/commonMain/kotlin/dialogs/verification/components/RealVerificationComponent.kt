@@ -1,10 +1,10 @@
-package verification.components
+package dialogs.verification.components
 
 import androidx.compose.foundation.text.input.TextFieldState
 import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
 import decompose.componentCoroutineScope
-import interfaces.DialogComponent
+import dialogs.interfaces.DialogComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import network.NetworkState

@@ -1,4 +1,4 @@
-package interfaces
+package dialogs.interfaces
 
 interface DialogComponent {
 

@@ -1,4 +1,4 @@
-package verification.components
+package dialogs.verification.components
 
 import androidx.compose.foundation.text.input.TextFieldState
 import kotlinx.coroutines.flow.StateFlow

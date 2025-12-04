@@ -8,6 +8,7 @@ import itemEditorFlow.components.ItemEditorFlowComponent
 import kotlinx.serialization.Serializable
 import logic.ItemManagerPreData
 import mainFlow.components.MainFlowComponent
+import myProfile.components.QuickProfileData
 import profileFlow.components.ProfileFlowComponent
 import registration.components.RegistrationComponent
 
@@ -47,6 +48,6 @@ interface RootComponent : DefaultStack<Config, Child> {
 
 
         @Serializable
-        data class ProfileFlow(val userId: String?) : Config
+        data class ProfileFlow(val userData: Pair<String, QuickProfileData>?) : Config
     }
 }

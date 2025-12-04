@@ -7,22 +7,23 @@ import com.arkivanov.decompose.router.slot.SlotNavigation
 import com.arkivanov.decompose.router.slot.childSlot
 import com.arkivanov.decompose.router.slot.dismiss
 import com.arkivanov.decompose.value.Value
-import editProfile.components.RealEditProfileComponent
+import dialogs.editProfile.components.RealEditProfileComponent
+import dialogs.interfaces.DialogComponent
+import dialogs.interfaces.DialogConfig
+import dialogs.verification.components.RealVerificationComponent
 import enums.UsuallyI
-import interfaces.DialogComponent
-import interfaces.DialogConfig
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import usecases.AuthUseCases
 import usecases.SettingsUseCases
 import usecases.UserUseCases
-import verification.components.RealVerificationComponent
 
 class RealMyProfileComponent(
     componentContext: ComponentContext,
     private val goToAuth: () -> Unit,
     override val goToMain: () -> Unit,
+    private val goToTransactions: (QuickProfileData, String) -> Unit,
 ) : MyProfileComponent, KoinComponent, ComponentContext by componentContext {
 
     private val userUseCases: UserUseCases = get()
@@ -71,6 +72,11 @@ class RealMyProfileComponent(
                 organizationName = userUseCases.fetchOrganizationName()
             )
         )
+
+    override fun openTransactions() {
+        goToTransactions(profileData.value, authUseCases.fetchUserId()!!)
+    }
+
     override val isHelper: MutableStateFlow<Boolean> =
         MutableStateFlow(settingsUseCases.fetchUsuallyI() == UsuallyI.ShareCare)
 

@@ -5,6 +5,7 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
+            implementation(project(Modules.Profile.domain))
             implementation(project(Modules.Auth.domain))
             implementation(project(Modules.Settings.domain))
             implementation(project(Modules.Settings.presentation))

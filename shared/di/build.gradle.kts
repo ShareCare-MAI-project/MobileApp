@@ -21,6 +21,8 @@ kotlin {
 
             implementation(project(Modules.Settings.data))
 
+            implementation(project(Modules.Profile.data))
+
 
 
 

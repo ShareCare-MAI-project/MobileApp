@@ -111,7 +111,7 @@ class RealRootComponent(
             is Config.ProfileFlow -> ProfileFlowChild(
                 RealProfileFlowComponent(
                     childContext,
-                    userId = config.userId,
+                    userData = config.userData,
                     output = ::onProfileFlowOutput
                 )
             )

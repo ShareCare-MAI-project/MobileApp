@@ -1,4 +1,4 @@
-package editProfile.components
+package dialogs.editProfile.components
 
 import alertsManager.AlertState
 import alertsManager.AlertsManager
@@ -6,7 +6,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
 import decompose.componentCoroutineScope
-import interfaces.DialogComponent
+import dialogs.interfaces.DialogComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
