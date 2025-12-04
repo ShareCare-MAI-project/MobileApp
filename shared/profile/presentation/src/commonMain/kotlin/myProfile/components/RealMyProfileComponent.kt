@@ -13,7 +13,8 @@ import usecases.UserUseCases
 
 class RealMyProfileComponent(
     componentContext: ComponentContext,
-    private val goToAuth: () -> Unit
+    private val goToAuth: () -> Unit,
+    override val goToMain: () -> Unit,
 ) : MyProfileComponent, KoinComponent, ComponentContext by componentContext {
 
     private val userUseCases: UserUseCases = get()

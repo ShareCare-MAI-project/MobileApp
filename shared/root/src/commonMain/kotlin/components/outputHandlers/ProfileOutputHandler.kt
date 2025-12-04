@@ -10,5 +10,8 @@ fun RootComponent.onProfileFlowOutput(
 ) {
     when (output) {
         ProfileFlowComponent.Output.NavigateToAuth -> nav.replaceAll(Config.Auth)
+        ProfileFlowComponent.Output.Back ->
+            popOnce(RootComponent.Child.ProfileFlowChild::class)
+
     }
 }

@@ -9,6 +9,7 @@ interface MyProfileComponent {
     val isHelper: StateFlow<Boolean>
 
     fun logout()
+    val goToMain: () -> Unit
 
     fun changeUsuallyI(isHelper: Boolean)
 

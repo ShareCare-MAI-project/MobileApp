@@ -56,7 +56,7 @@ fun MyProfileUI(
                 )
             ) {
                 BackGlassButton(hazeState = hazeState) {
-
+                    component.goToMain()
                 }
             }
         }

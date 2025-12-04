@@ -38,7 +38,8 @@ class RealProfileFlowComponent(
             Config.MyProfile -> Child.MyProfileChild(
                 RealMyProfileComponent(
                     childContext,
-                    goToAuth = { output(Output.NavigateToAuth) }
+                    goToAuth = { output(Output.NavigateToAuth) },
+                    goToMain = { output(Output.Back) }
                 )
             )
         }
