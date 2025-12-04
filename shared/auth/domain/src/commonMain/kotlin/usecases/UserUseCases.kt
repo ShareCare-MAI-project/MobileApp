@@ -1,6 +1,7 @@
 package usecases
 
 import repositories.UserRepository
+import usecases.user.ChangeVerificationUseCase
 import usecases.user.FetchIsVerifiedUseCase
 import usecases.user.FetchNameUseCase
 import usecases.user.FetchOrganizationNameUseCase
@@ -15,4 +16,6 @@ class UserUseCases(
     val fetchOrganizationName = FetchOrganizationNameUseCase(repository)
 
     val updateCurrentUserInfo = UpdateCurrentUserUseCase(repository)
+
+    val changeVerification = ChangeVerificationUseCase(repository)
 }

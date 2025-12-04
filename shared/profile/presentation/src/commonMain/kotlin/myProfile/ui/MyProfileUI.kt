@@ -31,6 +31,8 @@ import myProfile.ui.sections.QuitButtonSection
 import myProfile.ui.sections.UsuallyISection
 import myProfile.ui.sections.VerificationSection
 import utils.SpacerV
+import verification.components.VerificationComponent
+import verification.ui.VerificationUI
 import view.consts.Paddings
 import widgets.Avatar
 import widgets.glass.BackGlassButton
@@ -89,7 +91,7 @@ fun MyProfileUI(
                 VerificationSection(
                     isVerified = profileData.isVerified,
                     organizationName = profileData.organizationName
-                ) {}
+                ) { component.dialogsNav.activate(DialogConfig.Verification) }
                 SpacerV(Paddings.medium)
 
                 UsuallyISection(
@@ -109,9 +111,7 @@ fun MyProfileUI(
                 ListSection(
                     onProfileEditClick = {
                         component.dialogsNav.activate(
-                            DialogConfig.EditProfile(
-                                profileData.name
-                            )
+                            DialogConfig.EditProfile
                         )
                     }
                 )
@@ -127,6 +127,7 @@ fun MyProfileUI(
     if (dialogs != null) {
         when (dialogs) {
             is EditProfileComponent -> EditProfileUI(dialogs)
+            is VerificationComponent -> VerificationUI(dialogs)
         }
     }
 }

@@ -13,4 +13,6 @@ interface UserRepository {
 
     fun fetchIsVerified(): Boolean
     fun fetchOrganizationName(): String?
+
+    fun changeVerification(isVerified: Boolean, organizationName: String?): Flow<NetworkState<Unit>>
 }

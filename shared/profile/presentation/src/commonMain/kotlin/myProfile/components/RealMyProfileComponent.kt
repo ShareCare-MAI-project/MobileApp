@@ -17,6 +17,7 @@ import org.koin.core.component.get
 import usecases.AuthUseCases
 import usecases.SettingsUseCases
 import usecases.UserUseCases
+import verification.components.RealVerificationComponent
 
 class RealMyProfileComponent(
     componentContext: ComponentContext,
@@ -45,7 +46,18 @@ class RealMyProfileComponent(
                         }
                     )
 
-                    is DialogConfig.Verification -> TODO()
+                    is DialogConfig.Verification -> RealVerificationComponent(
+                        componentContext = ctx,
+                        onBackClick = { dialogsNav.dismiss() },
+                        initialIsVerified = userUseCases.fetchIsVerified(),
+                        initialOrganizationName = userUseCases.fetchOrganizationName(),
+                        onIsVerifiedChanged = { isVerified ->
+                            profileData.value = profileData.value.copy(isVerified = isVerified)
+                        },
+                        onOrganizationNameChanged = { organizationName ->
+                            profileData.value = profileData.value.copy(organizationName = organizationName)
+                        }
+                    )
                 }
             }
         )
