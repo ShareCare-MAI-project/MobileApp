@@ -102,7 +102,7 @@ class RealMainFlowComponent(
                                     is ShareCareChild -> child.shareCareComponent.denyItem(cfg.id)
                                 }
                             },
-                            deleteItemFromFlow = { closeSheet ->
+                            deleteItemFromFlow = { closeSheet, deleteFromReadyToHelp ->
                                 val findHelpComponent =
                                     (stack.items.firstOrNull { it.configuration is Config.FindHelp }?.instance as? Child.FindHelpChild)?.findHelpComponent
                                 val shareCareComponent =
@@ -118,6 +118,10 @@ class RealMainFlowComponent(
                                 closeSheet {
                                     // onCompletion
                                     shareCareComponent?.fetchItems()
+
+                                    if (deleteFromReadyToHelp) {
+                                        findHelpComponent?.fetchBasic()
+                                    }
                                 }
                             },
                             onEditClick = {

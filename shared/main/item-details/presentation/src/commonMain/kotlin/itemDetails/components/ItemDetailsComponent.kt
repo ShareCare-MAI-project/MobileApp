@@ -29,10 +29,10 @@ interface ItemDetailsComponent: DetailsComponent {
 
 
     val takeItemResult: StateFlow<NetworkState<TakeItemResponse>>
-    val denyItemResult: StateFlow<NetworkState<Unit>>
-    val deleteItemResult: StateFlow<NetworkState<Unit>>
+    val operationItemResult: StateFlow<NetworkState<Unit>>
 
     fun takeItem()
+    fun acceptItem(closeSheet: (() -> Unit) -> Unit)
     fun denyItem()
 
     fun deleteItem(closeSheet: (() -> Unit) -> Unit)

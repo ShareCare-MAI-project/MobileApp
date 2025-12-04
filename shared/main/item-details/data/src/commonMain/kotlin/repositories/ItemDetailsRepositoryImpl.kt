@@ -25,6 +25,9 @@ class ItemDetailsRepositoryImpl(
             }
         }.flowOn(Dispatchers.IO)
 
+    override fun acceptItem(itemId: String): Flow<NetworkState<Unit>> =
+        remoteDataSource.acceptItem(itemId)
+
     override fun denyItem(itemId: String): Flow<NetworkState<Unit>> =
         remoteDataSource.denyItem(itemId)
 

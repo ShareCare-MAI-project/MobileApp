@@ -6,9 +6,8 @@ import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
 import decompose.componentCoroutineScope
 import entities.TakeItemResponse
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.withContext
 import logic.enums.DeliveryType
 import logic.enums.ItemCategory
 import network.NetworkState
@@ -33,7 +32,7 @@ class RealItemDetailsComponent(
     telegram: String?,
     private val takeItemFromFindHelp: (String) -> Unit,
     private val denyItemFromFlow: () -> Unit,
-    private val deleteItemFromFlow: ((() -> Unit) -> Unit) -> Unit,
+    private val deleteItemFromFlow: ((() -> Unit) -> Unit, Boolean) -> Unit,
     override val onEditClick: () -> Unit
 ) : ItemDetailsComponent, KoinComponent, ComponentContext by componentContext {
 
@@ -48,9 +47,7 @@ class RealItemDetailsComponent(
 
     override val takeItemResult: MutableStateFlow<NetworkState<TakeItemResponse>> =
         MutableStateFlow(NetworkState.AFK)
-    override val denyItemResult: MutableStateFlow<NetworkState<Unit>> =
-        MutableStateFlow(NetworkState.AFK)
-    override val deleteItemResult: MutableStateFlow<NetworkState<Unit>> =
+    override val operationItemResult: MutableStateFlow<NetworkState<Unit>> =
         MutableStateFlow(NetworkState.AFK)
 
     override fun takeItem() {
@@ -73,45 +70,58 @@ class RealItemDetailsComponent(
         }
     }
 
+    override fun acceptItem(closeSheet: (() -> Unit) -> Unit) {
+        if (recipientId.value != null && !operationItemResult.value.isLoading()) {
+            defaultOperationRequest(
+                onSuccess = {
+                    deleteItemFromFlow(closeSheet, true)
+                },
+                useCase = { itemDetailsUseCases.acceptItem(id) }
+            )
+        }
+    }
+
     override fun denyItem() {
-        if (recipientId.value != null && !denyItemResult.value.isLoading()) {
-            coroutineScope.launchIO {
-                itemDetailsUseCases.denyItem(id).collect {
-                    denyItemResult.value = it
-                }
-                denyItemResult.value.handle(
-                    onError = {
-                        AlertsManager.push(AlertState.SnackBar(message = it.prettyPrint))
-                    }
-                ) {
+        if (recipientId.value != null && !operationItemResult.value.isLoading()) {
+            defaultOperationRequest(
+                onSuccess = {
                     recipientId.value = null
                     denyItemFromFlow()
-                }
-            }
-                .invokeOnCompletion {
-                    denyItemResult.value = denyItemResult.value.onCoroutineDeath()
-                }
+                },
+                useCase = { itemDetailsUseCases.denyItem(id) }
+            )
         }
     }
 
     override fun deleteItem(closeSheet: (() -> Unit) -> Unit) {
-        if (!deleteItemResult.value.isLoading()) {
-            coroutineScope.launchIO {
-                itemDetailsUseCases.deleteItem(id).collect {
-                    deleteItemResult.value = it
-                }
-                withContext(Dispatchers.Main) {
-                    deleteItemResult.value.handle(
-                        onError = { AlertsManager.push(AlertState.SnackBar(it.prettyPrint)) }
-                    ) {
-                        deleteItemFromFlow(closeSheet)
-                    }
-                }
+        if (!operationItemResult.value.isLoading()) {
+            defaultOperationRequest(
+                onSuccess = {
+                    deleteItemFromFlow(closeSheet, false)
+                },
+                useCase = { itemDetailsUseCases.deleteItem(id) }
+            )
+        }
+    }
 
-            }.invokeOnCompletion {
-                deleteItemResult.value = deleteItemResult.value.onCoroutineDeath()
+    private fun defaultOperationRequest(
+        onSuccess: () -> Unit,
+        useCase: () -> Flow<NetworkState<Unit>>
+    ) {
+        coroutineScope.launchIO {
+            useCase().collect {
+                operationItemResult.value = it
+            }
+            operationItemResult.value.handle(
+                onError = {
+                    AlertsManager.push(AlertState.SnackBar(message = it.prettyPrint))
+                }
+            ) {
+                onSuccess()
             }
         }
-
+            .invokeOnCompletion {
+                operationItemResult.value = operationItemResult.value.onCoroutineDeath()
+            }
     }
 }
