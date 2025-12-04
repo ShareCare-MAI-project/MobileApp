@@ -15,9 +15,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.arkivanov.decompose.router.slot.activate
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
+import editProfile.components.EditProfileComponent
+import editProfile.ui.EditProfileUI
 import foundation.scrollables.VerticalScrollableBox
+import interfaces.DialogConfig
 import myProfile.components.MyProfileComponent
 import myProfile.ui.sections.FontSizeSection
 import myProfile.ui.sections.ListSection
@@ -34,6 +39,9 @@ import widgets.glass.BackGlassButton
 fun MyProfileUI(
     component: MyProfileComponent
 ) {
+
+    val dialogsSlot by component.dialogsSlot.subscribeAsState()
+    val dialogs = dialogsSlot.child?.instance
 
     val fontSize by FontSizeManager.fontSize.collectAsState()
 
@@ -98,7 +106,15 @@ fun MyProfileUI(
 
                 SpacerV(Paddings.medium)
 
-                ListSection()
+                ListSection(
+                    onProfileEditClick = {
+                        component.dialogsNav.activate(
+                            DialogConfig.EditProfile(
+                                profileData.name
+                            )
+                        )
+                    }
+                )
 
                 SpacerV(Paddings.medium)
 
@@ -107,6 +123,10 @@ fun MyProfileUI(
                 SpacerV(Paddings.endListPadding)
             }
         }
-
+    }
+    if (dialogs != null) {
+        when (dialogs) {
+            is EditProfileComponent -> EditProfileUI(dialogs)
+        }
     }
 }

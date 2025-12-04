@@ -24,4 +24,7 @@ interface ProfileFlowComponent : DefaultStack<Config, Child>  {
         data object NavigateToAuth : Output()
         data object Back : Output()
     }
+
+
+
 }

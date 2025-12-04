@@ -9,17 +9,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.window.Dialog
 import common.CreatorInfoSection
-import common.requestCard.RequestCardDefaults
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
+import foundation.DefaultDialog
 import requestDetails.components.RequestDetailsComponent
 import requestDetails.ui.sections.ButtonSection
 import requestDetails.ui.sections.DeliveryTypesSection
@@ -45,64 +43,66 @@ fun SharedTransitionScope.RequestDetailsUI(
 
     val isEditing = !component.isCreating
 
-    Dialog(
-        onDismissRequest = component.onBackClick
+    val dismissable = !createRequestResult.isLoading() || !deleteRequestResult.isLoading()
+
+    DefaultDialog(
+        onDismissRequest = component.onBackClick,
+        dismissable = dismissable
     ) {
-        Surface(Modifier.fillMaxWidth(), shape = RequestCardDefaults.cardShape) {
-            Column(
-                Modifier
-                    .padding(top = Paddings.semiMedium, bottom = Paddings.medium)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                TextFieldsSection(
-                    requestTextState = component.requestText,
-                    category = category,
-                    isCreationMode = component.isEditable,
-                    isLoading = createRequestResult.isLoading()
-                ) { component.updateCategory(it) }
+        Column(
+            Modifier
+                .padding(top = Paddings.semiMedium, bottom = Paddings.medium)
+                .verticalScroll(rememberScrollState())
+        ) {
+            TextFieldsSection(
+                requestTextState = component.requestText,
+                category = category,
+                isCreationMode = component.isEditable,
+                isLoading = createRequestResult.isLoading()
+            ) { component.updateCategory(it) }
+            SpacerV(Paddings.semiMedium)
+
+            DeliveryTypesSection(
+                deliveryTypes = deliveryTypes,
+                isEditable = component.isEditable
+            ) { component.updateDeliveryType(it) }
+
+            SpacerV(Paddings.semiMedium)
+            LocationSection(modifier = Modifier.fillMaxWidth(), location = component.location)
+
+
+            SpacerV(Paddings.semiMedium)
+            ButtonSection(
+                isEditable = component.isEditable,
+                isEditing = isEditing,
+                requestText = component.requestText.text.toString(),
+                category = category,
+                deliveryTypes = deliveryTypes,
+                initialText = component.initialText,
+                initialDeliveryTypes = component.initialDeliveryTypes,
+                initialCategory = component.initialCategory,
+                isLoading = createRequestResult.isLoading(),
+                createOrEditRequest = component::createOrEditRequest,
+                onAcceptClick = component.onAcceptClick,
+                onDeleteClick = component::deleteRequest,
+                isDeleteLoading = deleteRequestResult.isLoading()
+            )
+
+            if (!component.isEditable) {
                 SpacerV(Paddings.semiMedium)
-
-                DeliveryTypesSection(
-                    deliveryTypes = deliveryTypes,
-                    isEditable = component.isEditable
-                ) { component.updateDeliveryType(it) }
-
-                SpacerV(Paddings.semiMedium)
-                LocationSection(modifier = Modifier.fillMaxWidth(), location = component.location)
-
-
-                SpacerV(Paddings.semiMedium)
-                ButtonSection(
-                    isEditable = component.isEditable,
-                    isEditing = isEditing,
-                    requestText = component.requestText.text.toString(),
-                    category = category,
-                    deliveryTypes = deliveryTypes,
-                    initialText = component.initialText,
-                    initialDeliveryTypes = component.initialDeliveryTypes,
-                    initialCategory = component.initialCategory,
-                    isLoading = createRequestResult.isLoading(),
-                    createOrEditRequest = component::createOrEditRequest,
-                    onAcceptClick = component.onAcceptClick,
-                    onDeleteClick = component::deleteRequest,
-                    isDeleteLoading = deleteRequestResult.isLoading()
-                )
-
-                if (!component.isEditable) {
-                    SpacerV(Paddings.semiMedium)
-                    Column(
-                        Modifier.fillMaxWidth().padding(horizontal = Paddings.medium),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        CreatorInfoSection(
-                            isMe = component.isEditable,
-                            onProfileClick = {},
-                            onReportClick = { AlertsManager.push(AlertState.SnackBar("MVP")) },
-                            isRecipient = true
-                        )
-                    }
+                Column(
+                    Modifier.fillMaxWidth().padding(horizontal = Paddings.medium),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CreatorInfoSection(
+                        isMe = component.isEditable,
+                        onProfileClick = {},
+                        onReportClick = { AlertsManager.push(AlertState.SnackBar("MVP")) },
+                        isRecipient = true
+                    )
                 }
             }
         }
     }
+
 }
