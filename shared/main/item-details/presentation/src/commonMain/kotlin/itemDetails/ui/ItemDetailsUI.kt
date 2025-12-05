@@ -22,6 +22,7 @@ fun SharedTransitionScope.ItemDetailsUI(
     component: ItemDetailsComponent
 ) {
     val itemDetailsAnimator = LocalItemDetailsAnimator.current
+
     PredictiveBackHandler { progress ->
         try {
             progress.collect { backEvent ->
@@ -35,7 +36,6 @@ fun SharedTransitionScope.ItemDetailsUI(
             throw e
         }
     }
-
     ItemDetailsContent(
         component = component,
         sheet = {
@@ -45,4 +45,5 @@ fun SharedTransitionScope.ItemDetailsUI(
             )
         }
     )
+
 }

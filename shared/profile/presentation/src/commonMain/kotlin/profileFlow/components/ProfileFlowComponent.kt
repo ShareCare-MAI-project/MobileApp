@@ -2,8 +2,8 @@ package profileFlow.components
 
 import architecture.DefaultStack
 import kotlinx.serialization.Serializable
+import logic.QuickProfileData
 import myProfile.components.MyProfileComponent
-import myProfile.components.QuickProfileData
 import profileFlow.components.ProfileFlowComponent.Child
 import profileFlow.components.ProfileFlowComponent.Config
 import transactions.components.TransactionsComponent

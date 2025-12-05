@@ -1,5 +1,6 @@
 package ktor
 
+import dto.ItemQuickInfoDTO
 import dto.TakeItemResponseDTO
 import io.ktor.client.HttpClient
 import io.ktor.client.request.parameter
@@ -25,6 +26,9 @@ class ItemDetailsRemoteDataSource(
             parameter("item_id", itemId)
         }
 
+    fun fetchItemQuickInfo(itemId: String): Flow<NetworkState<ItemQuickInfoDTO>> =
+        hc.defaultGet("$FETCH_ITEM_QUICK_INFO_PATH/$itemId", tokenProvider = tokenProvider)
+
     private companion object {
         const val TAKE_ITEM_PATH = "findhelp/take"
 
@@ -32,6 +36,8 @@ class ItemDetailsRemoteDataSource(
         const val DENY_ITEM_PATH = "items/deny"
 
         const val DELETE_ITEM_PATH = "items/"
+
+        const val FETCH_ITEM_QUICK_INFO_PATH = "items/quick-info"
     }
 
 }

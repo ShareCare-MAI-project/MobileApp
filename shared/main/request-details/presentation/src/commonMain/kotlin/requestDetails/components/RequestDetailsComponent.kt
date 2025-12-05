@@ -2,15 +2,21 @@ package requestDetails.components
 
 import androidx.compose.foundation.text.input.TextFieldState
 import common.detailsInterfaces.DetailsComponent
+import entity.ItemQuickInfo
 import kotlinx.coroutines.flow.StateFlow
 import logic.enums.DeliveryType
 import logic.enums.ItemCategory
 import network.NetworkState
 
 interface RequestDetailsComponent: DetailsComponent {
+
+    fun onProfileClick()
+    val requestQuickInfo: StateFlow<NetworkState<ItemQuickInfo>>
+    fun fetchRequestQuickInfo()
+
     val onBackClick: () -> Unit
 
-    val onAcceptClick: () -> Unit
+    val onAcceptClick: (NetworkState<ItemQuickInfo>) -> Unit
 
     val isEditable: Boolean
     val isCreating: Boolean

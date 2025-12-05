@@ -64,7 +64,7 @@ class ItemDetailsAnimator(
 
     }
 
-    fun onBackSuccessful(onCompletion: () -> Unit = {}) {
+    fun onBackSuccessful(onlyAnimation: Boolean = false, onCompletion: () -> Unit = {}) {
         coroutineScope.launch {
             isStableDetailed = false
             isBackGesture = false
@@ -75,7 +75,9 @@ class ItemDetailsAnimator(
 // with await doesn't work
             imageAnimation.join()
             sheetAnimation.join()
-            onBackClicked()
+            if (!onlyAnimation) {
+                onBackClicked()
+            }
 
         }.invokeOnCompletion {
             onCompletion()

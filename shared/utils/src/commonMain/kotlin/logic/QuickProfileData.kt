@@ -1,4 +1,4 @@
-package myProfile.components
+package logic
 
 import kotlinx.serialization.Serializable
 

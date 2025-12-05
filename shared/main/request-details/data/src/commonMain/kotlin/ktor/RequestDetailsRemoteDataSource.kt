@@ -1,5 +1,6 @@
 package ktor
 
+import dto.ItemQuickInfoDTO
 import dto.RequestDTO
 import dto.RequestWithIdDTO
 import io.ktor.client.HttpClient
@@ -23,8 +24,13 @@ class RequestDetailsRemoteDataSource(
             parameter("request_id", requestId)
         }
 
+    fun fetchRequestQuickInfo(requestId: String): Flow<NetworkState<ItemQuickInfoDTO>> =
+        hc.defaultGet("$FETCH_REQUEST_QUICK_INFO_PATH/$requestId", tokenProvider = tokenProvider)
+
+
 
     private companion object {
         const val REQUESTS_PATH = "/requests/"
+        const val FETCH_REQUEST_QUICK_INFO_PATH = "/requests/quick-info"
     }
 }

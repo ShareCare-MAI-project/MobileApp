@@ -10,15 +10,18 @@ fun RootComponent.onMainOutput(
     output: MainFlowComponent.Output
 ) {
     when (output) {
-        is MainFlowComponent.Output.NavigateToItemEditor -> nav.bringToFront(Config.ItemEditor(
-            itemManagerPreData = output.itemManagerPreData
+        is MainFlowComponent.Output.NavigateToItemEditor -> nav.bringToFront(
+            Config.ItemEditor(
+                itemManagerPreData = output.itemManagerPreData
 
-        ))
+            )
+        )
+
         MainFlowComponent.Output.NavigateToAuth -> nav.replaceAll(Config.Auth)
         MainFlowComponent.Output.NavigateToRegistration -> nav.replaceAll(Config.Registration)
-        MainFlowComponent.Output.NavigateToProfile -> nav.bringToFront(
+        is MainFlowComponent.Output.NavigateToProfile -> nav.bringToFront(
             Config.ProfileFlow(
-                userData = null
+                userData = if (output.profileData != null && output.userId != null) output.userId!! to output.profileData!! else null
             )
         )
     }

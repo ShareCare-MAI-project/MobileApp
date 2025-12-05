@@ -6,6 +6,7 @@ import com.arkivanov.decompose.value.Value
 import dialogs.interfaces.DialogComponent
 import dialogs.interfaces.DialogConfig
 import kotlinx.coroutines.flow.StateFlow
+import logic.QuickProfileData
 
 
 interface MyProfileComponent {

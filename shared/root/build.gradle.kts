@@ -15,6 +15,8 @@ kotlin {
             implementation(project(Modules.Main.Flow.presentation))
             implementation(project(Modules.Main.FindHelp.presentation))
             implementation(project(Modules.Main.ShareCare.presentation))
+            implementation(project(Modules.Main.Common.presentation))
+            implementation(project(Modules.Main.ItemDetails.presentation))
             implementation(project(Modules.Main.Common.domain))
 
             implementation(project(Modules.ItemEditor.presentation))

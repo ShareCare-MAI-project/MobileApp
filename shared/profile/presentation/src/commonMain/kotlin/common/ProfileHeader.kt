@@ -1,7 +1,7 @@
 package common
 
 import androidx.compose.runtime.Composable
-import myProfile.components.QuickProfileData
+import logic.QuickProfileData
 import myProfile.ui.sections.NameSection
 import myProfile.ui.sections.VerificationSection
 import utils.SpacerV

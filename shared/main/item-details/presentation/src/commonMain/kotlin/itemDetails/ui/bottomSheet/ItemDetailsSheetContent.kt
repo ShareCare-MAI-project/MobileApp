@@ -20,7 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
-import common.CreatorInfoSection
+import common.UserInfoSection
 import common.itemDetailsTransition.LocalItemDetailsAnimator
 import common.itemDetailsTransition.LocalTransitionHazeState
 import itemDetails.components.ItemDetailsComponent
@@ -28,6 +28,7 @@ import itemDetails.ui.ItemDetailsDefaults
 import itemDetails.ui.bottomSheet.sections.DetailedInfoSection
 import itemDetails.ui.bottomSheet.sections.HugeButtonsSection
 import itemDetails.ui.bottomSheet.sections.QuickInfoSection
+import network.NetworkState
 import utils.SpacerV
 import view.consts.Paddings
 
@@ -54,15 +55,21 @@ fun BoxScope.ItemDetailsSheetContent(
     val isOwner = component.isOwner
     val isRecipient = component.currentId == recipientId
 
+    val itemQuickInfo by component.itemQuickInfo.collectAsState()
 
-    val buttons = rememberButtons(isOwner = isOwner, recipientId = recipientId, component = component, closeSheet = { updateShareCare ->
-        itemDetailsAnimator.onBackSuccessful(
-            onCompletion = {
-                itemDetailsAnimator.onBackClicked()
-                updateShareCare()
-            }
-        )
-    })
+
+    val buttons = rememberButtons(
+        isOwner = isOwner,
+        recipientId = recipientId,
+        component = component,
+        closeSheet = { updateShareCare ->
+            itemDetailsAnimator.onBackSuccessful(
+                onCompletion = {
+                    itemDetailsAnimator.onBackClicked()
+                    updateShareCare()
+                }
+            )
+        })
 
 
 
@@ -90,7 +97,11 @@ fun BoxScope.ItemDetailsSheetContent(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             SpacerV(topPadding)
-            QuickInfoSection(title = component.title, location = component.location, category = component.category)
+            QuickInfoSection(
+                title = component.title,
+                location = component.location,
+                category = component.category
+            )
             SpacerV(Paddings.semiMedium)
 
             HugeButtonsSection(buttons)
@@ -101,12 +112,23 @@ fun BoxScope.ItemDetailsSheetContent(
             )
 
             SpacerV(Paddings.semiMedium)
-            CreatorInfoSection(
-                onProfileClick = {},
+
+            val data = itemQuickInfo.data
+
+            UserInfoSection(
+                onProfileClick = component::onProfileClick,
                 onReportClick = { AlertsManager.push(AlertState.SnackBar("MVP")) },
                 isMe = isOwner,
-                isRecipient = !isOwner,
-                smallSectionTitlePadding = PaddingValues(start = Paddings.ultraSmall)
+                isOwner = isOwner && recipientId != null,
+                smallSectionTitlePadding = PaddingValues(start = Paddings.ultraSmall),
+                isLoading = itemQuickInfo.isLoading(),
+                error = (itemQuickInfo as? NetworkState.Error)?.prettyPrint,
+                name = data?.opponentName ?: "",
+                given = data?.opponentDonated ?: 0,
+                taken = data?.opponentReceived ?: 0,
+                organizationName = data?.opponentOrganizationName,
+                isVerified = data?.opponentIsVerified == true,
+                onErrorClick = { component.fetchItemQuickInfo() }
             )
 
 

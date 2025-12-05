@@ -7,10 +7,12 @@ import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
 import decompose.componentCoroutineScope
 import entities.Request
+import entity.ItemQuickInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
+import logic.QuickProfileData
 import logic.enums.DeliveryType
 import logic.enums.ItemCategory
 import network.NetworkState
@@ -34,9 +36,10 @@ class RealRequestDetailsComponent(
 
 
     override val onBackClick: () -> Unit,
-    override val onAcceptClick: () -> Unit,
+    override val onAcceptClick: (NetworkState<ItemQuickInfo>) -> Unit,
 
     private val updateFindHelpFlow: () -> Unit,
+    private val goToTransactions: (QuickProfileData, String) -> Unit
 ) : RequestDetailsComponent, KoinComponent, ComponentContext by componentContext {
 
     private val coroutineScope = componentCoroutineScope()
@@ -141,4 +144,39 @@ class RealRequestDetailsComponent(
         this.deliveryTypes.update { current -> current - deliveryType }
     }
 
+
+    override val requestQuickInfo: MutableStateFlow<NetworkState<ItemQuickInfo>> =
+        MutableStateFlow(NetworkState.AFK)
+
+    override fun fetchRequestQuickInfo() {
+        if (!requestQuickInfo.value.isLoading()) {
+            coroutineScope.launchIO {
+                requestDetailsUseCases.fetchRequestQuickInfo(id).collect {
+                    requestQuickInfo.value = it
+                }
+            }.invokeOnCompletion {
+                requestQuickInfo.value = requestQuickInfo.value.onCoroutineDeath()
+            }
+        }
+    }
+
+    override fun onProfileClick() {
+        val data = requestQuickInfo.value.data
+        data?.let {
+            goToTransactions(
+                QuickProfileData(
+                    name = data.opponentName,
+                    isVerified = data.opponentIsVerified,
+                    organizationName = data.opponentOrganizationName
+                ),
+                data.opponentId
+            )
+        }
+    }
+
+    init {
+        if (!isEditable) {
+            fetchRequestQuickInfo()
+        }
+    }
 }

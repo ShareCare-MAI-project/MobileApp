@@ -10,6 +10,7 @@ import findHelp.components.FindHelpComponent
 import kotlinx.serialization.Serializable
 import loading.components.LoadingComponent
 import logic.ItemManagerPreData
+import logic.QuickProfileData
 import mainFlow.components.MainFlowComponent.Child
 import mainFlow.components.MainFlowComponent.Config
 import shareCare.components.ShareCareComponent
@@ -54,6 +55,6 @@ interface MainFlowComponent : DefaultStack<Config, Child> {
         data object NavigateToRegistration : Output()
         data object NavigateToAuth : Output()
 
-        data object NavigateToProfile : Output()
+        data class NavigateToProfile(val profileData: QuickProfileData?, val userId: String?) : Output()
     }
 }

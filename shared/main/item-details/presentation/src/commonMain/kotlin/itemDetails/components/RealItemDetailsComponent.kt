@@ -6,10 +6,13 @@ import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
 import decompose.componentCoroutineScope
 import entities.TakeItemResponse
+import entity.ItemQuickInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import logic.QuickProfileData
 import logic.enums.DeliveryType
 import logic.enums.ItemCategory
+import logic.enums.ItemStatus
 import network.NetworkState
 import network.NetworkState.AFK.onCoroutineDeath
 import org.koin.core.component.KoinComponent
@@ -33,7 +36,8 @@ class RealItemDetailsComponent(
     private val takeItemFromFindHelp: (String) -> Unit,
     private val denyItemFromFlow: () -> Unit,
     private val deleteItemFromFlow: ((() -> Unit) -> Unit, Boolean) -> Unit,
-    override val onEditClick: () -> Unit
+    override val onEditClick: () -> Unit,
+    private val goToTransactions: (QuickProfileData, String) -> Unit
 ) : ItemDetailsComponent, KoinComponent, ComponentContext by componentContext {
 
     private val coroutineScope = componentCoroutineScope()
@@ -51,7 +55,11 @@ class RealItemDetailsComponent(
         MutableStateFlow(NetworkState.AFK)
 
     override fun takeItem() {
-        if (recipientId.value == null && !isOwner && !takeItemResult.value.isLoading()) {
+        if (itemQuickInfo.value.data == null) {
+            AlertsManager.push(AlertState.SnackBar(message = "Пожалуйста, подождите загрузки данных"))
+        } else if (itemQuickInfo.value.data?.status != ItemStatus.Listed) {
+            AlertsManager.push(AlertState.SnackBar(message = "Предмет уже забрали"))
+        } else if (recipientId.value == null && !isOwner && !takeItemResult.value.isLoading()) {
             coroutineScope.launchIO {
                 itemDetailsUseCases.takeItem(id).collect {
                     takeItemResult.value = it
@@ -102,6 +110,39 @@ class RealItemDetailsComponent(
                 useCase = { itemDetailsUseCases.deleteItem(id) }
             )
         }
+    }
+
+    override val itemQuickInfo: MutableStateFlow<NetworkState<ItemQuickInfo>> =
+        MutableStateFlow(NetworkState.AFK)
+
+    override fun fetchItemQuickInfo() {
+        if (!itemQuickInfo.value.isLoading()) {
+            coroutineScope.launchIO {
+                itemDetailsUseCases.fetchItemQuickInfo(id).collect {
+                    itemQuickInfo.value = it
+                }
+            }.invokeOnCompletion {
+                itemQuickInfo.value = itemQuickInfo.value.onCoroutineDeath()
+            }
+        }
+    }
+
+    override fun onProfileClick() {
+        val data = itemQuickInfo.value.data
+        data?.let {
+            goToTransactions(
+                QuickProfileData(
+                    name = data.opponentName,
+                    isVerified = data.opponentIsVerified,
+                    organizationName = data.opponentOrganizationName
+                ),
+                data.opponentId
+            )
+        }
+    }
+
+    init {
+        fetchItemQuickInfo()
     }
 
     private fun defaultOperationRequest(

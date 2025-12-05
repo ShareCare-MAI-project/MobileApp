@@ -1,5 +1,7 @@
 package mainFlow.components
 
+import alertsManager.AlertState
+import alertsManager.AlertsManager
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.childContext
 import com.arkivanov.decompose.router.slot.ChildSlot
@@ -23,6 +25,7 @@ import itemDetails.components.RealItemDetailsComponent
 import loading.components.LoadingComponent
 import loading.components.RealLoadingComponent
 import logic.ItemManagerPreData
+import logic.enums.ItemStatus
 import mainFlow.components.MainFlowComponent.Child
 import mainFlow.components.MainFlowComponent.Child.FindHelpChild
 import mainFlow.components.MainFlowComponent.Child.ShareCareChild
@@ -138,6 +141,14 @@ class RealMainFlowComponent(
                                         )
                                     )
                                 )
+                            },
+                            goToTransactions = { profileData, userId ->
+                                output(
+                                    Output.NavigateToProfile(
+                                        profileData = profileData,
+                                        userId = userId
+                                    )
+                                )
                             }
                         )
 
@@ -155,17 +166,31 @@ class RealMainFlowComponent(
                                 (stack.items.firstOrNull { it.configuration is Config.FindHelp }?.instance as? Child.FindHelpChild)?.findHelpComponent?.fetchBasic()
                             },
                             onBackClick = { detailsNav.dismiss() },
-                            onAcceptClick = {
-                                detailsNav.dismiss()
-                                output(
-                                    Output.NavigateToItemEditor(
-                                        itemManagerPreData = ItemManagerPreData(
-                                            title = cfg.text,
-                                            category = cfg.category,
-                                            availableDeliveryTypes = cfg.deliveryTypes,
-                                            location = "Москва, м. Сокол",
-                                            requestId = cfg.id
+                            onAcceptClick = { itemQuickInfo ->
+                                if (itemQuickInfo.data == null) {
+                                    AlertsManager.push(AlertState.SnackBar(message = "Пожалуйста, подождите загрузки данных"))
+                                } else if (itemQuickInfo.data?.status != ItemStatus.Listed) {
+                                    AlertsManager.push(AlertState.SnackBar(message = "Кто-то другой уже откликнулся, спасибо за отзывчивость!"))
+                                } else {
+                                    detailsNav.dismiss()
+                                    output(
+                                        Output.NavigateToItemEditor(
+                                            itemManagerPreData = ItemManagerPreData(
+                                                title = cfg.text,
+                                                category = cfg.category,
+                                                availableDeliveryTypes = cfg.deliveryTypes,
+                                                location = "Москва, м. Сокол",
+                                                requestId = cfg.id
+                                            )
                                         )
+                                    )
+                                }
+                            },
+                            goToTransactions = { profileData, userId ->
+                                output(
+                                    Output.NavigateToProfile(
+                                        profileData = profileData,
+                                        userId = userId
                                     )
                                 )
                             }

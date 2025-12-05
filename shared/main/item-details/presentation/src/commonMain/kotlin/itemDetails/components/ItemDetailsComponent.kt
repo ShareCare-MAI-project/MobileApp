@@ -2,12 +2,14 @@ package itemDetails.components
 
 import common.detailsInterfaces.DetailsComponent
 import entities.TakeItemResponse
+import entity.ItemQuickInfo
 import kotlinx.coroutines.flow.StateFlow
 import logic.enums.DeliveryType
 import logic.enums.ItemCategory
 import network.NetworkState
 
 interface ItemDetailsComponent: DetailsComponent {
+    fun onProfileClick()
 
     val onEditClick: () -> Unit
 
@@ -36,5 +38,10 @@ interface ItemDetailsComponent: DetailsComponent {
     fun denyItem()
 
     fun deleteItem(closeSheet: (() -> Unit) -> Unit)
+
+
+
+    val itemQuickInfo: StateFlow<NetworkState<ItemQuickInfo>>
+    fun fetchItemQuickInfo()
 
 }
