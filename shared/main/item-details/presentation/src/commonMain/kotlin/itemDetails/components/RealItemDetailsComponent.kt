@@ -5,9 +5,11 @@ import alertsManager.AlertsManager
 import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
 import decompose.componentCoroutineScope
+import entities.ItemQuickInfo
 import entities.TakeItemResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import logic.QuickProfileData
 import logic.enums.DeliveryType
 import logic.enums.ItemCategory
 import network.NetworkState
@@ -33,7 +35,8 @@ class RealItemDetailsComponent(
     private val takeItemFromFindHelp: (String) -> Unit,
     private val denyItemFromFlow: () -> Unit,
     private val deleteItemFromFlow: ((() -> Unit) -> Unit, Boolean) -> Unit,
-    override val onEditClick: () -> Unit
+    override val onEditClick: () -> Unit,
+    override val goToTransactions: (QuickProfileData, String) -> Unit
 ) : ItemDetailsComponent, KoinComponent, ComponentContext by componentContext {
 
     private val coroutineScope = componentCoroutineScope()
@@ -102,6 +105,39 @@ class RealItemDetailsComponent(
                 useCase = { itemDetailsUseCases.deleteItem(id) }
             )
         }
+    }
+
+    override val itemQuickInfo: MutableStateFlow<NetworkState<ItemQuickInfo>> =
+        MutableStateFlow(NetworkState.AFK)
+
+    override fun fetchItemQuickInfo() {
+        if (!itemQuickInfo.value.isLoading()) {
+            coroutineScope.launchIO {
+                itemDetailsUseCases.fetchItemQuickInfo(id).collect {
+                    itemQuickInfo.value = it
+                }
+            }.invokeOnCompletion {
+                itemQuickInfo.value = itemQuickInfo.value.onCoroutineDeath()
+            }
+        }
+    }
+
+    override fun onProfileClick() {
+        val data = itemQuickInfo.value.data
+        data?.let {
+            goToTransactions(
+                QuickProfileData(
+                    name = data.opponentName,
+                    isVerified = data.opponentIsVerified,
+                    organizationName = data.opponentOrganizationName
+                ),
+                data.opponentId
+            )
+        }
+    }
+
+    init {
+        fetchItemQuickInfo()
     }
 
     private fun defaultOperationRequest(

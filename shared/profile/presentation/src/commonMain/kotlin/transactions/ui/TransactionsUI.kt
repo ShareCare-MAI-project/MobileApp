@@ -1,6 +1,7 @@
 package transactions.ui
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -70,7 +71,8 @@ fun TransactionsUI(
     val items = transactions.data
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize(),
         topBar = {
             Box(
                 Modifier.padding(
@@ -97,7 +99,10 @@ fun TransactionsUI(
                     ProfileHeader(
                         profileData = component.profileData
                     ) {}
-                    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         AnimatedVisibility(transactionsInfo != null) {
                             val donated = transactionsInfo?.donated ?: 0
                             val received = transactionsInfo?.received ?: 0

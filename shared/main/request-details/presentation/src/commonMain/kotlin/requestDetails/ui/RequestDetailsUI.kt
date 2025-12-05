@@ -1,7 +1,5 @@
 package requestDetails.ui
 
-import alertsManager.AlertState
-import alertsManager.AlertsManager
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
@@ -15,7 +13,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import common.CreatorInfoSection
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import foundation.DefaultDialog
 import requestDetails.components.RequestDetailsComponent
@@ -94,12 +91,13 @@ fun SharedTransitionScope.RequestDetailsUI(
                     Modifier.fillMaxWidth().padding(horizontal = Paddings.medium),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    CreatorInfoSection(
-                        isMe = component.isEditable,
-                        onProfileClick = {},
-                        onReportClick = { AlertsManager.push(AlertState.SnackBar("MVP")) },
-                        isRecipient = true
-                    )
+                    // TODO::
+//                    CreatorInfoSection(
+//                        isMe = component.isEditable,
+//                        onProfileClick = {},
+//                        onReportClick = { AlertsManager.push(AlertState.SnackBar("MVP")) },
+//                        isRecipient = true
+//                    )
                 }
             }
         }

@@ -6,7 +6,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
-import myProfile.components.QuickProfileData
+import logic.QuickProfileData
 import myProfile.components.RealMyProfileComponent
 import org.koin.core.component.KoinComponent
 import profileFlow.components.ProfileFlowComponent.Child
@@ -57,7 +57,13 @@ class RealProfileFlowComponent(
                     childContext,
                     profileData = config.profileData,
                     userId = config.userId,
-                    pop = { popOnce(Child.TransactionsChild::class) }
+                    pop = {
+                        if (calculateInitialConfig() !is Config.Transactions) {
+                            popOnce(Child.TransactionsChild::class)
+                        } else {
+                            output.invoke(Output.Back)
+                        }
+                    }
                 )
             )
         }

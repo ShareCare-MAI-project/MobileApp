@@ -1,5 +1,6 @@
 package repositories
 
+import entities.ItemQuickInfo
 import entities.TakeItemResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -33,5 +34,15 @@ class ItemDetailsRepositoryImpl(
 
     override fun deleteItem(itemId: String): Flow<NetworkState<Unit>> =
         remoteDataSource.deleteItem(itemId)
+
+    override fun fetchItemQuickInfo(itemId: String): Flow<NetworkState<ItemQuickInfo>> = flow {
+        remoteDataSource.fetchItemQuickInfo(itemId).collect { infoResponse ->
+            emit(
+                infoResponse.defaultWhen { response ->
+                    NetworkState.Success(response.data.toDomain())
+                }
+            )
+        }
+    }.flowOn(Dispatchers.IO)
 
 }

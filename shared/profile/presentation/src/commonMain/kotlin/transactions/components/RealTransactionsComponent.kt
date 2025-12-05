@@ -5,7 +5,7 @@ import com.arkivanov.decompose.ComponentContext
 import decompose.componentCoroutineScope
 import entities.Transaction
 import kotlinx.coroutines.flow.MutableStateFlow
-import myProfile.components.QuickProfileData
+import logic.QuickProfileData
 import network.NetworkState
 import network.NetworkState.AFK.onCoroutineDeath
 import org.koin.core.component.KoinComponent

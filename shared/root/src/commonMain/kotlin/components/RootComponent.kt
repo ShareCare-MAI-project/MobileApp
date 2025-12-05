@@ -7,8 +7,8 @@ import components.RootComponent.Config
 import itemEditorFlow.components.ItemEditorFlowComponent
 import kotlinx.serialization.Serializable
 import logic.ItemManagerPreData
+import logic.QuickProfileData
 import mainFlow.components.MainFlowComponent
-import myProfile.components.QuickProfileData
 import profileFlow.components.ProfileFlowComponent
 import registration.components.RegistrationComponent
 

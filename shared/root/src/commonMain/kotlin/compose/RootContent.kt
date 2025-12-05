@@ -35,20 +35,31 @@ fun SharedTransitionScope.RootContent(
     Surface(
         Modifier.fillMaxSize()
     ) {
+
         Children(
             stack = stack,
-            animation = predictiveBackAnimation(
+            animation =
+                // workaround
+//                if (stack.active.instance is RootComponent.Child.ProfileFlowChild
+//                && stack.backStack.last().instance is RootComponent.Child.MainFlowChild
+//                && ((stack.backStack.last().instance as RootComponent.Child.MainFlowChild).mainFlowComponent.detailsSlot.child?.instance is ItemDetailsComponent)
+//            ) stackAnimation(
+//                iosSlide()
+//            ) else
+                predictiveBackAnimation(
                 backHandler = component.backHandler,
                 fallbackAnimation = stackAnimation(iosSlide()),
                 onBack = component::onBackClicked
             )
         ) {
-
             when (val child = it.instance) {
                 is RootComponent.Child.HelloChild -> HelloUI(child.helloComponent)
                 is RootComponent.Child.AuthChild -> AuthUI(child.authComponent)
                 is RootComponent.Child.RegistrationChild -> RegistrationUI(child.registrationComponent)
-                is RootComponent.Child.MainFlowChild -> MainFlowUI(child.mainFlowComponent)
+                is RootComponent.Child.MainFlowChild -> MainFlowUI(
+                    child.mainFlowComponent
+                )
+
                 is RootComponent.Child.ItemEditorChild -> ItemEditorFlowUI(child.itemEditorComponent)
                 is RootComponent.Child.ProfileFlowChild -> ProfileFlowUI(child.profileFlowComponent)
             }

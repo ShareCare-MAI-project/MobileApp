@@ -138,6 +138,14 @@ class RealMainFlowComponent(
                                         )
                                     )
                                 )
+                            },
+                            goToTransactions = { profileData, userId ->
+                                output(
+                                    Output.NavigateToProfile(
+                                        profileData = profileData,
+                                        userId = userId
+                                    )
+                                )
                             }
                         )
 

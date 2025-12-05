@@ -2,7 +2,7 @@ package transactions.components
 
 import entities.Transaction
 import kotlinx.coroutines.flow.StateFlow
-import myProfile.components.QuickProfileData
+import logic.QuickProfileData
 import network.NetworkState
 
 interface TransactionsComponent {

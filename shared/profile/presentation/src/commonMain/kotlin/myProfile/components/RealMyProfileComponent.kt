@@ -13,6 +13,7 @@ import dialogs.interfaces.DialogConfig
 import dialogs.verification.components.RealVerificationComponent
 import enums.UsuallyI
 import kotlinx.coroutines.flow.MutableStateFlow
+import logic.QuickProfileData
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import usecases.AuthUseCases
