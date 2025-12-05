@@ -19,8 +19,8 @@ import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -111,7 +111,9 @@ fun AIHelpSection(
 
         AnimatedVisibility(aiAnswer is NetworkState.Success) {
             Row(
-                Modifier.fillMaxWidth().padding(horizontal = Paddings.listHorizontalPadding),
+                Modifier.fillMaxWidth().padding(horizontal = Paddings.listHorizontalPadding).clip(shapes.medium).clickable {
+                    isAiAnswerExpanded = !isAiAnswerExpanded
+                },
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -120,16 +122,10 @@ fun AIHelpSection(
                     horizontalPadding = 0.dp,
                     modifier = Modifier.weight(1f, false)
                 )
-                IconButton(
-                    onClick = {
-                        isAiAnswerExpanded = !isAiAnswerExpanded
-                    }
-                ) {
-                    Icon(
-                        if (!isAiAnswerExpanded) Icons.Rounded.ExpandMore else Icons.Rounded.ExpandLess,
-                        null
-                    )
-                }
+                Icon(
+                    if (!isAiAnswerExpanded) Icons.Rounded.ExpandMore else Icons.Rounded.ExpandLess,
+                    null
+                )
             }
         }
 
