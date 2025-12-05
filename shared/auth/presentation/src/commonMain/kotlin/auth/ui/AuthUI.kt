@@ -26,11 +26,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import auth.components.AuthComponent
 import auth.components.AuthProgressState
+import foundation.AsyncLocalImage
 import foundation.scrollables.VerticalScrollableBox
+import resources.RImages
 import utils.SpacerV
 import utils.fastBackground
 import view.consts.Paddings
@@ -74,7 +78,16 @@ fun AuthUI(
                         .fillMaxWidth()
                         .aspectRatio(1f),
                     shape = shapes.extraLarge
-                ) {}
+                ) {
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        AsyncLocalImage(
+                            RImages.ICON,
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(.5f),
+                            colorFilter = ColorFilter.tint(color = lerp(colorScheme.primary, colorScheme.onBackground, .5f))
+                        )
+                    }
+                }
                 SpacerV(Paddings.medium)
                 Text(
                     "ДоброДар",
