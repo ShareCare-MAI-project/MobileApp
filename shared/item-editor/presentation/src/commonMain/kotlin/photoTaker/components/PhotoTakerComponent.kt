@@ -12,4 +12,5 @@ interface PhotoTakerComponent {
 
     fun onPhotoPick(imageBitmap: ImageBitmap)
     fun deletePhoto(imageBitmap: ImageBitmap)
+    fun rotatePhoto(imageBitmap: ImageBitmap)
 }

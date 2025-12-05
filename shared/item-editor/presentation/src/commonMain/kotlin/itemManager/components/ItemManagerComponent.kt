@@ -1,6 +1,7 @@
 package itemManager.components
 
 import androidx.compose.foundation.text.input.TextFieldState
+import entities.AICreateHelp
 import kotlinx.coroutines.flow.StateFlow
 import logic.ItemManagerPreData
 import logic.enums.DeliveryType
@@ -9,6 +10,13 @@ import network.NetworkState
 import photoTaker.components.PhotoTakerComponent
 
 interface ItemManagerComponent {
+
+
+
+    val aiAnswer: StateFlow<NetworkState<AICreateHelp>>
+    fun askAI()
+
+
 
     val isEditing: Boolean
 

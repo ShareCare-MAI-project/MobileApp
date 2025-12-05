@@ -1,5 +1,6 @@
 package dto
 
+import entities.AICreateHelp
 import entities.Item
 
 fun Item.toDTO() = ItemDTO(
@@ -10,4 +11,10 @@ fun Item.toDTO() = ItemDTO(
     deliveryTypes = this.deliveryTypes.map { it.name },
     images = this.images,
     requestId = this.requestId
+)
+
+fun AICreateHelpDTO.toDomain() = AICreateHelp(
+    title = name,
+    description = description,
+    category = category
 )
