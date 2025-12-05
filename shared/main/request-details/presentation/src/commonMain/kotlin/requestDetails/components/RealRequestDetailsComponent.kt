@@ -36,7 +36,7 @@ class RealRequestDetailsComponent(
 
 
     override val onBackClick: () -> Unit,
-    override val onAcceptClick: () -> Unit,
+    override val onAcceptClick: (NetworkState<ItemQuickInfo>) -> Unit,
 
     private val updateFindHelpFlow: () -> Unit,
     private val goToTransactions: (QuickProfileData, String) -> Unit

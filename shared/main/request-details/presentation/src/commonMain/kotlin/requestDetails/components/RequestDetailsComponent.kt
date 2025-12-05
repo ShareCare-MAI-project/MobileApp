@@ -16,7 +16,7 @@ interface RequestDetailsComponent: DetailsComponent {
 
     val onBackClick: () -> Unit
 
-    val onAcceptClick: () -> Unit
+    val onAcceptClick: (NetworkState<ItemQuickInfo>) -> Unit
 
     val isEditable: Boolean
     val isCreating: Boolean

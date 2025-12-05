@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import logic.QuickProfileData
 import logic.enums.DeliveryType
 import logic.enums.ItemCategory
+import logic.enums.ItemStatus
 import network.NetworkState
 import network.NetworkState.AFK.onCoroutineDeath
 import org.koin.core.component.KoinComponent
@@ -54,7 +55,11 @@ class RealItemDetailsComponent(
         MutableStateFlow(NetworkState.AFK)
 
     override fun takeItem() {
-        if (recipientId.value == null && !isOwner && !takeItemResult.value.isLoading()) {
+        if (itemQuickInfo.value.data == null) {
+            AlertsManager.push(AlertState.SnackBar(message = "Пожалуйста, подождите загрузки данных"))
+        } else if (itemQuickInfo.value.data?.status != ItemStatus.Listed) {
+            AlertsManager.push(AlertState.SnackBar(message = "Предмет уже забрали"))
+        } else if (recipientId.value == null && !isOwner && !takeItemResult.value.isLoading()) {
             coroutineScope.launchIO {
                 itemDetailsUseCases.takeItem(id).collect {
                     takeItemResult.value = it

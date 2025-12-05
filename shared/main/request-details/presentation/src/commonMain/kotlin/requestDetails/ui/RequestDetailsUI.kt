@@ -86,7 +86,7 @@ fun SharedTransitionScope.RequestDetailsUI(
                 initialCategory = component.initialCategory,
                 isLoading = createRequestResult.isLoading(),
                 createOrEditRequest = component::createOrEditRequest,
-                onAcceptClick = component.onAcceptClick,
+                onAcceptClick = { component.onAcceptClick(requestQuickInfo) },
                 onDeleteClick = component::deleteRequest,
                 isDeleteLoading = deleteRequestResult.isLoading()
             )
