@@ -1,5 +1,7 @@
 package requestDetails.ui
 
+import alertsManager.AlertState
+import alertsManager.AlertsManager
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
@@ -13,8 +15,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import common.UserInfoSection
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import foundation.DefaultDialog
+import network.NetworkState
 import requestDetails.components.RequestDetailsComponent
 import requestDetails.ui.sections.ButtonSection
 import requestDetails.ui.sections.DeliveryTypesSection
@@ -41,6 +45,8 @@ fun SharedTransitionScope.RequestDetailsUI(
     val isEditing = !component.isCreating
 
     val dismissable = !createRequestResult.isLoading() || !deleteRequestResult.isLoading()
+
+    val requestQuickInfo by component.requestQuickInfo.collectAsState()
 
     DefaultDialog(
         onDismissRequest = component.onBackClick,
@@ -91,13 +97,22 @@ fun SharedTransitionScope.RequestDetailsUI(
                     Modifier.fillMaxWidth().padding(horizontal = Paddings.medium),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // TODO::
-//                    CreatorInfoSection(
-//                        isMe = component.isEditable,
-//                        onProfileClick = {},
-//                        onReportClick = { AlertsManager.push(AlertState.SnackBar("MVP")) },
-//                        isRecipient = true
-//                    )
+                    val data = requestQuickInfo.data
+
+                    UserInfoSection(
+                        isMe = component.isEditable,
+                        onProfileClick = component::onProfileClick,
+                        onReportClick = { AlertsManager.push(AlertState.SnackBar("MVP")) },
+                        isOwner = true,
+                        isLoading = requestQuickInfo.isLoading(),
+                        error = (requestQuickInfo as? NetworkState.Error)?.prettyPrint,
+                        name = data?.opponentName ?: "",
+                        given = data?.opponentDonated ?: 0,
+                        taken = data?.opponentReceived ?: 0,
+                        organizationName = data?.opponentOrganizationName,
+                        isVerified = data?.opponentIsVerified == true,
+                        onErrorClick = { component.fetchRequestQuickInfo() }
+                    )
                 }
             }
         }

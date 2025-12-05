@@ -1,16 +1,14 @@
 package itemDetails.components
 
 import common.detailsInterfaces.DetailsComponent
-import entities.ItemQuickInfo
 import entities.TakeItemResponse
+import entity.ItemQuickInfo
 import kotlinx.coroutines.flow.StateFlow
-import logic.QuickProfileData
 import logic.enums.DeliveryType
 import logic.enums.ItemCategory
 import network.NetworkState
 
 interface ItemDetailsComponent: DetailsComponent {
-    val goToTransactions: (QuickProfileData, String) -> Unit
     fun onProfileClick()
 
     val onEditClick: () -> Unit

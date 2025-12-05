@@ -13,6 +13,7 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.arkivanov.decompose.router.slot.child
 import components.RootComponent
 import itemEditorFlow.ui.ItemEditorFlowUI
 import mainFlow.ui.MainFlowUI
@@ -39,18 +40,17 @@ fun SharedTransitionScope.RootContent(
         Children(
             stack = stack,
             animation =
-                // workaround
-//                if (stack.active.instance is RootComponent.Child.ProfileFlowChild
-//                && stack.backStack.last().instance is RootComponent.Child.MainFlowChild
-//                && ((stack.backStack.last().instance as RootComponent.Child.MainFlowChild).mainFlowComponent.detailsSlot.child?.instance is ItemDetailsComponent)
-//            ) stackAnimation(
-//                iosSlide()
-//            ) else
-                predictiveBackAnimation(
-                backHandler = component.backHandler,
-                fallbackAnimation = stackAnimation(iosSlide()),
-                onBack = component::onBackClicked
-            )
+                if (stack.active.instance is RootComponent.Child.ProfileFlowChild
+                    && stack.backStack.last().instance is RootComponent.Child.MainFlowChild
+                    && ((stack.backStack.last().instance as RootComponent.Child.MainFlowChild).mainFlowComponent.detailsSlot.child?.instance != null)
+                ) stackAnimation(
+                    iosSlide()
+                ) else
+                    predictiveBackAnimation(
+                        backHandler = component.backHandler,
+                        fallbackAnimation = stackAnimation(iosSlide()),
+                        onBack = component::onBackClicked
+                    )
         ) {
             when (val child = it.instance) {
                 is RootComponent.Child.HelloChild -> HelloUI(child.helloComponent)

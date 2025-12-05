@@ -5,8 +5,8 @@ import alertsManager.AlertsManager
 import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
 import decompose.componentCoroutineScope
-import entities.ItemQuickInfo
 import entities.TakeItemResponse
+import entity.ItemQuickInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import logic.QuickProfileData
@@ -36,7 +36,7 @@ class RealItemDetailsComponent(
     private val denyItemFromFlow: () -> Unit,
     private val deleteItemFromFlow: ((() -> Unit) -> Unit, Boolean) -> Unit,
     override val onEditClick: () -> Unit,
-    override val goToTransactions: (QuickProfileData, String) -> Unit
+    private val goToTransactions: (QuickProfileData, String) -> Unit
 ) : ItemDetailsComponent, KoinComponent, ComponentContext by componentContext {
 
     private val coroutineScope = componentCoroutineScope()

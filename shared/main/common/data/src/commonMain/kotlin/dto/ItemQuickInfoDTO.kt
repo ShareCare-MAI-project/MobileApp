@@ -1,6 +1,6 @@
 package dto
 
-import entities.ItemQuickInfo
+import entity.ItemQuickInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import logic.enums.ItemStatus
