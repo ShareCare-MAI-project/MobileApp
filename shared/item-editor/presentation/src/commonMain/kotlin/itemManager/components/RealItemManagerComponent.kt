@@ -6,6 +6,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
 import decompose.componentCoroutineScope
+import entities.AICreateHelp
 import entities.Item
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,6 +34,24 @@ class RealItemManagerComponent(
     private val itemEditorUseCases: ItemEditorUseCases = get()
 
     private val coroutineScope = componentCoroutineScope()
+    override val aiAnswer: MutableStateFlow<NetworkState<AICreateHelp>> =
+        MutableStateFlow(NetworkState.AFK)
+
+    override fun askAI() {
+        if (!aiAnswer.value.isLoading()) {
+            coroutineScope.launchIO {
+                itemEditorUseCases.askAICreateHelp(images = getImages()).collect {
+                    aiAnswer.value = it
+                    it.onError { error ->
+                        AlertsManager.push(AlertState.SnackBar(error.prettyPrint))
+                    }
+                }
+            }.invokeOnCompletion {
+                aiAnswer.value = aiAnswer.value.onCoroutineDeath()
+            }
+        }
+    }
+
     override val isEditing: Boolean
         get() = itemManagerPreData.description.isNotEmpty()
     override val createOrEditItemResult: MutableStateFlow<NetworkState<Unit>> =
@@ -67,7 +86,7 @@ class RealItemManagerComponent(
         if (!createOrEditItemResult.value.isLoading()) {
             coroutineScope.launchIO {
                 val preparedItem: Item = Item(
-                    images = photoTakerComponent.pickedPhotos.value.map { it.encodeToByteArray(50) },
+                    images = getImages(),
                     title = title.text.toString(),
                     description = description.text.toString(),
                     category = itemCategory.value!!,
@@ -106,4 +125,7 @@ class RealItemManagerComponent(
     private fun removeDeliveryType(deliveryType: DeliveryType) {
         this.deliveryTypes.update { current -> current - deliveryType }
     }
+
+    private suspend fun getImages() =
+        photoTakerComponent.pickedPhotos.value.map { it.encodeToByteArray(50) }
 }

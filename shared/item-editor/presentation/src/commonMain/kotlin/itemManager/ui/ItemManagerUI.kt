@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -61,6 +62,8 @@ internal fun ItemManagerUI(
 
     val itemManagerPreData = component.itemManagerPreData
 
+    val aiAnswer by component.aiAnswer.collectAsState()
+
     Scaffold(
         Modifier.fillMaxSize().imePadding(),
         topBar = {
@@ -102,9 +105,17 @@ internal fun ItemManagerUI(
 
                     SpacerV(Paddings.medium)
 
-                    AIHelpSection(images.isNotEmpty()) {
-                        // TODO
-                    }
+                    AIHelpSection(
+                        images.isNotEmpty(),
+                        aiAnswer = aiAnswer,
+                        curTitle = title.text.toString(),
+                        curDescription = description.text.toString(),
+                        curCategory = itemCategory,
+                        onHelpClick = component::askAI,
+                        onAcceptTitleClick = { title.setTextAndPlaceCursorAtEnd(it) },
+                        onAcceptDescriptionClick = { description.setTextAndPlaceCursorAtEnd(it) },
+                        onAcceptItemCategoryClick = component::updateItemCategory
+                    )
 
                     SpacerV(Paddings.medium)
                 }
