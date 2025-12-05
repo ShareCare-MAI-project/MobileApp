@@ -2,6 +2,7 @@ package repositories
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -23,6 +24,7 @@ class AuthRepositoryImpl(
             emit(verifyCodeResponse.defaultWhen { response ->
                 localDataSource.saveToken(response.data.token)
                 localDataSource.saveUserId(response.data.userId)
+                delay(1000) //=(((
                 (NetworkState.Success(response.data.name == null))
             })
         }

@@ -100,7 +100,8 @@ fun BoxScope.ItemDetailsSheetContent(
             QuickInfoSection(
                 title = component.title,
                 location = component.location,
-                category = component.category
+                category = component.category,
+                sheetState = itemDetailsAnimator.sheetState
             )
             SpacerV(Paddings.semiMedium)
 

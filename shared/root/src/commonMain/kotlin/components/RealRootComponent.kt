@@ -113,6 +113,11 @@ class RealRootComponent(
                     childContext,
                     userData = config.userData,
                     openVerification = config.openVerification,
+                    onVerifiedChange = { isVerified ->
+                        val mainFlowComponent =
+                            (stack.items.firstOrNull { it.configuration is Config.MainFlow }?.instance as? Child.MainFlowChild)?.mainFlowComponent
+                        mainFlowComponent?.isVerified?.value = isVerified
+                    },
                     output = ::onProfileFlowOutput
                 )
             )

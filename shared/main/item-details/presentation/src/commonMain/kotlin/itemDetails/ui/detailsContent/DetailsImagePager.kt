@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,7 +44,7 @@ fun SharedTransitionScope.DetailsImagePager(
                     modifier = Modifier
                         .padding(horizontal = Paddings.listHorizontalPadding)
                         .fillMaxSize(),
-                    key = itemKey,
+                    key = if (index == 0) itemKey else itemKey+index,
                     detailedItemKey = null,
                     animatedContentScope = null
                 )
