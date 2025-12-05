@@ -7,6 +7,7 @@ import com.arkivanov.decompose.ComponentContext
 import decompose.componentCoroutineScope
 import entities.TakeItemResponse
 import entity.ItemQuickInfo
+import itemDetails.TelegramOpener
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import logic.QuickProfileData
@@ -44,6 +45,8 @@ class RealItemDetailsComponent(
     private val coroutineScope = componentCoroutineScope()
     private val itemDetailsUseCases: ItemDetailsUseCases = get()
     private val userUseCases: UserUseCases = get()
+
+    private val telegramOpener: TelegramOpener = get()
 
     override val isOwner = currentId == creatorId
     override val telegram: MutableStateFlow<String?> = MutableStateFlow(telegram)
@@ -128,6 +131,18 @@ class RealItemDetailsComponent(
             }.invokeOnCompletion {
                 itemQuickInfo.value = itemQuickInfo.value.onCoroutineDeath()
             }
+        }
+    }
+
+    override fun openTelegram() {
+        if (telegram.value == null) {
+            AlertsManager.push(
+                AlertState.SnackBar(
+                    "Неизвестный телеграм"
+                )
+            )
+        } else {
+            telegramOpener.open(telegram.value!!)
         }
     }
 

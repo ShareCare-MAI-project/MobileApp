@@ -1,7 +1,5 @@
 package itemDetails.ui.bottomSheet
 
-import alertsManager.AlertState
-import alertsManager.AlertsManager
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Send
@@ -107,11 +105,7 @@ fun rememberButtons(
                             containerColor = containerColor,
                             contentColor = primaryColor
                         ) {
-                            AlertsManager.push(
-                                AlertState.SnackBar(
-                                    component.telegram.value ?: "Неизвестный телеграм"
-                                )
-                            )
+                            component.openTelegram()
                         }
                     )
                 } else if (!isOwner) {

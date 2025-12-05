@@ -9,6 +9,9 @@ import logic.enums.ItemCategory
 import network.NetworkState
 
 interface ItemDetailsComponent: DetailsComponent {
+
+    fun openTelegram()
+
     fun onProfileClick()
 
     val onEditClick: () -> Unit
