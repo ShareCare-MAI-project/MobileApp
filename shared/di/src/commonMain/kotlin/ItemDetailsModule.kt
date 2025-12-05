@@ -1,9 +1,11 @@
 
+import itemDetails.TelegramOpener
 import ktor.ItemDetailsRemoteDataSource
 import org.koin.dsl.module
 import repositories.ItemDetailsRepository
 import repositories.ItemDetailsRepositoryImpl
 import usecases.ItemDetailsUseCases
+import utils.initTelegramOpener
 
 
 internal val itemDetailsModule = module {
@@ -19,5 +21,9 @@ internal val itemDetailsModule = module {
 
     factory<ItemDetailsUseCases> {
         ItemDetailsUseCases(get())
+    }
+
+    single<TelegramOpener> {
+        initTelegramOpener()
     }
 }

@@ -7,6 +7,7 @@ import com.arkivanov.decompose.value.Value
 import common.detailsInterfaces.DetailsComponent
 import common.detailsInterfaces.DetailsConfig
 import findHelp.components.FindHelpComponent
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.Serializable
 import loading.components.LoadingComponent
 import logic.ItemManagerPreData
@@ -20,6 +21,7 @@ interface MainFlowComponent : DefaultStack<Config, Child> {
 
 
 
+    val isVerified: StateFlow<Boolean>
 
     val loadingComponent: LoadingComponent
 
@@ -55,6 +57,6 @@ interface MainFlowComponent : DefaultStack<Config, Child> {
         data object NavigateToRegistration : Output()
         data object NavigateToAuth : Output()
 
-        data class NavigateToProfile(val profileData: QuickProfileData?, val userId: String?) : Output()
+        data class NavigateToProfile(val profileData: QuickProfileData?, val userId: String?, val openVerification: Boolean) : Output()
     }
 }

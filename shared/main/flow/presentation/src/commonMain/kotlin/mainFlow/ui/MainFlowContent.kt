@@ -81,6 +81,8 @@ fun SharedTransitionScope.MainFlowContent(
     }, animationSpec = spring(stiffness = Spring.StiffnessVeryLow))
 
 
+    val isVerified by component.isVerified.collectAsState()
+
     val stack by component.stack.subscribeAsState()
     val currentChild = stack.active.instance
     var currentContentType: ContentType? by remember { mutableStateOf(null) }
@@ -126,7 +128,9 @@ fun SharedTransitionScope.MainFlowContent(
                     } else {
                         component.output(Output.NavigateToItemEditor())
                     }
-                }
+                },
+                isVerified = isVerified,
+                goToProfile = { component.output(Output.NavigateToProfile(null,null, openVerification = true)) }
             )
 
         },

@@ -7,6 +7,7 @@ import com.arkivanov.decompose.ComponentContext
 import decompose.componentCoroutineScope
 import entities.TakeItemResponse
 import entity.ItemQuickInfo
+import itemDetails.TelegramOpener
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import logic.QuickProfileData
@@ -18,6 +19,7 @@ import network.NetworkState.AFK.onCoroutineDeath
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import usecases.ItemDetailsUseCases
+import usecases.UserUseCases
 
 class RealItemDetailsComponent(
     componentContext: ComponentContext,
@@ -42,6 +44,9 @@ class RealItemDetailsComponent(
 
     private val coroutineScope = componentCoroutineScope()
     private val itemDetailsUseCases: ItemDetailsUseCases = get()
+    private val userUseCases: UserUseCases = get()
+
+    private val telegramOpener: TelegramOpener = get()
 
     override val isOwner = currentId == creatorId
     override val telegram: MutableStateFlow<String?> = MutableStateFlow(telegram)
@@ -55,7 +60,9 @@ class RealItemDetailsComponent(
         MutableStateFlow(NetworkState.AFK)
 
     override fun takeItem() {
-        if (itemQuickInfo.value.data == null) {
+        if (!userUseCases.fetchIsVerified()) {
+            AlertsManager.push(AlertState.SnackBar(message = "Сначала необходимо верифицировать свой аккаунт"))
+        } else if (itemQuickInfo.value.data == null) {
             AlertsManager.push(AlertState.SnackBar(message = "Пожалуйста, подождите загрузки данных"))
         } else if (itemQuickInfo.value.data?.status != ItemStatus.Listed) {
             AlertsManager.push(AlertState.SnackBar(message = "Предмет уже забрали"))
@@ -124,6 +131,18 @@ class RealItemDetailsComponent(
             }.invokeOnCompletion {
                 itemQuickInfo.value = itemQuickInfo.value.onCoroutineDeath()
             }
+        }
+    }
+
+    override fun openTelegram() {
+        if (telegram.value == null) {
+            AlertsManager.push(
+                AlertState.SnackBar(
+                    "Неизвестный телеграм"
+                )
+            )
+        } else {
+            telegramOpener.open(telegram.value!!)
         }
     }
 

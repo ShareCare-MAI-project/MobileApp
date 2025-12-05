@@ -18,6 +18,7 @@ import transactions.components.RealTransactionsComponent
 class RealProfileFlowComponent(
     componentContext: ComponentContext,
     private val userData: Pair<String, QuickProfileData>?,
+    private val openVerification: Boolean = false,
     val output: (Output) -> Unit
 ) : ProfileFlowComponent, KoinComponent, ComponentContext by componentContext {
 
@@ -42,6 +43,7 @@ class RealProfileFlowComponent(
             Config.MyProfile -> MyProfileChild(
                 RealMyProfileComponent(
                     childContext,
+                    openVerification = openVerification,
                     goToAuth = { output(Output.NavigateToAuth) },
                     goToMain = { output(Output.Back) },
                     goToTransactions = { profileData, userId ->

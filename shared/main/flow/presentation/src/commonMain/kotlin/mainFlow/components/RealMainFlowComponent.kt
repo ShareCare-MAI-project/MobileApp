@@ -2,6 +2,7 @@ package mainFlow.components
 
 import alertsManager.AlertState
 import alertsManager.AlertsManager
+import architecture.launchIO
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.childContext
 import com.arkivanov.decompose.router.slot.ChildSlot
@@ -19,9 +20,12 @@ import com.arkivanov.decompose.value.Value
 import common.detailsInterfaces.DetailsComponent
 import common.detailsInterfaces.DetailsConfig
 import common.detailsInterfaces.DetailsConfig.ItemDetailsConfig
+import decompose.componentCoroutineScope
 import enums.UsuallyI
 import findHelp.components.RealFindHelpComponent
 import itemDetails.components.RealItemDetailsComponent
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import loading.components.LoadingComponent
 import loading.components.RealLoadingComponent
 import logic.ItemManagerPreData
@@ -37,16 +41,22 @@ import requestDetails.components.RealRequestDetailsComponent
 import shareCare.components.RealShareCareComponent
 import usecases.AuthUseCases
 import usecases.SettingsUseCases
+import usecases.UserUseCases
 
 class RealMainFlowComponent(
     componentContext: ComponentContext,
     override val output: (Output) -> Unit
 ) : MainFlowComponent, KoinComponent, ComponentContext by componentContext {
 
+    private val coroutineScope = componentCoroutineScope()
+
     private val authUseCases: AuthUseCases = get()
+    private val userUseCases: UserUseCases = get()
     private val settingsUseCases: SettingsUseCases = get()
 
     private val usuallyI = settingsUseCases.fetchUsuallyI()
+    override val isVerified: MutableStateFlow<Boolean> =
+        MutableStateFlow(userUseCases.fetchIsVerified())
 
     override val loadingComponent: LoadingComponent =
         RealLoadingComponent(
@@ -146,7 +156,8 @@ class RealMainFlowComponent(
                                 output(
                                     Output.NavigateToProfile(
                                         profileData = profileData,
-                                        userId = userId
+                                        userId = userId,
+                                        openVerification = false
                                     )
                                 )
                             }
@@ -190,7 +201,8 @@ class RealMainFlowComponent(
                                 output(
                                     Output.NavigateToProfile(
                                         profileData = profileData,
-                                        userId = userId
+                                        userId = userId,
+                                        openVerification = false
                                     )
                                 )
                             }
@@ -248,5 +260,12 @@ class RealMainFlowComponent(
 
     override fun navigateTo(cfg: Config) {
         nav.bringToFront(cfg)
+    }
+
+    init {
+        coroutineScope.launchIO {
+            delay(500) //0_oo
+            isVerified.value = userUseCases.fetchIsVerified()
+        }
     }
 }

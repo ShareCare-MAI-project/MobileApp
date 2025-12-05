@@ -1,6 +1,7 @@
 package ui
 
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
@@ -24,6 +26,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -36,8 +40,10 @@ import careshare.shared.hello.presentation.generated.resources.join_button
 import components.FakeHelloComponent
 import components.HelloComponent
 import components.HelloComponent.Output
+import foundation.AsyncLocalImage
 import foundation.scrollables.VerticalScrollableBox
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import resources.RImages
 import utils.SpacerH
 import utils.SpacerV
 import utils.value
@@ -75,7 +81,17 @@ fun HelloUI(
                     .fillMaxWidth()
                     .aspectRatio(1f),
                 shape = shapes.extraLarge
-            ) {}
+            ) {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    AsyncLocalImage(
+                        RImages.ICON,
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(.5f),
+                        colorFilter = ColorFilter.tint(color = lerp(colorScheme.primary, colorScheme.onBackground, .5f))
+                    )
+                }
+
+            }
 
             SpacerV(Paddings.medium)
 

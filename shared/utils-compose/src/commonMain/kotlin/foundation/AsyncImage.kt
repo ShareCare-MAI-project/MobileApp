@@ -2,6 +2,7 @@ package foundation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import careshare.shared.SharedRes
 import coil3.compose.AsyncImage
@@ -16,13 +17,15 @@ fun AsyncLocalImage(
     path: String,
     modifier: Modifier = Modifier,
     contentDescription: String?,
+    colorFilter: ColorFilter? = null,
     contentScale: ContentScale = ContentScale.Crop
 ) {
     AsyncImage(
         link = SharedRes.getUri(path),
         modifier = modifier,
         contentDescription = contentDescription,
-        contentScale = contentScale
+        contentScale = contentScale,
+        colorFilter = colorFilter
     )
 
 }
@@ -33,6 +36,7 @@ fun AsyncImage(
     modifier: Modifier = Modifier,
     contentDescription: String?,
     key: String? = null,
+    colorFilter: ColorFilter? = null,
     contentScale: ContentScale = ContentScale.Crop
 ) {
     val model = ImageRequest.Builder(LocalPlatformContext.current)
@@ -50,6 +54,7 @@ fun AsyncImage(
         model = model,
         modifier = modifier,
         contentScale = contentScale,
-        contentDescription = contentDescription
+        contentDescription = contentDescription,
+        colorFilter = colorFilter
     )
 }

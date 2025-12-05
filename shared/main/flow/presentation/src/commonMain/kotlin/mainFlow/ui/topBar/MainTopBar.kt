@@ -123,7 +123,7 @@ internal fun MainTopBar(
                 isCloseButton = isCloseButton
             ) {
                 if (isCloseButton) onSearchBarChange("")
-                else component.output(MainFlowComponent.Output.NavigateToProfile(null, null))
+                else component.output(MainFlowComponent.Output.NavigateToProfile(null, null, openVerification = false))
             }
 
             SpacerH(Paddings.listHorizontalPadding)

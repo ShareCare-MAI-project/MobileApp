@@ -1,5 +1,6 @@
 package registration.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
@@ -26,13 +27,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import animations.NetworkButtonIconAnimation
+import foundation.AsyncLocalImage
 import foundation.scrollables.VerticalScrollableBox
 import icons.Telegram
 import registration.components.RegistrationComponent
+import resources.RImages
 import utils.SpacerH
 import utils.SpacerV
 import utils.fastBackground
@@ -65,7 +70,16 @@ fun RegistrationUI(component: RegistrationComponent) {
                     .fillMaxWidth()
                     .aspectRatio(1f),
                 shape = shapes.extraLarge
-            ) {}
+            ) {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    AsyncLocalImage(
+                        RImages.ICON,
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(.5f),
+                        colorFilter = ColorFilter.tint(color = lerp(colorScheme.primary, colorScheme.onBackground, .5f))
+                    )
+                }
+            }
             SpacerV(Paddings.medium)
             Text(
                 "Регистрация",

@@ -14,6 +14,7 @@ kotlin {
             implementation(project(Modules.ItemEditor.data))
             implementation(project(Modules.Main.RequestDetails.data))
             implementation(project(Modules.Main.ItemDetails.data))
+            implementation(project(Modules.Main.ItemDetails.presentation))
 
             
             implementation(project(Modules.Main.ShareCare.data))
