@@ -19,6 +19,7 @@ class RealProfileFlowComponent(
     componentContext: ComponentContext,
     private val userData: Pair<String, QuickProfileData>?,
     private val openVerification: Boolean = false,
+    private val onVerifiedChange: (Boolean) -> Unit,
     val output: (Output) -> Unit
 ) : ProfileFlowComponent, KoinComponent, ComponentContext by componentContext {
 
@@ -50,7 +51,8 @@ class RealProfileFlowComponent(
                         nav.bringToFront(
                             Config.Transactions(profileData, userId)
                         )
-                    }
+                    },
+                    onVerifiedChange = onVerifiedChange
                 )
             )
 

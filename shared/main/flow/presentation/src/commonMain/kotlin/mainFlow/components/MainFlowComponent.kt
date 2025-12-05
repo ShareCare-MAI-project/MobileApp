@@ -7,7 +7,7 @@ import com.arkivanov.decompose.value.Value
 import common.detailsInterfaces.DetailsComponent
 import common.detailsInterfaces.DetailsConfig
 import findHelp.components.FindHelpComponent
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.serialization.Serializable
 import loading.components.LoadingComponent
 import logic.ItemManagerPreData
@@ -21,7 +21,7 @@ interface MainFlowComponent : DefaultStack<Config, Child> {
 
 
 
-    val isVerified: StateFlow<Boolean>
+    val isVerified: MutableStateFlow<Boolean>
 
     val loadingComponent: LoadingComponent
 

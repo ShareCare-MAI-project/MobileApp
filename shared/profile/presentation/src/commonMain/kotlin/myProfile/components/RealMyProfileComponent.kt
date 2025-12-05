@@ -25,7 +25,8 @@ class RealMyProfileComponent(
     private val openVerification: Boolean,
     private val goToAuth: () -> Unit,
     override val goToMain: () -> Unit,
-    private val goToTransactions: (QuickProfileData, String) -> Unit
+    private val goToTransactions: (QuickProfileData, String) -> Unit,
+    private val onVerifiedChange: (Boolean) -> Unit
 ) : MyProfileComponent, KoinComponent, ComponentContext by componentContext {
 
     private val userUseCases: UserUseCases = get()
@@ -56,6 +57,7 @@ class RealMyProfileComponent(
                         initialOrganizationName = userUseCases.fetchOrganizationName(),
                         onIsVerifiedChanged = { isVerified ->
                             profileData.value = profileData.value.copy(isVerified = isVerified)
+                            onVerifiedChange(isVerified)
                         },
                         onOrganizationNameChanged = { organizationName ->
                             profileData.value =
