@@ -15,7 +15,7 @@ internal val authModule = module {
             get()
         )
     }
-    single<AuthLocalDataSource> {
+    factory<AuthLocalDataSource> {
         AuthLocalDataSource(
             get()
         )
