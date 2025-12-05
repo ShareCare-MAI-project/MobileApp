@@ -104,10 +104,10 @@ internal fun CameraUI(
             ImagesRow(
                 photosRowLazyState = photosRowLazyState,
                 images = images.asReversed(),
-                isReversedNumeric = true
-            ) { image ->
-                component.deletePhoto(image)
-            }
+                isReversedNumeric = true,
+                onRotateClick = component::rotatePhoto,
+                onDeleteClick = component::deletePhoto
+            )
             SpacerV(Paddings.medium)
             val height = Sizes.hugeCircularButton
             Box(

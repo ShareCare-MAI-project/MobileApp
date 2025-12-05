@@ -100,6 +100,11 @@ internal fun ItemManagerUI(
                             if (!createOrEditItemResult.isLoading()) {
                                 component.photoTakerComponent.deletePhoto(it)
                             }
+                        },
+                        onRotateClick = {
+                            if (!createOrEditItemResult.isLoading()) {
+                                component.photoTakerComponent.rotatePhoto(it)
+                            }
                         }
                     )
 

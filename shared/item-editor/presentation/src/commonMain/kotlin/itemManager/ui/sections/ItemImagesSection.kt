@@ -15,7 +15,8 @@ import widgets.sections.SectionTitle
 internal fun ItemImagesSection(
     images: List<ImageBitmap>,
     onAddButtonClick: () -> Unit,
-    onDeleteClick: (ImageBitmap) -> Unit
+    onDeleteClick: (ImageBitmap) -> Unit,
+    onRotateClick: (ImageBitmap) -> Unit,
 ) {
     Column(Modifier.fillMaxWidth()) {
         SectionTitle("Фотографии")
@@ -23,7 +24,8 @@ internal fun ItemImagesSection(
         ImagesRow(
             addButton = onAddButtonClick,
             images = images,
-            onDeleteClick = { onDeleteClick(it) },
+            onDeleteClick = onDeleteClick,
+            onRotateClick = onRotateClick,
             isReversedNumeric = false
         )
     }

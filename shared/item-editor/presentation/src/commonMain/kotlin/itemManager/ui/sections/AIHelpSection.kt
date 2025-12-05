@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,13 +15,20 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material.icons.rounded.ExpandLess
+import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,13 +57,19 @@ fun AIHelpSection(
     onAcceptDescriptionClick: (String) -> Unit,
     onAcceptItemCategoryClick: (ItemCategory) -> Unit,
 ) {
+
+    var isAiAnswerExpanded by remember { mutableStateOf(false) }
+
     Column {
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             Column {
                 AnimatedVisibility(isShown) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         TextButton(
-                            onClick = onHelpClick,
+                            onClick = {
+                                onHelpClick()
+                                isAiAnswerExpanded = true
+                            },
                             colors = ButtonDefaults.textButtonColors(
                                 containerColor = colorScheme.primaryContainer.copy(
                                     alpha = .2f
@@ -94,13 +108,34 @@ fun AIHelpSection(
                 }
             }
         }
+
         AnimatedVisibility(aiAnswer is NetworkState.Success) {
+            Row(
+                Modifier.fillMaxWidth().padding(horizontal = Paddings.listHorizontalPadding),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                SectionTitle(
+                    "Вот, что предложил ИИ",
+                    horizontalPadding = 0.dp,
+                    modifier = Modifier.weight(1f, false)
+                )
+                IconButton(
+                    onClick = {
+                        isAiAnswerExpanded = !isAiAnswerExpanded
+                    }
+                ) {
+                    Icon(
+                        if (!isAiAnswerExpanded) Icons.Rounded.ExpandMore else Icons.Rounded.ExpandLess,
+                        null
+                    )
+                }
+            }
+        }
+
+        AnimatedVisibility(aiAnswer is NetworkState.Success && isAiAnswerExpanded) {
             val answer = aiAnswer.data
             Column(Modifier.padding(horizontal = Paddings.listHorizontalPadding / 2)) {
-                SectionTitle(
-                    "Вот, что предложил ИИ:",
-                    horizontalPadding = Paddings.listHorizontalPadding / 2
-                )
                 SpacerV(Paddings.semiMedium)
                 Text(
                     "Выберите нажатием, что хотите использовать",
