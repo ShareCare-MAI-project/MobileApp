@@ -48,6 +48,6 @@ interface RootComponent : DefaultStack<Config, Child> {
 
 
         @Serializable
-        data class ProfileFlow(val userData: Pair<String, QuickProfileData>?) : Config
+        data class ProfileFlow(val userData: Pair<String, QuickProfileData>?, val openVerification: Boolean) : Config
     }
 }

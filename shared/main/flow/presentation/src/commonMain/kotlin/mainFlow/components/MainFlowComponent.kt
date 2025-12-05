@@ -20,6 +20,7 @@ interface MainFlowComponent : DefaultStack<Config, Child> {
 
 
 
+    val isVerified: Boolean
 
     val loadingComponent: LoadingComponent
 
@@ -55,6 +56,6 @@ interface MainFlowComponent : DefaultStack<Config, Child> {
         data object NavigateToRegistration : Output()
         data object NavigateToAuth : Output()
 
-        data class NavigateToProfile(val profileData: QuickProfileData?, val userId: String?) : Output()
+        data class NavigateToProfile(val profileData: QuickProfileData?, val userId: String?, val openVerification: Boolean) : Output()
     }
 }

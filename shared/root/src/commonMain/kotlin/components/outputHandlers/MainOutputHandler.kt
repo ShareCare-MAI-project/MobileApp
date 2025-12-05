@@ -21,7 +21,8 @@ fun RootComponent.onMainOutput(
         MainFlowComponent.Output.NavigateToRegistration -> nav.replaceAll(Config.Registration)
         is MainFlowComponent.Output.NavigateToProfile -> nav.bringToFront(
             Config.ProfileFlow(
-                userData = if (output.profileData != null && output.userId != null) output.userId!! to output.profileData!! else null
+                userData = if (output.profileData != null && output.userId != null) output.userId!! to output.profileData!! else null,
+                openVerification = output.openVerification
             )
         )
     }

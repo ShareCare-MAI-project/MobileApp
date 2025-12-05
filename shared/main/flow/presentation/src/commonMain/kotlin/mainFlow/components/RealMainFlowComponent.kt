@@ -37,6 +37,7 @@ import requestDetails.components.RealRequestDetailsComponent
 import shareCare.components.RealShareCareComponent
 import usecases.AuthUseCases
 import usecases.SettingsUseCases
+import usecases.UserUseCases
 
 class RealMainFlowComponent(
     componentContext: ComponentContext,
@@ -44,9 +45,12 @@ class RealMainFlowComponent(
 ) : MainFlowComponent, KoinComponent, ComponentContext by componentContext {
 
     private val authUseCases: AuthUseCases = get()
+    private val userUseCases: UserUseCases = get()
     private val settingsUseCases: SettingsUseCases = get()
 
     private val usuallyI = settingsUseCases.fetchUsuallyI()
+    override val isVerified: Boolean
+        get() = userUseCases.fetchIsVerified()
 
     override val loadingComponent: LoadingComponent =
         RealLoadingComponent(
@@ -146,7 +150,8 @@ class RealMainFlowComponent(
                                 output(
                                     Output.NavigateToProfile(
                                         profileData = profileData,
-                                        userId = userId
+                                        userId = userId,
+                                        openVerification = false
                                     )
                                 )
                             }
@@ -190,7 +195,8 @@ class RealMainFlowComponent(
                                 output(
                                     Output.NavigateToProfile(
                                         profileData = profileData,
-                                        userId = userId
+                                        userId = userId,
+                                        openVerification = false
                                     )
                                 )
                             }

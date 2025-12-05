@@ -47,12 +47,15 @@ import widgets.glass.GlassCard
 @Composable
 internal fun MainFAB(
     hazeState: HazeState,
+    isVerified: Boolean,
     isFindHelp: Boolean,
     onClick: () -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     var isAnimating by remember { mutableStateOf(false) }
+
+
     LaunchedEffect(isFindHelp) {
         isAnimating = true
         delay(400)
@@ -62,9 +65,15 @@ internal fun MainFAB(
     val isDarkTheme = isSystemInDarkTheme()
 
     val animatedTint by animateColorAsState(
-        (if (isFindHelp) colorScheme.secondaryContainer else colorScheme.tertiaryContainer).copy(
-            alpha = if (isDarkTheme) .7f else .45f
-        ),
+        (if (isFindHelp) {
+            colorScheme.secondaryContainer
+        } else colorScheme.tertiaryContainer
+                )
+            .copy(
+                alpha = if (isFindHelp && !isVerified) .1f else {
+                    if (isDarkTheme) .7f else .45f
+                }
+            ),
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioLowBouncy,
             stiffness = Spring.StiffnessVeryLow
@@ -78,8 +87,6 @@ internal fun MainFAB(
             animationSpec = ShapeByInteractionDefaults.shapeAnimationSpec
         ).value
     )
-
-
     GlassCard(
         hazeState = hazeState,
         tint = animatedTint,
@@ -121,26 +128,7 @@ internal fun MainFAB(
                 )
             }
         }
-
-
-//        Row {
-//
-//            AnimatedContent(
-//                if (isFindHelpMode) Icons.Rounded.LibraryAdd else Icons.Rounded.Handshake,
-//                transitionSpec = { fadeIn().togetherWith(fadeOut()) }
-//            ) { animatedIcon ->
-//                Icon(animatedIcon, contentDescription = null)
-//            }
-//            SpacerH(Paddings.semiSmall)
-//            AnimatedContent(
-//                if (isFindHelpMode) Res.string.fab_find_help else Res.string.fab_share_care,
-//                transitionSpec = { fadeIn().togetherWith(fadeOut()) }
-//            ) { animatedText ->
-//                Text(
-//                    (animatedText).value,
-//                    modifier = Modifier.basicMarquee(iterations = Int.MAX_VALUE)
-//                )
-//            }
-//        }
     }
+
+
 }

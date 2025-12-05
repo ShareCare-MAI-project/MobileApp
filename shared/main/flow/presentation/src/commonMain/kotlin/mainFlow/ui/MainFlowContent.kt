@@ -126,7 +126,9 @@ fun SharedTransitionScope.MainFlowContent(
                     } else {
                         component.output(Output.NavigateToItemEditor())
                     }
-                }
+                },
+                isVerified = component.isVerified,
+                goToProfile = { component.output(Output.NavigateToProfile(null,null, openVerification = true)) }
             )
 
         },

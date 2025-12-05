@@ -22,9 +22,10 @@ import usecases.UserUseCases
 
 class RealMyProfileComponent(
     componentContext: ComponentContext,
+    private val openVerification: Boolean,
     private val goToAuth: () -> Unit,
     override val goToMain: () -> Unit,
-    private val goToTransactions: (QuickProfileData, String) -> Unit,
+    private val goToTransactions: (QuickProfileData, String) -> Unit
 ) : MyProfileComponent, KoinComponent, ComponentContext by componentContext {
 
     private val userUseCases: UserUseCases = get()
@@ -57,11 +58,13 @@ class RealMyProfileComponent(
                             profileData.value = profileData.value.copy(isVerified = isVerified)
                         },
                         onOrganizationNameChanged = { organizationName ->
-                            profileData.value = profileData.value.copy(organizationName = organizationName)
+                            profileData.value =
+                                profileData.value.copy(organizationName = organizationName)
                         }
                     )
                 }
-            }
+            },
+            initialConfiguration = { if (openVerification) DialogConfig.Verification else null }
         )
 
 

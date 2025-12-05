@@ -112,6 +112,7 @@ class RealRootComponent(
                 RealProfileFlowComponent(
                     childContext,
                     userData = config.userData,
+                    openVerification = config.openVerification,
                     output = ::onProfileFlowOutput
                 )
             )
