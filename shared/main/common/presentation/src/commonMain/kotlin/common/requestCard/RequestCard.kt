@@ -3,6 +3,7 @@ package common.requestCard
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import architecture.launchIO
 import utils.SpacerV
 import view.consts.Paddings
+import widgets.SimpleChip
 
 @Composable
 fun SharedTransitionScope.RequestCard(
@@ -64,13 +66,20 @@ fun SharedTransitionScope.RequestCard(
 
             SpacerV(Paddings.semiSmall)
 
-            Text(
-                location,
-                maxLines = 1,
-                style = typography.bodySmall,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.alpha(.7f),
-            )
+            Box(contentAlignment = Alignment.Center) {
+                if (organizationName != null) {
+                    SimpleChip(organizationName)
+                } else {
+                    Text(
+                        location,
+                        maxLines = 1,
+                        style = typography.bodySmall,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.alpha(.7f),
+                    )
+                }
+                SimpleChip("Для сохранения одинакового размера", modifier = Modifier.alpha(0f))
+            }
         }
     }
 }

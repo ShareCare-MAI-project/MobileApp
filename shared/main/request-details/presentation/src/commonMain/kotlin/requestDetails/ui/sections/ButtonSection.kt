@@ -70,7 +70,7 @@ internal fun ColumnScope.ButtonSection(
         fadeIn(animationSpec = animationSpec)
             .togetherWith(fadeOut(animationSpec = animationSpec))
     }) {
-        Column {
+        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             if (it) {
                 Row(Modifier.padding(horizontal = Paddings.medium)) {
                     Button(
